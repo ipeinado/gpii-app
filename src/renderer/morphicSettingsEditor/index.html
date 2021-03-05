@@ -6,6 +6,8 @@
         <link rel="stylesheet" href="../common/css/button.css">
         <link rel="stylesheet" href="../common/css/dialog.css">
         <link rel="stylesheet" href="../common/css/titlebar.css">
+        <link rel="stylesheet" href="../qss/css/qss.css">
+        <link rel="stylesheet" href="./css/morphicSettingsEditor.css">
 
         <script type="text/javascript" src="../../../node_modules/infusion/src/lib/jquery/core/js/jquery.js"></script>
         <script type="text/javascript" src="../../../node_modules/infusion/dist/infusion-all.js"></script>
@@ -13,6 +15,9 @@
         <script type="text/javascript" src="../common/js/widgets.js"></script>
         <script type="text/javascript" src="../common/js/titlebar.js"></script>
 
+        <script type="text/javascript" src="../common/js/elementRepeater.js"></script>
+        <script type="text/javascript" src="../qss/js/qss.js"></script>
+        <script type="text/javascript" src="../qss/js/qssButtons.js"></script>
         <script type="text/javascript" src="js/morphicSettingsEditor.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
 
@@ -20,18 +25,20 @@
         <script type="text/javascript" src="../common/js/channelUtils.js"></script>
     </head>
 
-    <body>
+    <body style="overflow: auto;">
         <div class="fl-dialog">
+            <h1>Morphic Settings Editor</h1>
 
-            <div>
-              <b>ButtonList:</b>
-              <span class="flc-buttonList"></span>
+            <div class="flc-quickSetStrip fl-qss" style="justify-content: flex-start;">
+              <div class="flc-quickSetStrip-more fl-quickSetStrip-more" style="display: block;">
+                  <button class="flc-quickSetStrip-more-close fl-focusable fl-qss-closeButton fl-more-closeButton" tabindex="999">×</button>
+                  <div class="flc-quickSetStrip-more-button-grid fl-quickSetStrip-more-button-grid">
+              </div>
             </div>
 
-            <div>
-              <b>MorePanelList:</b>
-              <span class="flc-morePanelList"></span>
-            </div>
+            <div class="flc-quickSetStrip-main fl-quickSetStrip-main">
+              <img class="flc-qss-logo fl-qss-logo" src="../../icons/Morphic-QuickStrip-logo.svg">
+          </div>
 
         </div>
     </body>

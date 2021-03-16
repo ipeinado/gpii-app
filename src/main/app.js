@@ -27,6 +27,7 @@ require("./common/ws.js");
 require("./dialogs/dialogManager.js");
 require("./dialogs/captureToolDialog.js");
 require("./dialogs/morphicSettingsEditor.js");
+require("./dialogs/makeYourOwnButtonDialog.js");
 require("./storage.js");
 require("./factsManager.js");
 require("./gpiiConnector.js");
@@ -311,6 +312,11 @@ fluid.defaults("gpii.app", {
                     preferences: "{pspChannel}.model.preferences"
                 }
             }
+        },
+        makeYourOwnButtonDialog: {
+            type: "gpii.app.makeYourOwnButtonDialog",
+            createOnEvent: "onPSPPrerequisitesReady"
+            //createOnEvent: "onOpenMYOBDialog"
         },
         morphicSettingsEditor: {
             type: "gpii.app.morphicSettingsEditor",

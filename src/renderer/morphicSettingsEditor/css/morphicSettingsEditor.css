@@ -1,0 +1,35 @@
+.fl-qss {
+    background-color: #e0e0e0;
+    height: auto;
+    border-bottom: 16px solid #333;
+    padding-top: 16px;
+}
+
+.flc-quickSetStrip-main {
+    width: auto;
+   flex-direction: row;
+   flex-wrap: nowrap;
+}
+
+.fl-qss-logo {
+    flex-basis: auto;
+}
+
+.fl-qss-separator {
+    background: #999 !important;
+}
+
+.fl-reorderer-movable-selected {
+    background-color: green;
+}
+
+.fl-reorderer-dropMarker {
+    width: 5px;
+    background-color: green;
+    border-radius: 5px;
+    margin: 5px 0 5px 6px;
+}
+
+.fl-reorderer-movable-dragging {
+    opacity: 0.5;
+}

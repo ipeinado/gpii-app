@@ -19,13 +19,105 @@
     var gpii = fluid.registerNamespace("gpii");
 
     /**
+     * Grade creates to be used for rendering the QSS strip and `More panel` buttons.
+     */
+    fluid.defaults("gpii.morphicSettingsEditor.repeaterInList", {
+        gradeNames: ["gpii.psp.repeater"],
+
+        dynamicContainerMarkup: {
+            container: "<div class=\"%containerClass fl-focusable\">" +
+                       "</div>",
+            containerClassPrefix: "fl-qss-button"
+        },
+        
+        markup: "<span class=\"flc-qss-btnLabel fl-qss-btnLabel\"></span>",
+
+        invokers: {
+            getHandlerType: {
+                funcName: "gpii.morphicSettingsEditor.qss.getHandlerType",
+                args: ["that", "{arguments}.0"]
+            }
+        }
+    });
+
+    fluid.defaults("gpii.morphicSettingsEditor.qss.buttonPresenter", {
+        gradeNames: ["fluid.viewComponent"],
+        model: {
+            item: ""
+        },
+        selectors: {
+            title: ".flc-qss-btnLabel"
+        },
+        listeners: {
+            "onCreate.displayTitle": "{that}.displayTitle"
+        },
+        invokers: {
+            displayTitle: {
+                this: "{that}.dom.title",
+                method: "text",
+                args: ["{that}.model.item"]
+            }
+        }
+    });
+
+    fluid.defaults("gpii.morphicSettingsEditor.qss.separatorButtonPresenter", {
+        gradeNames: ["fluid.viewComponent"],
+        model: {
+            item: ""
+        },
+        listeners: {
+            "onCreate.addClasses": "{that}.addClasses"
+        },
+        invokers: {
+            addClasses: {
+                this: "{that}.container",
+                method: "addClass",
+                args: ["fl-qss-separator"]
+            }
+        }
+    });
+
+    gpii.morphicSettingsEditor.qss.filterSettings = function(settings) {
+        console.log(settings);
+        var newSettings = [];
+        fluid.each(settings, function(item, key) {
+            var buttonName = "";
+            if (typeof(item) === 'object' ) {
+                if (item.hasOwnProperty('buttonName')) {
+                    buttonName = item['buttonName'];
+                }
+            }
+            if (typeof(item) === 'string') {
+                buttonName = item;
+            }
+            newSettings.push(buttonName);
+        });
+        return newSettings;
+    }; 
+
+    gpii.morphicSettingsEditor.qss.getHandlerType = function (that, setting) {
+        if ((typeof(setting) === "string") && (setting === "||")) {
+            return "gpii.morphicSettingsEditor.qss.separatorButtonPresenter";
+        } else {
+            return "gpii.morphicSettingsEditor.qss.buttonPresenter";
+        }
+    };
+
+    gpii.morphicSettingsEditor.afterButtonMove = function(item, position, movables) {
+        console.log(movables);
+    };
+
+    gpii.morphicSettingsEditor.testFunction = function(variables) {
+        console.log(variables);
+    }
+
+    /**
      * Represents the controller for the settings editor.
      */
     fluid.defaults("gpii.morphicSettingsEditor", {
-        gradeNames: ["fluid.viewComponent"],
+        gradeNames: ["fluid.reorderer", "fluid.viewComponent"],
 
-        buttonList: null,
-        morePanelList: null,
+        layoutHandler: "fluid.moduleLayoutHandler",
 
         model: {
             buttonList: "{that}.options.buttonList",
@@ -33,42 +125,49 @@
         },
 
         selectors: {
-            buttonList: ".flc-buttonList",
-            morePanelList: ".flc-morePanelList",
-        },
-
-        invokers: {
-            renderButtonList: {
-                this: "{that}.dom.buttonList",
-                method: "html",
-                args: "{that}.model.buttonList"
-            },
-            renderMorePanelList: {
-                this: "{that}.dom.morePanelList",
-                method: "html",
-                args: "{that}.model.morePanelList"
-            }
-        },
-
-        modelListeners: {
-            "buttonList": {
-                this: "{that}.dom.buttonList",
-                method: "html",
-                args: ["{change}.value"]
-            },
-            "morePanelList": {
-                this: "{that}.dom.morePanelList",
-                method: "html",
-                args: ["{change}.value"]
-            }
+            buttonList: ".flc-quickSetStrip-main",
+            morePanelList: ".flc-quickSetStrip-more-button-grid",
+            movables: ".fl-qss-button",
+            dropTargets: ["{that}.dom.buttonList", "{that}.dom.morePanelList"],
+            modules: ".fl-qss-button",
+            columns: ".flc-quickSetStrip-main,.flc-quickSetStrip-more-button-grid"
         },
 
         listeners: {
-            "onCreate.renderButtonList": {
-                func: "{that}.renderButtonList"
+            "afterMove.reorderButtons": "gpii.morphicSettingsEditor.afterButtonMove"
+        },
+
+
+        components: {
+            qss: {
+                type: "gpii.morphicSettingsEditor.repeaterInList",
+                container: "{that}.dom.buttonList",
+                options: {
+                    model: {
+                        items: {
+                            expander: {
+                                func: "gpii.morphicSettingsEditor.qss.filterSettings",
+                                args: ["{morphicSettingsEditor}.model.buttonList"]
+                            }
+                        }
+                    },
+                    handlerType: " gpii.morphicSettingsEditor.qss.getHandlerType"
+                }
             },
-            "onCreate.renderMorePanelList": {
-                func: "{that}.renderMorePanelList"
+            morePanel: {
+                type: "gpii.morphicSettingsEditor.repeaterInList",
+                container: "{that}.dom.morePanelList",
+                options: {
+                    model: {
+                        items: {
+                            expander: {
+                                func: "gpii.morphicSettingsEditor.qss.filterSettings",
+                                args: ["{morphicSettingsEditor}.model.morePanelList"]
+                            }
+                        }
+                    },
+                    handlerType: " gpii.morphicSettingsEditor.qss.getHandlerType"
+                }
             }
         }
 

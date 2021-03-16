@@ -28,20 +28,23 @@
 
     <body>
         <div class="fl-dialog centered-container">
-            <div>
+            <div class="container-fluid">
                 <div>
                     <img src="../../assets/smartworkLogoColor.png" class="img-fluid smartwork-logo" alt="Smartwork Logo">
                 </div>
                 <div class="form-group">
-                    <span class="smartwork-login-form-label">Username</span>
+                    <p class="smartwork-login-form-label">Username</p>
                     <input type="text" class="flc-username form-control" placeholder="johndoe@smartwork.eu" value="" />
                 </div>
                 <div class="form-group">
-                    <span class="smartwork-login-form-label">Password</span>
+                    <p class="smartwork-login-form-label">Password</p>
                     <input type="password" class="flc-password form-control" placeholder="my password" value="" />
                 </div>
                 <div class="form-group">
-                    <input type="submit" class="flc-submitBtn btn" value="Login" />
+                    <input type="submit" class="flc-loginBtn btn" value="Login" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="flc-logoutBtn btn" value="Logout" />
                 </div>
                 <div class="progress-ring progress-medium" alt="Login is in progress">
                     <div class="progress-circle"></div>
@@ -51,7 +54,7 @@
                     <div class="progress-circle"></div>
                 </div>
                 <div>
-                    <span class="flc-feedbackLabel alert"></span>
+                    <p class="flc-feedbackLabel alert smartwork-feedbackLabel"></p>
                 </div>
             </div>
         </div>

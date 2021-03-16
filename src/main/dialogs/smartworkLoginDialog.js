@@ -38,24 +38,43 @@ fluid.defaults("gpii.app.smartworkLoginDialog", {
             minimizable: true,
             maximizable: true,
             titleBarStyle: "default"
+        },
+        params: {
+            smartworkCredentials: "{that}.options.smartworkCredentials"
         }
     },
     events: {
-        onSmartworkCredentialsArrived: null,
+        // Login events
+        onSmartworkLoginRequestArrived: null,
         onLoginSucceeded: null,
-        onLoginFailed: null
+        onLoginFailed: null,
+        // Logout events
+        onSmartworkLogoutRequestArrived: null,
+        onLogoutSucceeded: null,
+        onLogoutFailed: null,
+        // other
+        onDestroyRequest: null
     },
     components: {
         channelListener: {
             type: "gpii.app.channelListener",
             options: {
                 events: {
-                    onSmartworkCredentialsInput: null
+                    onSmartworkLoginRequest: null,
+                    onSmartworkLogoutRequest: null,
+                    onDestroyRequest: null
                 },
                 listeners: {
-                    onSmartworkCredentialsInput: {
-                        funcName: "{smartworkLoginDialog}.events.onSmartworkCredentialsArrived.fire",
+                    onSmartworkLoginRequest: {
+                        funcName: "{smartworkLoginDialog}.events.onSmartworkLoginRequestArrived.fire",
                         args: ["{arguments}.0"]
+                    },
+                    onSmartworkLogoutRequest: {
+                        funcName: "{smartworkLoginDialog}.events.onSmartworkLogoutRequestArrived.fire"
+                    },
+                    onDestroyRequest: {
+                        funcName: "{smartworkLoginDialog}.events.onDestroyRequest.fire",
+                        args: "{arguments}.0"
                     }
                 }
             }
@@ -65,7 +84,9 @@ fluid.defaults("gpii.app.smartworkLoginDialog", {
             options: {
                 events: {
                     onLoginSucceeded: null,
-                    onLoginFailed: null
+                    onLoginFailed: null,
+                    onLogoutSucceeded: null,
+                    onLogoutFailed: null
                 }
             }
         }
@@ -77,10 +98,20 @@ fluid.defaults("gpii.app.smartworkLoginDialog", {
         "onCreate.removeMenu": {
             funcName: "gpii.app.smartworkLoginDialog.removeWindowMenu",
             args: "{that}"
+        },
+        "onDestroyRequest.destroyDialog": {
+            funcName: "gpii.app.smartworkLoginDialog.destroyDialog",
+            args: ["{that}", "{arguments}.0"]
         }
     }
 });
 
 gpii.app.smartworkLoginDialog.removeWindowMenu = function (that) {
+    // Comment this out to enable toggling devTools
     that.dialog.removeMenu();
+};
+
+gpii.app.smartworkLoginDialog.destroyDialog = function (that, delayToClose) {
+    var closeDelay = delayToClose || 1000;
+    setTimeout(that.destroy, closeDelay);
 };

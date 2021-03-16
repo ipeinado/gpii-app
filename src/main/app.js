@@ -272,7 +272,7 @@ fluid.defaults("gpii.app", {
             //createOnEvent: "onPSPPrerequisitesReady"
             options: {
                 listeners: {
-                    "onSmartworkCredentialsArrived.logIntoSmartwork": {
+                    "onSmartworkLoginRequestArrived.logIntoSmartwork": {
                         func: "{smartworkLoginManager}.logIntoSmartwork",
                         args: "{arguments}.0"
                     },
@@ -281,8 +281,20 @@ fluid.defaults("gpii.app", {
                     },
                     "{smartworkLoginManager}.events.onLoginFailed": {
                         func: "{smartworkLoginDialog}.channelNotifier.events.onLoginFailed.fire"
+                    },
+
+                    "onSmartworkLogoutRequestArrived.logoutFromSmartwork": {
+                        func: "{smartworkLoginManager}.logoutFromSmartwork"
+                    },
+                    "{smartworkLoginManager}.events.onLogoutSucceeded": {
+                        func: "{smartworkLoginDialog}.channelNotifier.events.onLogoutSucceeded.fire"
+                    },
+                    "{smartworkLoginManager}.events.onLogoutFailed": {
+                        func: "{smartworkLoginDialog}.channelNotifier.events.onLogoutFailed.fire"
                     }
-                }
+                },
+                // This indicates whether the user can login or logout
+                smartworkCredentials: "{smartworkLoginManager}.model.username"
             }
         },
         smartworkLoginManager: {
@@ -303,14 +315,18 @@ fluid.defaults("gpii.app", {
                             "{smartworkLoginManager}.options.loginInfo"
                         ]
                     },
+
                     "onLoginSucceeded.keyUserIn": {
                         func: "{app}.keyIn",
                         args: [
                             "{smartworkLoginManager}.model.gpiiKey",
                             "{smartworkLoginManager}.options.loginInfo"
                         ]
-
+                    },
+                    "onLogoutSucceeded.keyUserOut": {
+                        func: "{app}.keyOut"
                     }
+
                 }
             }
         },

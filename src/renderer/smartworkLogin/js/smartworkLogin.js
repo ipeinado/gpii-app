@@ -24,23 +24,30 @@
     fluid.defaults("gpii.smartworkLogin", {
         gradeNames: ["fluid.viewComponent", "gpii.binder.bindOnCreate"],
 
+        // Provided from main process through index.js
+        smartworkCredentials: null,
+
         model: {
             credentials: {
                 username: null,
                 password: null
             },
 
-            // Transaltable strings
+            // Translatable strings
             messages: {
                 loginSuccess: "Login succeeded",
-                loginFail: "Invalid Credentials"
+                loginFail: "Invalid Credentials",
+                logoutWarning: "When logging out, the Smartwork credentials will be removed from " +
+                               "your system and you will be keyed out from Morphic",
+                logoutSuccess: "Successfully removed Smartwork credentials from the system"
             }
         },
 
         selectors: {
             usernameInput: ".flc-username",
             passwordInput: ".flc-password",
-            submitButton: ".flc-submitBtn",
+            loginButton: ".flc-loginBtn",
+            logoutButton: ".flc-logoutBtn",
             feedbackLabel: ".flc-feedbackLabel",
             progressRing: ".progress-ring"
         },
@@ -53,25 +60,65 @@
 
         styles: {
             loginSuccess: "alert-success",
-            loginFailed: "alert-danger"
+            loginFailed: "alert-danger",
+            logoutWarning: "alert-warning"
         },
 
         events: {
-            onClick: null
+            onLoginClick: null,
+            onLogoutClick: null
         },
 
         invokers: {
             // TODO: i18n
+            setupButtons: {
+                funcName: "gpii.smartworkLogin.setupButtons",
+                args: ["{that}"]
+            },
+
+            showLoginButton: {
+                this: "{that}.dom.loginButton",
+                method: "show"
+            },
+            hideLoginButton: {
+                this: "{that}.dom.loginButton",
+                method: "hide"
+            },
+            showLogoutButton: {
+                this: "{that}.dom.logoutButton",
+                method: "show"
+            },
+            hideLogoutButton: {
+                this: "{that}.dom.logoutButton",
+                method: "hide"
+            },
+
             showSuccessLabel: {
                 this: "{that}.dom.feedbackLabel",
                 method: "text",
-                args: "{that}.model.messages.loginSuccess"
+                args: "{arguments}.0"
             },
             showFailureLabel: {
                 this: "{that}.dom.feedbackLabel",
                 method: "text",
                 args: "{that}.model.messages.loginFail"
             },
+            showLogoutWarning: {
+                this: "{that}.dom.feedbackLabel",
+                method: "text",
+                args: "{that}.model.messages.logoutWarning"
+            },
+            applyWarningStyle: {
+                this: "{that}.dom.feedbackLabel",
+                method: "addClass",
+                args: "alert-warning"
+            },
+            removeWarningStyle: {
+                this: "{that}.dom.feedbackLabel",
+                method: "removeClass",
+                args: "alert-warning"
+            },
+
             toggleProgressRing: {
                 this: "{smartworkLogin}.dom.progressRing",
                 method: "toggle",
@@ -85,7 +132,9 @@
                 options: {
                     events: {
                         onLoginSucceeded: null,
-                        onLoginFailed: null
+                        onLoginFailed: null,
+                        onLogoutSucceeded: null,
+                        onLogoutFailed: null
                     },
                     listeners: {
                         // TODO: Refactor these listeners in a decent way
@@ -100,8 +149,13 @@
                             method: "addClass",
                             args: "alert-success"
                         }, {
-                            func: "{smartworkLogin}.showSuccessLabel"
+                            func: "{smartworkLogin}.showSuccessLabel",
+                            args: "{smartworkLogin}.model.messages.loginSuccess"
+                        }, {
+                            func: "{smartworkLogin}.channelNotifier.events.onDestroyRequest.fire",
+                            args: 5000
                         }],
+
                         onLoginFailed: [{
                             func: "{smartworkLogin}.toggleProgressRing"
                         }, {
@@ -114,6 +168,20 @@
                             args: "alert-danger"
                         }, {
                             func: "{smartworkLogin}.showFailureLabel"
+                        }],
+
+                        onLogoutSucceeded: [{
+                            func: "{smartworkLogin}.toggleProgressRing"
+                          }, {
+                            this: "{smartworkLogin}.dom.feedbackLabel",
+                            method: "addClass",
+                            args: "alert-success"
+                        }, {
+                            func: "{smartworkLogin}.showSuccessLabel",
+                            args: "{smartworkLogin}.model.messages.logoutSuccess"
+                        }, {
+                            func: "{smartworkLogin}.channelNotifier.events.onDestroyRequest.fire",
+                            args: 5000
                         }]
                     }
                 }
@@ -122,34 +190,76 @@
                 type: "gpii.psp.channelNotifier",
                 options: {
                     events: {
-                        onSmartworkCredentialsInput: null
+                        onSmartworkLoginRequest: null,
+                        onSmartworkLogoutRequest: null,
+                        onDestroyRequest: null
                     }
                 }
             }
         },
 
+        // TODO: Do it properly and KISS
         listeners: {
-            "onCreate.addClickHandler": {
-                "this": "{that}.dom.submitButton",
+            "onCreate.addLoginClickHandler": {
+                "this": "{that}.dom.loginButton",
                 method: "click",
-                args: ["{that}.events.onClick.fire"]
+                args: ["{that}.events.onLoginClick.fire"]
+            },
+            "onCreate.addLogoutClickHandler": {
+                "this": "{that}.dom.logoutButton",
+                method: "click",
+                args: ["{that}.events.onLogoutClick.fire"]
             },
             "onCreate.hideProgressRing": {
                 this: "{that}.dom.progressRing",
                 method: "hide"
             },
-            "onClick.notifiyMainProcess": {
-                funcName: "{that}.channelNotifier.events.onSmartworkCredentialsInput.fire",
+
+            "onCreate.setupButtons": "{that}.setupButtons",
+
+            "onLoginClick.notifiyMainProcess": {
+                funcName: "{that}.channelNotifier.events.onSmartworkLoginRequest.fire",
                 args: ["{that}.model.credentials"]
             },
-            "onClick.clearFeedbackLabel": {
+            "onLoginClick.clearFeedbackLabel": {
                 this: "{that}.dom.feedbackLabel",
                 method: "empty"
             },
-            "onClick.toggleProgressRing": {
+            "onLoginClick.toggleProgressRing": {
                 func: "{smartworkLogin}.toggleProgressRing"
-            }
+            },
+
+            "onLogoutClick.clearFeedbackLabel": {
+                this: "{that}.dom.feedbackLabel",
+                method: "empty"
+            },
+            "onLogoutClick.removeWarningStyle": {
+                func: "{that}.removeWarningStyle"
+            },
+            "onLogoutClick.toggleProgressRing": {
+                func: "{smartworkLogin}.toggleProgressRing"
+            },
+            "onLogoutClick.notifiyMainProcess": {
+                funcName: "{that}.channelNotifier.events.onSmartworkLogoutRequest.fire"
+            },
         }
     });
+
+    gpii.smartworkLogin.setupButtons = function (that) {
+        var isLoggedIntoSmartwork = that.options.smartworkCredentials;
+
+        if (isLoggedIntoSmartwork) {
+            that.hideLoginButton();
+            that.showLogoutWarning();
+            that.applyWarningStyle();
+            that.showLogoutButton();
+            that.applier.change(["credentials", "username"], isLoggedIntoSmartwork);
+            that.applier.change(["credentials", "password"], isLoggedIntoSmartwork);
+        } else {
+            that.showLoginButton();
+            that.hideLogoutButton();
+        }
+
+    };
 
 })(fluid);

@@ -22,6 +22,8 @@
     // TODO: Add i18n support
 
     jQuery(function () {
-      gpii.smartworkLogin(".fl-dialog", {} );
+      gpii.smartworkLogin(".fl-dialog", {
+          smartworkCredentials: windowInitialParams.smartworkCredentials
+      });
     });
 })(fluid);

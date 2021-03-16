@@ -47,7 +47,9 @@ fluid.defaults("gpii.app.smartworkLoginManager", {
         onCredentialsFound: null,
         onNoCredentialsFound: null,
         onLoginSucceeded: null,
-        onLoginFailed: null
+        onLoginFailed: null,
+        onLogoutSucceeded: null,
+        onLogoutFailed: null
     },
     listeners: {
         "onCreate.checkCredentials": {
@@ -68,6 +70,10 @@ fluid.defaults("gpii.app.smartworkLoginManager", {
         logIntoSmartwork: {
             funcName: "gpii.app.smartworkLoginManager.logIntoSmartwork",
             args: ["{that}", "{arguments}.0", "{that}.events.onLoginSucceeded", "{that}.events.onLoginFailed"]
+        },
+        logoutFromSmartwork: {
+            funcName: "gpii.app.smartworkLoginManager.logoutFromSmartwork",
+            args: ["{that}", "{that}.events.onLogoutSucceeded", "{that}.events.onLogoutFailed"]
         },
         generateGpiiKey: {
             funcName: "gpii.app.smartworkLoginManager.generateGpiiKey",
@@ -122,6 +128,19 @@ gpii.app.smartworkLoginManager.logIntoSmartwork = function (that, credentials, o
     });
 
     req.end()
+};
+
+gpii.app.smartworkLoginManager.logoutFromSmartwork = function (that, onLogoutSucceeded, onLogoutFailed) {
+    that.keyring.deletePassword(that.model.username).then(function (/* result */) {
+        that.applier.change("", {
+          username: null,
+          password: null,
+          gpiiKey: null
+        });
+        onLogoutSucceeded.fire();
+    }, function (error) {
+        onLogoutFailed.fire();
+    });
 };
 
 gpii.app.smartworkLoginManager.generateGpiiKey = function (that) {

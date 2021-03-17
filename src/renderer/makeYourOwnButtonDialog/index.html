@@ -17,6 +17,9 @@
 
         <script type="text/javascript" src="../qss/js/qss.js"></script>
         <script type="text/javascript" src="../qss/js/qssButtons.js"></script>
+
+        <script type="text/javascript" src="../../../node_modules/gpii-binder/src/js/binder.js"></script>
+
         <script type="text/javascript" src="js/makeYourOwnButtonEditor.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
 
@@ -30,25 +33,31 @@
                 <h2>Make Your Own Button</h2>
 
                 <div class="fl-qss-button fl-focusable fl-qss-largeButton fl-qss-btnId-MakeYourOwn fl-qss-settingButton fl-btn-makeYourOwnButtonEditor">
-                  <div class="flc-qss-btnImage fl-qss-btnImage" style="display: none;"></div>
-                  <span class="flc-qss-btnLabel fl-qss-btnLabel fl-btn-makeYourOwnButtonEditor-label">My first Own Button</span>
-                  <div class="flc-qss-btnCaption fl-qss-btnCaption"></div>
+                    <span class="flc-myobEditor-btnPreviewLabel fl-qss-btnLabel fl-btn-makeYourOwnButtonEditor-label"></span>
                 </div>
 
                 <form>
-                  <label for="inputName">Name</label>
-                  <input type="text" id="inputName" class="form-control" placeholder="Enter name for button" required autofocus>
+                    <label for="inputName" class="flc-myobEditor-nameLabel"></label>
+                    <input type="text" id="inputName" class="flc-myobEditor-nameInput form-control" required autofocus>
 
-                  <label for="inputData">URL address</label>
-                  <input type="text" id="inputData" class="form-control" placeholder="Enter address of the webpage" required autofocus>
+                    <label for="inputType" class="flc-myobEditor-typeLabel"></label>
+                    <div class="form-group">
+                        <select class="flc-myobEditor-typeInput form-control fl-myob-saveBtn" id="inputType" required>
+                            <option class="flc-myobEditor-typeOptionWeb" selected value="WEB"></option>
+                            <option class="flc-myobEditor-typeOptionApp" value="APP"></option>
+                        </select>
+                    </div>
 
-                  <label for="inputPopup">Popup text</label>
-                  <input type="text" id="inputPopup" class="form-control" placeholder="Enter Popup Text" required autofocus>
+                    <label for="inputData" class="flc-myobEditor-dataLabel"></label>
+                    <input type="text" id="inputData" class="flc-myobEditor-dataInput form-control" required autofocus>
 
-                  <label for="inputDescription">Description</label>
-                  <input type="text" id="inputDescription" class="form-control" placeholder="Enter description" autofocus>
+                    <label for="inputPopup" class="flc-myobEditor-popupLabel"></label>
+                    <input type="text" id="inputPopup" class="flc-myobEditor-popupInput form-control" required autofocus>
 
-                  <button class="btn btn-lg btn-primary btn-block fl-myob-saveBtn" type="submit">Save button</button>
+                    <label for="inputDescription" class="flc-myobEditor-descriptionLabel"></label>
+                    <input type="text" id="inputDescription" class="flc-myobEditor-descriptionInput form-control" autofocus>
+
+                    <button class="flc-myobEditor-saveButton btn btn-lg btn-primary btn-block fl-myob-saveBtn"></button>
                 </form>
 
             </div>

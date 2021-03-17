@@ -62,7 +62,7 @@
                 buttonData: null,
                 popupText: null,
                 description: null,
-                fullScreen: null // TODO: Add into UI
+                fullScreen: false // TODO: Add into UI
             }
         },
 
@@ -190,6 +190,10 @@
         },
 
         listeners: {
+            "onCreate.setupButtonDef": {
+                funcName: "gpii.makeYourOwnButtonEditor.setupButtonDef",
+                args: "{that}"
+            },
             "onCreate.addSaveClickHandler": {
                 this: "{that}.dom.saveButton",
                 method: "click",
@@ -228,6 +232,12 @@
 
         dataLabelEl.text(typeLabelStr);
         dataInputEl.attr("placeholder", typePlaceholderStr);
+    };
+
+    gpii.makeYourOwnButtonEditor.setupButtonDef = function (that) {
+        if (that.options.buttonDef) {
+            that.applier.change("buttonDef", that.options.buttonDef);
+        };
     };
 
 })(fluid);

@@ -313,10 +313,27 @@ fluid.defaults("gpii.app", {
                 }
             }
         },
+        // This dialog doesn't belong here, it'll be opened from the morphicSettingsEditor.
+        // This is just for testing purposes
         makeYourOwnButtonDialog: {
             type: "gpii.app.makeYourOwnButtonDialog",
+            //createOnEvent: "onOpenMYOBDialog",
             createOnEvent: "onPSPPrerequisitesReady"
-            //createOnEvent: "onOpenMYOBDialog"
+            //
+            // When providing the buttonsDef, the dialog will take the data
+            // so the user can edit the button.
+            //
+            // options: {
+            //     buttonDef: {
+            //         "buttonId": "MakeYourOwn",
+            //         "buttonName": "Launch Notepad",
+            //         "buttonType": "APP",
+            //         "buttonData": "C:\\Windows\\system32\\notepad.exe",
+            //         "fullScreen": true,
+            //         "popupText": "<p>Launch the Notepad application.</p>",
+            //         "description": "The full description of the button..."
+            //     }
+            // }
         },
         morphicSettingsEditor: {
             type: "gpii.app.morphicSettingsEditor",

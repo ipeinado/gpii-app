@@ -22,7 +22,9 @@
     // TODO: Add i18n support
 
     jQuery(function () {
-        gpii.makeYourOwnButtonEditor(".fl-dialog", {});
+        gpii.makeYourOwnButtonEditor(".fl-dialog", {
+            buttonDef: windowInitialParams.buttonDef
+        });
     });
 
 })(fluid);

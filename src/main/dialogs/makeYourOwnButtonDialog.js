@@ -26,6 +26,8 @@ var gpii = fluid.registerNamespace("gpii");
 fluid.defaults("gpii.app.makeYourOwnButtonDialog", {
     gradeNames: ["gpii.app.dialog", "gpii.app.centeredDialog"],
 
+    buttonDef: null,
+
     config: {
         fileSuffixPath: "makeYourOwnButtonDialog/index.html",
         attrs: {
@@ -40,6 +42,10 @@ fluid.defaults("gpii.app.makeYourOwnButtonDialog", {
             maximizable: true,
             autoHideMenuBar: true,
             titleBarStyle: "default",
+        },
+
+        params: {
+            buttonDef: "{that}.options.buttonDef"
         }
     },
 

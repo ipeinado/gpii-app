@@ -29,8 +29,8 @@ fluid.defaults("gpii.app.makeYourOwnButtonDialog", {
     config: {
         fileSuffixPath: "makeYourOwnButtonDialog/index.html",
         attrs: {
-            width: 600,
-            height: 400,
+            width: 380,
+            height: 680,
             alwaysOnTop: true,
             frame: true,
             resizable: true,

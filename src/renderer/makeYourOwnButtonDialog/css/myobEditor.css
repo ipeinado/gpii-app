@@ -1,0 +1,17 @@
+.fl-btn-makeYourOwnButtonEditor {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 76px;
+    width: 76px;
+}
+
+.fl-btn-makeYourOwnButtonEditor-label {
+    font-size: 13px;
+    line-height: 1.2em;
+}
+
+.fl-myob-saveBtn {
+    max-width: fit-content;
+}

@@ -21,7 +21,7 @@
     /**
      * Represents the controller for the settings editor.
      */
-    fluid.defaults("gpii.morphicSettingsEditor", {
+    fluid.defaults("gpii.makeYourOwnButtonEditor", {
         gradeNames: ["fluid.viewComponent"]
     });
 

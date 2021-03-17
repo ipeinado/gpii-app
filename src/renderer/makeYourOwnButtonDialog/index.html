@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="../common/css/dialog.css">
         <link rel="stylesheet" href="../common/css/titlebar.css">
         <link rel="stylesheet" href="../qss/css/qss.css">
+        <link rel="stylesheet" href="./css/myobEditor.css">
 
         <script type="text/javascript" src="../../../node_modules/infusion/src/lib/jquery/core/js/jquery.js"></script>
         <script type="text/javascript" src="../../../node_modules/infusion/dist/infusion-all.js"></script>
@@ -25,7 +26,32 @@
 
     <body style="overflow: auto;">
         <div class="fl-dialog">
-            <h1>Make Your Own Button</h1>
+            <div class="container">
+                <h2>Make Your Own Button</h2>
+
+                <div class="fl-qss-button fl-focusable fl-qss-largeButton fl-qss-btnId-MakeYourOwn fl-qss-settingButton fl-btn-makeYourOwnButtonEditor">
+                  <div class="flc-qss-btnImage fl-qss-btnImage" style="display: none;"></div>
+                  <span class="flc-qss-btnLabel fl-qss-btnLabel fl-btn-makeYourOwnButtonEditor-label">My first Own Button</span>
+                  <div class="flc-qss-btnCaption fl-qss-btnCaption"></div>
+                </div>
+
+                <form>
+                  <label for="inputName">Name</label>
+                  <input type="text" id="inputName" class="form-control" placeholder="Enter name for button" required autofocus>
+
+                  <label for="inputData">URL address</label>
+                  <input type="text" id="inputData" class="form-control" placeholder="Enter address of the webpage" required autofocus>
+
+                  <label for="inputPopup">Popup text</label>
+                  <input type="text" id="inputPopup" class="form-control" placeholder="Enter Popup Text" required autofocus>
+
+                  <label for="inputDescription">Description</label>
+                  <input type="text" id="inputDescription" class="form-control" placeholder="Enter description" autofocus>
+
+                  <button class="btn btn-lg btn-primary btn-block fl-myob-saveBtn" type="submit">Save button</button>
+                </form>
+
+            </div>
         </div>
     </body>
 

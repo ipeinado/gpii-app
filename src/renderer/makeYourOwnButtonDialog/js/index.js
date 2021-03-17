@@ -24,4 +24,5 @@
     jQuery(function () {
         gpii.makeYourOwnButtonEditor(".fl-dialog", {});
     });
+
 })(fluid);

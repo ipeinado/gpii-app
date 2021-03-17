@@ -42,6 +42,28 @@ fluid.defaults("gpii.app.makeYourOwnButtonDialog", {
             titleBarStyle: "default",
         }
     },
+
+    components: {
+        channelListener: {
+            type: "gpii.app.channelListener",
+            options: {
+                events: {
+                    onButtonCreated: null
+                },
+                listeners: {
+                    "onButtonCreated.propagate": {
+                        func: "{makeYourOwnButtonDialog}.events.onButtonCreated.fire",
+                        args: "{arguments}.0"
+                    }
+                }
+            }
+        }
+    },
+
+    events: {
+        onButtonCreated: null
+    },
+
     listeners: {
         "onCreate.show": {
             func: "{that}.show"
@@ -49,8 +71,13 @@ fluid.defaults("gpii.app.makeYourOwnButtonDialog", {
         "onCreate.debug": {
             funcName: "gpii.app.makeYourOwnButtonDialog.debug",
             args: "{that}"
+        },
+        "onButtonCreated.debug": {
+            funcName: "console.log",
+            args: ["## Button created: ", "{arguments}.0"]
         }
     }
+
 });
 
 gpii.app.makeYourOwnButtonDialog.debug = function (that) {

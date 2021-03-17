@@ -58,7 +58,7 @@
             buttonDef: {
                 buttonId: "MakeYourOwn",
                 buttonName: null,
-                buttonType: null,
+                buttonType: "WEB",
                 buttonData: null,
                 popupText: null,
                 description: null,
@@ -100,6 +100,11 @@
 
         bindings: {
             // selector : model
+            nameInput: "buttonDef.buttonName",
+            typeInput: "buttonDef.buttonType",
+            dataInput: "buttonDef.buttonData",
+            popupInput: "buttonDef.popupText",
+            descriptionInput: "buttonDef.description"
         },
 
         modelListeners: {
@@ -163,9 +168,66 @@
                 this: "{that}.dom.saveButton",
                 method: "text",
                 args: "{that}.model.messages.saveButtonLabel"
+            },
+
+            // Button type switch
+            "buttonDef.buttonType": {
+                funcName: "gpii.makeYourOwnButtonEditor.switchType",
+                args: ["{that}", "{change}.value"]
+            },
+
+            // Button name update - that updates button preview
+            "buttonDef.buttonName": {
+                this: "{that}.dom.btnPreviewLabel",
+                method: "text",
+                args: "{that}.model.buttonDef.buttonName"
+            }
+        },
+
+        events: {
+            onSaveClick: null,
+            onButtonCreated: null
+        },
+
+        listeners: {
+            "onCreate.addSaveClickHandler": {
+                this: "{that}.dom.saveButton",
+                method: "click",
+                args: "{that}.events.onSaveClick.fire"
+            },
+            "onSaveClick.notifyMainProcess": {
+                func: "{channelNotifier}.events.onButtonCreated.fire",
+                args: "{that}.model.buttonDef"
+            }
+        },
+
+        components: {
+            channelNotifier: {
+                type: "gpii.psp.channelNotifier",
+                options: {
+                    events: {
+                        onButtonCreated: null
+                    }
+                }
             }
         }
 
     });
+
+    gpii.makeYourOwnButtonEditor.switchType = function (that, type) {
+        var typeLabelStr = (type === "WEB")?
+            that.model.messages.dataLabelWeb:
+            that.model.messages.dataLabelApp;
+
+        var typePlaceholderStr = (type === "WEB")?
+            that.model.messages.dataPlaceholderWeb:
+            that.model.messages.dataPlaceholderApp;
+
+        var dataLabelEl = gpii.psp.widgetGradeToSelectorName(that.dom, "gpii.makeYourOwnButtonEditor.dataLabel");
+        var dataInputEl = gpii.psp.widgetGradeToSelectorName(that.dom, "gpii.makeYourOwnButtonEditor.dataInput");
+
+        dataLabelEl.text(typeLabelStr);
+        dataInputEl.attr("placeholder", typePlaceholderStr);
+    };
 
 })(fluid);

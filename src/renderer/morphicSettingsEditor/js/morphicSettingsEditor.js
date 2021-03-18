@@ -144,10 +144,12 @@
                 method: "click",
                 args: "{that}.events.onOpenMYOBDialog.fire"
             },
-            "onOpenMYOBDialog.debug": {
-                funcName: "console.log",
-                args: ["#### onOpenMYOBDialog fired, args: ", "{arguments}.0"]
-            },
+            // TODO: Useful to debug work on opening myobDialog and passing a buttonDef,
+            // remove when that's implemented.
+            // "onOpenMYOBDialog.debug": {
+            //     funcName: "console.log",
+            //     args: ["#### onOpenMYOBDialog fired, args: ", "{arguments}.0"]
+            // },
             "onOpenMYOBDialog.notifyMainProcess": {
                 funcName: "{channelNotifier}.events.onOpenMYOBDialog.fire",
                 args: ["{arguments}.0"]

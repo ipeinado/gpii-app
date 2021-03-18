@@ -29,7 +29,7 @@
                        "</div>",
             containerClassPrefix: "fl-qss-button"
         },
-        
+
         markup: "<span class=\"flc-qss-btnLabel fl-qss-btnLabel\"></span>",
 
         invokers: {
@@ -93,7 +93,7 @@
             newSettings.push(buttonName);
         });
         return newSettings;
-    }; 
+    };
 
     gpii.morphicSettingsEditor.qss.getHandlerType = function (that, setting) {
         if ((typeof(setting) === "string") && (setting === "||")) {
@@ -125,6 +125,7 @@
         },
 
         selectors: {
+            openMYOBButton: ".flc-morphicSettingsEditor-myobButton",
             buttonList: ".flc-quickSetStrip-main",
             morePanelList: ".flc-quickSetStrip-more-button-grid",
             movables: ".fl-qss-button",
@@ -133,10 +134,27 @@
             columns: ".flc-quickSetStrip-main,.flc-quickSetStrip-more-button-grid"
         },
 
-        listeners: {
-            "afterMove.reorderButtons": "gpii.morphicSettingsEditor.afterButtonMove"
+        events: {
+            onOpenMYOBDialog: null
         },
 
+        listeners: {
+            "onCreate.addMYOBClickHandler": {
+                this: "{that}.dom.openMYOBButton",
+                method: "click",
+                args: "{that}.events.onOpenMYOBDialog.fire"
+            },
+            "onOpenMYOBDialog.debug": {
+                funcName: "console.log",
+                args: ["#### onOpenMYOBDialog fired, args: ", "{arguments}.0"]
+            },
+            "onOpenMYOBDialog.notifyMainProcess": {
+                funcName: "{channelNotifier}.events.onOpenMYOBDialog.fire",
+                args: ["{arguments}.0"]
+            },
+
+            "afterMove.reorderButtons": "gpii.morphicSettingsEditor.afterButtonMove"
+        },
 
         components: {
             qss: {
@@ -167,6 +185,14 @@
                         }
                     },
                     handlerType: " gpii.morphicSettingsEditor.qss.getHandlerType"
+                }
+            },
+            channelNotifier: {
+                type: "gpii.psp.channelNotifier",
+                options: {
+                    events: {
+                        onOpenMYOBDialog: null
+                    }
                 }
             }
         }

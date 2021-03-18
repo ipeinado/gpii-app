@@ -27,7 +27,6 @@ require("./common/ws.js");
 require("./dialogs/dialogManager.js");
 require("./dialogs/captureToolDialog.js");
 require("./dialogs/morphicSettingsEditor.js");
-require("./dialogs/makeYourOwnButtonDialog.js");
 require("./storage.js");
 require("./factsManager.js");
 require("./gpiiConnector.js");
@@ -312,28 +311,6 @@ fluid.defaults("gpii.app", {
                     preferences: "{pspChannel}.model.preferences"
                 }
             }
-        },
-        // This dialog doesn't belong here, it'll be opened from the morphicSettingsEditor.
-        // This is just for testing purposes
-        makeYourOwnButtonDialog: {
-            type: "gpii.app.makeYourOwnButtonDialog",
-            //createOnEvent: "onOpenMYOBDialog",
-            createOnEvent: "onPSPPrerequisitesReady"
-            //
-            // When providing the buttonsDef, the dialog will take the data
-            // so the user can edit the button.
-            //
-            // options: {
-            //     buttonDef: {
-            //         "buttonId": "MakeYourOwn",
-            //         "buttonName": "Launch Notepad",
-            //         "buttonType": "APP",
-            //         "buttonData": "C:\\Windows\\system32\\notepad.exe",
-            //         "fullScreen": true,
-            //         "popupText": "<p>Launch the Notepad application.</p>",
-            //         "description": "The full description of the button..."
-            //     }
-            // }
         },
         morphicSettingsEditor: {
             type: "gpii.app.morphicSettingsEditor",

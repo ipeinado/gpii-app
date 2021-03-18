@@ -80,7 +80,7 @@ fluid.defaults("gpii.app.makeYourOwnButtonDialog", {
         },
         "onButtonCreated.debug": {
             funcName: "console.log",
-            args: ["## Button created: ", "{arguments}.0"]
+            args: ["## makeYourOwnButtonDialog - button created: ", "{arguments}.0"]
         }
     }
 

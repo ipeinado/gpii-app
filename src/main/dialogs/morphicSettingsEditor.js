@@ -29,6 +29,7 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
 
     buttonList: null,
     morePanelList: null,
+    supportedButtonsList: null,
 
     config: {
         fileSuffixPath: "morphicSettingsEditor/index.html",
@@ -47,7 +48,8 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
         },
         params: {
             buttonList: "{that}.options.buttonList",
-            morePanelList: "{that}.options.morePanelList"
+            morePanelList: "{that}.options.morePanelList",
+            supportedButtonsList: "{that}.options.supportedButtonsList"
         }
     },
 
@@ -119,8 +121,8 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
 
 gpii.app.morphicSettingsEditor.debug = function (that) {
     that.dialog.webContents.once("dom-ready", function () {
-        console.log("#### it worked ");
-    })
+        console.log("#### it worked - supportedButtonsList: ", that.options.supportedButtonsList);
+    });
 };
 
 gpii.app.morphicSettingsEditor.destroyMYOBDialog = function (that) {

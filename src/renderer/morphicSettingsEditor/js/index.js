@@ -20,13 +20,13 @@
     var windowInitialParams = electron.remote.getCurrentWindow().params;
 
     // TODO: Add i18n support
-
     jQuery(function () {
-      gpii.morphicSettingsEditor(".fl-dialog", {
-        model: {
-          buttonList: windowInitialParams.buttonList,
-          morePanelList: windowInitialParams.morePanelList
-        }
-      });
+        gpii.morphicSettingsEditor(".fl-dialog", {
+            model: {
+                buttonList: windowInitialParams.buttonList,
+                morePanelList: windowInitialParams.morePanelList,
+                supportedButtonsList: windowInitialParams.supportedButtonsList
+            }
+        });
     });
 })(fluid);

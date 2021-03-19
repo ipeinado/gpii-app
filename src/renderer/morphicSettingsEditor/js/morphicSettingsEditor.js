@@ -77,7 +77,7 @@
         }
     });
 
-    gpii.morphicSettingsEditor.qss.filterSettings = function(settings) {
+    gpii.morphicSettingsEditor.qss.filterSettings = function (settings) {
         console.log(settings);
         var newSettings = [];
         fluid.each(settings, function(item, key) {
@@ -103,13 +103,13 @@
         }
     };
 
-    gpii.morphicSettingsEditor.afterButtonMove = function(item, position, movables) {
-        console.log(movables);
+    gpii.morphicSettingsEditor.afterButtonMove = function (item, position, movables) {
+        console.log("## afterButtonMove - movables: ", movables);
     };
 
-    gpii.morphicSettingsEditor.testFunction = function(variables) {
-        console.log(variables);
-    }
+    gpii.morphicSettingsEditor.testFunction = function (variables) {
+        console.log("## testFunction - variables: ", variables);
+    };
 
     /**
      * Represents the controller for the settings editor.
@@ -121,7 +121,12 @@
 
         model: {
             buttonList: "{that}.options.buttonList",
-            morePanelList: "{that}.options.morePanelList"
+            morePanelList: "{that}.options.morePanelList",
+            // supportedButtonsList may include buttons that are already part of the
+            // buttonList or the morePanelList.
+            // TODO: We must ensure we don't show duplicated buttons to the users
+            // when moving among the main quickstrip or the more panel.
+            supportedButtonsList: "{that}.options.supportedButtonsList"
         },
 
         selectors: {

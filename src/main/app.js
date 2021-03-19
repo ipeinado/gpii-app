@@ -317,7 +317,8 @@ fluid.defaults("gpii.app", {
             createOnEvent: "onOpenMorphicEditor",
             options: {
                 buttonList: "{configurationHandler}.options.siteConfig.qss.buttonList",
-                morePanelList: "{configurationHandler}.options.siteConfig.qss.morePanelList"
+                morePanelList: "{configurationHandler}.options.siteConfig.qss.morePanelList",
+                supportedButtonsList: "@expand:gpii.app.getSupportedButtonsList()"
             }
         },
         diagnosticsCollector: {

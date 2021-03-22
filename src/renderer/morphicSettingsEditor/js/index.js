@@ -19,14 +19,27 @@
     var electron = require("electron");
     var windowInitialParams = electron.remote.getCurrentWindow().params;
 
-    // TODO: Add i18n support
-    jQuery(function () {
-        gpii.morphicSettingsEditor(".fl-dialog", {
-            model: {
-                buttonList: windowInitialParams.buttonList,
-                morePanelList: windowInitialParams.morePanelList,
-                supportedButtonsList: windowInitialParams.supportedButtonsList
+    /**
+     * Wrapper that enables translations for the `gpii.makeYourOwnButtonEditor` component.
+     */
+    fluid.defaults("gpii.psp.translatedMorphicSettingsEditor", {
+        gradeNames: ["gpii.psp.messageBundles", "fluid.viewComponent"],
+        components: {
+            morphicSettingsEditor: {
+                type: "gpii.psp.morphicSettingsEditor",
+                container: "{translatedMorphicSettingsEditor}.container",
+                options: {
+                    model: {
+                        buttonList: windowInitialParams.buttonList,
+                        morePanelList: windowInitialParams.morePanelList,
+                        supportedButtonsList: windowInitialParams.supportedButtonsList
+                    }
+                }
             }
-        });
+        }
+    });
+
+    jQuery(function () {
+        gpii.psp.translatedMorphicSettingsEditor(".fl-dialog");
     });
 })(fluid);

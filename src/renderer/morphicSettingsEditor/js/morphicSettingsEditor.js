@@ -21,7 +21,7 @@
     /**
      * Grade creates to be used for rendering the QSS strip and `More panel` buttons.
      */
-    fluid.defaults("gpii.morphicSettingsEditor.repeaterInList", {
+    fluid.defaults("gpii.psp.morphicSettingsEditor.repeaterInList", {
         gradeNames: ["gpii.psp.repeater"],
 
         dynamicContainerMarkup: {
@@ -34,13 +34,13 @@
 
         invokers: {
             getHandlerType: {
-                funcName: "gpii.morphicSettingsEditor.qss.getHandlerType",
+                funcName: "gpii.psp.morphicSettingsEditor.qss.getHandlerType",
                 args: ["that", "{arguments}.0"]
             }
         }
     });
 
-    fluid.defaults("gpii.morphicSettingsEditor.qss.buttonPresenter", {
+    fluid.defaults("gpii.psp.morphicSettingsEditor.qss.buttonPresenter", {
         gradeNames: ["fluid.viewComponent"],
         model: {
             item: ""
@@ -60,7 +60,7 @@
         }
     });
 
-    fluid.defaults("gpii.morphicSettingsEditor.qss.separatorButtonPresenter", {
+    fluid.defaults("gpii.psp.morphicSettingsEditor.qss.separatorButtonPresenter", {
         gradeNames: ["fluid.viewComponent"],
         model: {
             item: ""
@@ -77,7 +77,7 @@
         }
     });
 
-    gpii.morphicSettingsEditor.qss.filterSettings = function (settings) {
+    gpii.psp.morphicSettingsEditor.qss.filterSettings = function (settings) {
         console.log(settings);
         var newSettings = [];
         fluid.each(settings, function(item, key) {
@@ -95,26 +95,26 @@
         return newSettings;
     };
 
-    gpii.morphicSettingsEditor.qss.getHandlerType = function (that, setting) {
+    gpii.psp.morphicSettingsEditor.qss.getHandlerType = function (that, setting) {
         if ((typeof(setting) === "string") && (setting === "||")) {
-            return "gpii.morphicSettingsEditor.qss.separatorButtonPresenter";
+            return "gpii.psp.morphicSettingsEditor.qss.separatorButtonPresenter";
         } else {
-            return "gpii.morphicSettingsEditor.qss.buttonPresenter";
+            return "gpii.psp.morphicSettingsEditor.qss.buttonPresenter";
         }
     };
 
-    gpii.morphicSettingsEditor.afterButtonMove = function (item, position, movables) {
+    gpii.psp.morphicSettingsEditor.afterButtonMove = function (item, position, movables) {
         console.log("## afterButtonMove - movables: ", movables);
     };
 
-    gpii.morphicSettingsEditor.testFunction = function (variables) {
+    gpii.psp.morphicSettingsEditor.testFunction = function (variables) {
         console.log("## testFunction - variables: ", variables);
     };
 
     /**
      * Represents the controller for the settings editor.
      */
-    fluid.defaults("gpii.morphicSettingsEditor", {
+    fluid.defaults("gpii.psp.morphicSettingsEditor", {
         gradeNames: ["fluid.reorderer", "fluid.viewComponent"],
 
         layoutHandler: "fluid.moduleLayoutHandler",
@@ -126,7 +126,10 @@
             // buttonList or the morePanelList.
             // TODO: We must ensure we don't show duplicated buttons to the users
             // when moving among the main quickstrip or the more panel.
-            supportedButtonsList: "{that}.options.supportedButtonsList"
+            supportedButtonsList: "{that}.options.supportedButtonsList",
+            messages: {
+                // translatable strings go here
+            }
         },
 
         selectors: {
@@ -160,38 +163,38 @@
                 args: ["{arguments}.0"]
             },
 
-            "afterMove.reorderButtons": "gpii.morphicSettingsEditor.afterButtonMove"
+            "afterMove.reorderButtons": "gpii.psp.morphicSettingsEditor.afterButtonMove"
         },
 
         components: {
             qss: {
-                type: "gpii.morphicSettingsEditor.repeaterInList",
+                type: "gpii.psp.morphicSettingsEditor.repeaterInList",
                 container: "{that}.dom.buttonList",
                 options: {
                     model: {
                         items: {
                             expander: {
-                                func: "gpii.morphicSettingsEditor.qss.filterSettings",
+                                func: "gpii.psp.morphicSettingsEditor.qss.filterSettings",
                                 args: ["{morphicSettingsEditor}.model.buttonList"]
                             }
                         }
                     },
-                    handlerType: " gpii.morphicSettingsEditor.qss.getHandlerType"
+                    handlerType: " gpii.psp.morphicSettingsEditor.qss.getHandlerType"
                 }
             },
             morePanel: {
-                type: "gpii.morphicSettingsEditor.repeaterInList",
+                type: "gpii.psp.morphicSettingsEditor.repeaterInList",
                 container: "{that}.dom.morePanelList",
                 options: {
                     model: {
                         items: {
                             expander: {
-                                func: "gpii.morphicSettingsEditor.qss.filterSettings",
+                                func: "gpii.psp.morphicSettingsEditor.qss.filterSettings",
                                 args: ["{morphicSettingsEditor}.model.morePanelList"]
                             }
                         }
                     },
-                    handlerType: " gpii.morphicSettingsEditor.qss.getHandlerType"
+                    handlerType: " gpii.psp.morphicSettingsEditor.qss.getHandlerType"
                 }
             },
             channelNotifier: {

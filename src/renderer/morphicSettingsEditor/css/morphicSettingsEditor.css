@@ -3,6 +3,7 @@
     height: auto;
     border-bottom: 16px solid #333;
     padding-top: 16px;
+    justify-content: flex-start;
 }
 
 .flc-quickSetStrip-main {
@@ -32,4 +33,19 @@
 
 .fl-reorderer-movable-dragging {
     opacity: 0.5;
+}
+
+.flc-buttonCatalog-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items:  center;
+}
+
+.flc-buttonCatalog-buttonList {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
 }

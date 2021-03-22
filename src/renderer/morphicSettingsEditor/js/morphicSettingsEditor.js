@@ -133,6 +133,7 @@
             openMYOBButton: ".flc-morphicSettingsEditor-myobButton",
             buttonList: ".flc-quickSetStrip-main",
             morePanelList: ".flc-quickSetStrip-more-button-grid",
+            buttonCatalog: ".flc-buttonCatalog-buttonList",
             movables: ".fl-qss-button",
             dropTargets: ["{that}.dom.buttonList", "{that}.dom.morePanelList"],
             modules: ".fl-qss-button",
@@ -191,7 +192,23 @@
                             }
                         }
                     },
-                    handlerType: " gpii.morphicSettingsEditor.qss.getHandlerType"
+                    handlerType: "gpii.morphicSettingsEditor.qss.getHandlerType"
+                }
+            },
+            buttonCatalog: {
+                type: "gpii.psp.repeater",
+                container: "{that}.dom.buttonCatalog",
+                options: {
+                    model: {
+                        items: "{morphicSettingsEditor}.model.supportedButtonsList"
+                    },
+                    dynamicContainerMarkup: {
+                        container:            "<div class=\"cacafiti\"></div>",
+                        // TODO rename to containerClassTpl
+                        containerClassPrefix: "pulcinello" // preferably altered by the implementor
+                    },
+                    markup: "<span class=\"flc-qss-btnLabel fl-qss-btnLabel\"></span>",
+                    handlerType: "gpii.morphicSettingsEditor.qss.buttonPresenter"
                 }
             },
             channelNotifier: {

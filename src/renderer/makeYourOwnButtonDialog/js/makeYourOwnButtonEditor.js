@@ -21,38 +21,38 @@
     /**
      * Represents the controller for the settings editor.
      */
-    fluid.defaults("gpii.makeYourOwnButtonEditor", {
+    fluid.defaults("gpii.psp.makeYourOwnButtonEditor", {
         gradeNames: ["fluid.viewComponent", "gpii.binder.bindOnCreate"],
 
         model: {
-            // TODO: null all the messages and move them into the corresponding
-            // message bundle.
+            // messages are in message bundle, look for gpii_psp_makeYourOwnButtonEditor
+            // group of strings.
             messages: {
                 // button name
-                nameLabel: "Name",
-                namePlaceholder: "Enter name for button",
+                nameLabel: null,
+                namePlaceholder: null,
 
                 // button type
-                typeLabel: "Button Type",
-                typeOptionWeb: "Button that opens a website",
-                typeOptionApp: "Button that opens an application",
+                typeLabel: null,
+                typeOptionWeb: null,
+                typeOptionApp: null,
 
                 // button data
-                dataLabelWeb: "URL Address",
-                dataLabelApp: "Path to application executable",
-                dataPlaceholderWeb: "Enter address of the webpage",
-                dataPlaceholderApp: "Enter path to application executable",
+                dataLabelWeb: null,
+                dataLabelApp: null,
+                dataPlaceholderWeb: null,
+                dataPlaceholderApp: null,
 
                 // button popup
-                popupLabel: "Popup Text",
-                popupPlaceholder: "Enter Popup Text",
+                popupLabel: null,
+                popupPlaceholder: null,
 
                 // button description
-                descriptionLabel: "Description",
-                descriptionPlaceholder: "Enter description",
+                descriptionLabel: null,
+                descriptionPlaceholder: null,
 
                 // save button
-                saveButtonLabel: "Save button"
+                saveButtonLabel: null
             },
 
             buttonDef: {
@@ -172,7 +172,7 @@
 
             // Button type switch
             "buttonDef.buttonType": {
-                funcName: "gpii.makeYourOwnButtonEditor.switchType",
+                funcName: "gpii.psp.makeYourOwnButtonEditor.switchType",
                 args: ["{that}", "{change}.value"]
             },
 
@@ -191,7 +191,7 @@
 
         listeners: {
             "onCreate.setupButtonDef": {
-                funcName: "gpii.makeYourOwnButtonEditor.setupButtonDef",
+                funcName: "gpii.psp.makeYourOwnButtonEditor.setupButtonDef",
                 args: "{that}"
             },
             "onCreate.addSaveClickHandler": {
@@ -218,7 +218,7 @@
 
     });
 
-    gpii.makeYourOwnButtonEditor.switchType = function (that, type) {
+    gpii.psp.makeYourOwnButtonEditor.switchType = function (that, type) {
         var typeLabelStr = (type === "WEB")?
             that.model.messages.dataLabelWeb:
             that.model.messages.dataLabelApp;
@@ -227,14 +227,14 @@
             that.model.messages.dataPlaceholderWeb:
             that.model.messages.dataPlaceholderApp;
 
-        var dataLabelEl = gpii.psp.widgetGradeToSelectorName(that.dom, "gpii.makeYourOwnButtonEditor.dataLabel");
-        var dataInputEl = gpii.psp.widgetGradeToSelectorName(that.dom, "gpii.makeYourOwnButtonEditor.dataInput");
+        var dataLabelEl = gpii.psp.widgetGradeToSelectorName(that.dom, "gpii.psp.makeYourOwnButtonEditor.dataLabel");
+        var dataInputEl = gpii.psp.widgetGradeToSelectorName(that.dom, "gpii.psp.makeYourOwnButtonEditor.dataInput");
 
         dataLabelEl.text(typeLabelStr);
         dataInputEl.attr("placeholder", typePlaceholderStr);
     };
 
-    gpii.makeYourOwnButtonEditor.setupButtonDef = function (that) {
+    gpii.psp.makeYourOwnButtonEditor.setupButtonDef = function (that) {
         if (that.options.buttonDef) {
             that.applier.change("buttonDef", that.options.buttonDef);
         };

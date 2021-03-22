@@ -24,6 +24,22 @@
     "gpii_psp_aboutDialog_morphicHome": "Go to Morphic home",
     "gpii_psp_aboutDialog_submitSuggestions": "Submit suggestions",
 
+    "gpii_psp_makeYourOwnButtonEditor_nameLabel": "Name",
+    "gpii_psp_makeYourOwnButtonEditor_namePlaceholder": "Enter name for button",
+    "gpii_psp_makeYourOwnButtonEditor_typeLabel": "Button Type",
+    "gpii_psp_makeYourOwnButtonEditor_typeOptionWeb": "Button that opens a website",
+    "gpii_psp_makeYourOwnButtonEditor_typeOptionApp": "Button that opens an application",
+    "gpii_psp_makeYourOwnButtonEditor_dataLabelWeb": "URL Address",
+    "gpii_psp_makeYourOwnButtonEditor_dataLabelApp": "Path to application executable",
+    "gpii_psp_makeYourOwnButtonEditor_dataPlaceholderWeb": "Enter address of the webpage",
+    "gpii_psp_makeYourOwnButtonEditor_dataPlaceholderApp": "Enter path to application executable",
+    "gpii_psp_makeYourOwnButtonEditor_popupLabel": "Popup Text",
+    "gpii_psp_makeYourOwnButtonEditor_popupPlaceholder": "Enter Popup Text",
+    "gpii_psp_makeYourOwnButtonEditor_descriptionLabel": "Description",
+    "gpii_psp_makeYourOwnButtonEditor_descriptionPlaceholder": "Enter description",
+    "gpii_psp_makeYourOwnButtonEditor_saveButtonLabel": "Save button",
+
+
     "gpii_qss_toggleButtonPresenter_caption": "[now ON]",
     "gpii_qss_volumeButtonPresenter_caption": "(Audio Muted)",
 

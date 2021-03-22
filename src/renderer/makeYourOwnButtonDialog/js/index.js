@@ -19,12 +19,25 @@
     var electron = require("electron");
     var windowInitialParams = electron.remote.getCurrentWindow().params;
 
-    // TODO: Add i18n support
+    /**
+     * Wrapper that enables translations for the `gpii.makeYourOwnButtonEditor` component.
+     */
+    fluid.defaults("gpii.psp.translatedMYOBDialog", {
+        gradeNames: ["gpii.psp.messageBundles", "fluid.viewComponent"],
+
+        components: {
+            myobDialog: {
+                type: "gpii.psp.makeYourOwnButtonEditor",
+                container: "{translatedMYOBDialog}.container",
+                options: {
+                    buttonDef: windowInitialParams.buttonDef
+                }
+            }
+        }
+    });
 
     jQuery(function () {
-        gpii.makeYourOwnButtonEditor(".fl-dialog", {
-            buttonDef: windowInitialParams.buttonDef
-        });
+        gpii.psp.translatedMYOBDialog(".fl-dialog");
     });
 
 })(fluid);

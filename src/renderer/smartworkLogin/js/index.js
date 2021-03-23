@@ -19,11 +19,30 @@
     var electron = require("electron");
     var windowInitialParams = electron.remote.getCurrentWindow().params;
 
-    // TODO: Add i18n support
+    /**
+     * Wrapper that enables translations for the `gpii.psp.smartworkLogin` component.
+     */
+    fluid.defaults("gpii.psp.translatedSmartworkLogin", {
+        gradeNames: ["gpii.psp.messageBundles", "fluid.viewComponent"],
+        components: {
+            smartworkLogin: {
+                type: "gpii.psp.smartworkLogin",
+                container: "{translatedSmartworkLogin}.container",
+                options: {
+                    smartworkCredentials: windowInitialParams.smartworkCredentials,
+                    // We need to ensure that logoutWarning is set at the very beginning
+                    model: {
+                        messages: {
+                            logoutWarning: "{translatedSmartworkLogin}.model.messages.logoutWarning"
+                        }
+                    }
+                }
+            }
+        }
+    });
 
     jQuery(function () {
-      gpii.smartworkLogin(".fl-dialog", {
-          smartworkCredentials: windowInitialParams.smartworkCredentials
-      });
+        gpii.psp.translatedSmartworkLogin(".fl-dialog");
     });
+
 })(fluid);

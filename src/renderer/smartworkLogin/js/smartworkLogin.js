@@ -21,7 +21,7 @@
     /**
      * Represents the controller for the settings editor.
      */
-    fluid.defaults("gpii.smartworkLogin", {
+    fluid.defaults("gpii.psp.smartworkLogin", {
         gradeNames: ["fluid.viewComponent", "gpii.binder.bindOnCreate"],
 
         // Provided from main process through index.js
@@ -35,19 +35,32 @@
 
             // Translatable strings
             messages: {
-                loginSuccess: "Login succeeded",
-                loginFail: "Invalid Credentials",
-                logoutWarning: "When logging out, the Smartwork credentials will be removed from " +
-                               "your system and you will be keyed out from Morphic",
-                logoutSuccess: "Successfully removed Smartwork credentials from the system"
+                usernameLabel: null,
+                usernamePlaceholder: null,
+
+                passwordLabel: null,
+                passwordPlaceholder: null,
+
+                loginButtonLabel: null,
+                logoutButtonLabel: null,
+
+                loginSuccess: null,
+                loginFail: null,
+                logoutWarning: null,
+                logoutSuccess: null
             }
         },
 
         selectors: {
+            usernameLabel: ".flc-usernameLabel",
             usernameInput: ".flc-username",
+
+            passwordLabel: ".flc-passwordLabel",
             passwordInput: ".flc-password",
+
             loginButton: ".flc-loginBtn",
             logoutButton: ".flc-logoutBtn",
+
             feedbackLabel: ".flc-feedbackLabel",
             progressRing: ".progress-ring"
         },
@@ -72,7 +85,7 @@
         invokers: {
             // TODO: i18n
             setupButtons: {
-                funcName: "gpii.smartworkLogin.setupButtons",
+                funcName: "gpii.psp.smartworkLogin.setupButtons",
                 args: ["{that}"]
             },
 
@@ -242,10 +255,45 @@
             "onLogoutClick.notifiyMainProcess": {
                 funcName: "{that}.channelNotifier.events.onSmartworkLogoutRequest.fire"
             },
+        },
+
+        modelListeners: {
+            "messages.usernameLabel": {
+                this: "{that}.dom.usernameLabel",
+                method: "text",
+                args: "{that}.model.messages.usernameLabel"
+            },
+            "messages.usernamePlaceholder": {
+                this: "{that}.dom.usernameInput",
+                method: "attr",
+                args: ["placeholder", "{that}.model.messages.usernamePlaceholder"]
+            },
+
+            "messages.passwordLabel": {
+                this: "{that}.dom.passwordLabel",
+                method: "text",
+                args: "{that}.model.messages.passwordLabel"
+            },
+            "messages.passwordPlaceholder": {
+                this: "{that}.dom.passwordInput",
+                method: "attr",
+                args: ["placeholder", "{that}.model.messages.passwordPlaceholder"]
+            },
+
+            "messages.loginButtonLabel": {
+                this: "{that}.dom.loginButton",
+                method: "text",
+                args: "{that}.model.messages.loginButtonLabel"
+            },
+            "messages.logoutButtonLabel": {
+                this: "{that}.dom.logoutButton",
+                method: "text",
+                args: "{that}.model.messages.logoutButtonLabel"
+            }
         }
     });
 
-    gpii.smartworkLogin.setupButtons = function (that) {
+    gpii.psp.smartworkLogin.setupButtons = function (that) {
         var isLoggedIntoSmartwork = that.options.smartworkCredentials;
 
         if (isLoggedIntoSmartwork) {

@@ -10,20 +10,20 @@
 
         <script type="text/javascript" src="../../../node_modules/infusion/src/lib/jquery/core/js/jquery.js"></script>
         <script type="text/javascript" src="../../../node_modules/infusion/dist/infusion-all.js"></script>
-
-        <script type="text/javascript" src="../../shared/channelUtils.js"></script>
-        <script type="text/javascript" src="../common/js/channelUtils.js"></script>
+        <script type="text/javascript" src="../../../node_modules/gpii-binder/src/js/binder.js"></script>
 
         <script type="text/javascript" src="../common/js/widgets.js"></script>
         <script type="text/javascript" src="../common/js/titlebar.js"></script>
-
-        <script type="text/javascript" src="../../../node_modules/gpii-binder/src/js/binder.js"></script>
 
         <script type="text/javascript" src="js/smartworkLogin.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
 
         <script type="text/javascript" src="../common/js/utils.js"></script>
         <script type="text/javascript" src="../common/js/channelUtils.js"></script>
+        <script type="text/javascript" src="../../shared/channelUtils.js"></script>
+
+        <script type="text/javascript" src="../../shared/messageBundles.js"></script>
+        <script type="text/javascript" src="../common/js/messageBundles.js"></script>
     </head>
 
     <body>
@@ -32,20 +32,18 @@
                 <div>
                     <img src="../../assets/smartworkLogoColor.png" class="img-fluid smartwork-logo" alt="Smartwork Logo">
                 </div>
-                <div class="form-group" style="max-height: 3em;">
-                    <p class="smartwork-login-form-label" style="padding-top: 1px;">Username</p>
-                    <input type="text" class="flc-username form-control smartwork-logo" placeholder="johndoe@smartwork.eu" value="" style="margin-bottom: 1px;"/>
-                </div>
-                <div class="form-group" style="max-height: 5em;">
-                    <p class="smartwork-login-form-label" style="padding-top: 1px;">Password</p>
-                    <input type="password" class="flc-password form-control smartwork-logo" placeholder="my password" value="" style="margin-bottom: 1px;"/>
-                </div>
-                <div class="form-group">
-                    <input type="submit" class="flc-loginBtn btn" value="Login" />
-                </div>
-                <div class="form-group">
-                    <input type="submit" class="flc-logoutBtn btn" value="Logout" />
-                </div>
+
+                <form>
+                    <label for="usernameInput" class="flc-usernameLabel smartwork-login-form-label" style="padding-top: 1px;"></label>
+                    <input type="text" id="usernameInput" class="flc-username form-control smartwork-logo" value="" style="margin-bottom: 1px;"/>
+
+                    <label for="passwordInput" class="flc-passwordLabel smartwork-login-form-label" style="padding-top: 1px;"></label>
+                    <input type="password" id="passwordInput" class="flc-password form-control smartwork-logo" value="" style="margin-bottom: 1px;"/>
+
+                    <button type="button" class="flc-loginBtn btn btn-lg btn-primary"></button>
+                    <button type="button" class="flc-logoutBtn btn btn-lg btn-primary"></button>
+                </form>
+
                 <div class="progress-ring progress-medium" alt="Login is in progress">
                     <div class="progress-circle"></div>
                     <div class="progress-circle"></div>
@@ -55,7 +53,6 @@
                 </div>
 
                 <p class="flc-feedbackLabel alert smartwork-feedbackLabel"></p>
-
             </div>
         </div>
     </body>

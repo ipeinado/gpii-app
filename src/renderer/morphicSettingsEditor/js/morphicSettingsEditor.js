@@ -77,17 +77,17 @@
         }
     });
 
-    gpii.psp.morphicSettingsEditor.qss.filterSettings = function (settings) {
+    gpii.psp.morphicSettingsEditor.qss.filterSettings = function (morphicSettingsEditor, settings) {
         var newSettings = [];
         fluid.each(settings, function(item, key) {
             var buttonName = "";
-            if (typeof(item) === 'object' ) {
-                if (item.hasOwnProperty('buttonName')) {
-                    buttonName = item['buttonName'];
+            if (typeof(item) === "object" ) {
+                if (item.hasOwnProperty("buttonName")) {
+                    buttonName = item["buttonName"];
                 }
             }
-            if (typeof(item) === 'string') {
-                buttonName = item;
+            if (typeof(item) === "string") {
+                buttonName = morphicSettingsEditor.getButtonTitle(item) || item;
             }
             newSettings.push(buttonName);
         });
@@ -177,6 +177,13 @@
             "afterMove.reorderButtons": "gpii.psp.morphicSettingsEditor.afterButtonMove"
         },
 
+        invokers: {
+            getButtonTitle: {
+                funcName: "gpii.psp.morphicSettingsEditor.getButtonTitle",
+                args: ["{that}.model.buttonCatalog", "{arguments}.0"]
+            }
+        },
+
         components: {
             qss: {
                 type: "gpii.psp.morphicSettingsEditor.repeaterInList",
@@ -186,7 +193,7 @@
                         items: {
                             expander: {
                                 func: "gpii.psp.morphicSettingsEditor.qss.filterSettings",
-                                args: ["{morphicSettingsEditor}.model.buttonList"]
+                                args: ["{morphicSettingsEditor}", "{morphicSettingsEditor}.model.buttonList"]
                             }
                         }
                     },
@@ -201,7 +208,7 @@
                         items: {
                             expander: {
                                 func: "gpii.psp.morphicSettingsEditor.qss.filterSettings",
-                                args: ["{morphicSettingsEditor}.model.morePanelList"]
+                                args: ["{morphicSettingsEditor}", "{morphicSettingsEditor}.model.morePanelList"]
                             }
                         }
                     },
@@ -219,5 +226,13 @@
         }
 
     });
+
+    gpii.psp.morphicSettingsEditor.getButtonTitle = function (buttonCatalog, buttonId) {
+        var button = fluid.find_if(buttonCatalog, function (el) {
+            return (el.id === buttonId)? true : false;
+        });
+
+        return button? button.title: null
+    };
 
 })(fluid);

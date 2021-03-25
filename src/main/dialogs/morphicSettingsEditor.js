@@ -133,8 +133,7 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
 
 gpii.app.morphicSettingsEditor.debug = function (that) {
     that.dialog.webContents.once("dom-ready", function () {
-        console.log("#### it worked - supportedButtonsList: ", that.options.supportedButtonsList);
-        console.log("#### it worked - buttonCatalog: ", that.options.buttonCatalog);
+        console.log("#### morphicSettingsEditor.debug - supportedButtonsList: ", that.options.supportedButtonsList);
     });
 };
 

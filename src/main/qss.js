@@ -901,10 +901,16 @@ gpii.app.qssWrapper.getButtonPosition = function (qss, buttonElemMetrics) {
  */
 gpii.app.qssWrapper.applySettingTranslation = function (qssSettingMessages, setting) {
     var translatedSetting = fluid.copy(setting),
-        message = qssSettingMessages[translatedSetting.messageKey];
+        message = qssSettingMessages[translatedSetting.messageKey],
+        // TODO: Solve this workaround to avoid these kind of settings to be processed
+        // during this step. This is required because we need to provide a translation
+        // for the separator and grid type of buttons from the settings.json in order for them
+        // to be shown in the morphic settings editor
+        path = setting.path,
+        forbiddenPaths = ["grid", "separator"];
 
     // translation of the main settings
-    if (message) {
+    if ((message) && (!forbiddenPaths.includes(path))) {
         translatedSetting.tooltip = message.tooltip;
         translatedSetting.tip = message.tip;
 

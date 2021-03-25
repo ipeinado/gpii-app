@@ -32,7 +32,8 @@
                     model: {
                         buttonList: windowInitialParams.buttonList,
                         morePanelList: windowInitialParams.morePanelList,
-                        supportedButtonsList: windowInitialParams.supportedButtonsList
+                        supportedButtonsList: windowInitialParams.supportedButtonsList,
+                        buttonCatalog: windowInitialParams.buttonCatalog
                     }
                 }
             }

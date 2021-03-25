@@ -17,7 +17,8 @@ var fluid = require("infusion");
 var electron = require("electron");
 
 require("./basic/dialog.js");
-require("./makeYourOwnButtonDialog.js")
+require("./makeYourOwnButtonDialog.js");
+require("../common/utils.js");
 
 var gpii = fluid.registerNamespace("gpii");
 
@@ -30,6 +31,7 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
     buttonList: null,
     morePanelList: null,
     supportedButtonsList: null,
+    buttonCatalog: null,
 
     config: {
         fileSuffixPath: "morphicSettingsEditor/index.html",
@@ -49,7 +51,8 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
         params: {
             buttonList: "{that}.options.buttonList",
             morePanelList: "{that}.options.morePanelList",
-            supportedButtonsList: "{that}.options.supportedButtonsList"
+            supportedButtonsList: "{that}.options.supportedButtonsList",
+            buttonCatalog: "{buttonCatalog}.model.buttonCatalog"
         }
     },
 
@@ -89,7 +92,9 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
             }
             //
             // When providing the buttonsDef option, the dialog will take the data
-            // so the user can edit the button
+            // so the user can edit the button.
+            // We can add a new component of type gpii.app.makeYourOwnButtonDialog
+            // and adding the buttonDef data to the options block
             //
             // options: {
             //     buttonDef: {
@@ -115,16 +120,69 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
                     }
                 }
             }
+        },
+        buttonCatalog: {
+            type: "gpii.app.buttonCatalog",
+            options: {
+                supportedButtonsList: "{morphicSettingsEditor}.options.supportedButtonsList"
+            }
         }
+
     }
 });
 
 gpii.app.morphicSettingsEditor.debug = function (that) {
     that.dialog.webContents.once("dom-ready", function () {
         console.log("#### it worked - supportedButtonsList: ", that.options.supportedButtonsList);
+        console.log("#### it worked - buttonCatalog: ", that.options.buttonCatalog);
     });
 };
 
 gpii.app.morphicSettingsEditor.destroyMYOBDialog = function (that) {
     that.myobDialog.destroy();
+};
+
+// This component provides a button catalog that is used to present the buttons
+// to the user in the morphic settings editor.
+//
+fluid.defaults("gpii.app.buttonCatalog", {
+    gradeNames: ["fluid.modelComponent"],
+
+    supportedButtonsList: [],
+
+    model: {
+        translatedSettingsMessages: "{messageBundles}.model.messages.gpii_app_qss_settings",
+        catalog: []
+    },
+    components: {
+        messageBundles: {
+            type: "gpii.app.messageBundles"
+        }
+    },
+
+    listeners: {
+        "onCreate.generateCatalog": {
+            funcName: "gpii.app.buttonCatalog.generateCatalog",
+            args: ["{that}", "{that}.options.supportedButtonsList"]
+        }
+    }
+});
+
+gpii.app.buttonCatalog.generateCatalog = function (that, buttonList) {
+    var catalog = [];
+
+    fluid.each(buttonList, function (buttonId) {
+        var messageKey = gpii.app.getSupportedButtonMessageKey(buttonId);
+        var messages = that.model.translatedSettingsMessages[messageKey];
+
+        var button = {
+            id: buttonId,
+            description: messages.description,
+            title: messages.title
+        };
+
+        catalog.push(button);
+    });
+
+    that.applier.change("buttonCatalog", catalog);
 };

@@ -78,7 +78,6 @@
     });
 
     gpii.psp.morphicSettingsEditor.qss.filterSettings = function (settings) {
-        console.log(settings);
         var newSettings = [];
         fluid.each(settings, function(item, key) {
             var buttonName = "";
@@ -120,6 +119,8 @@
         layoutHandler: "fluid.moduleLayoutHandler",
 
         model: {
+            // buttonList, morePanelList and supportedButtonsList are arrays of
+            // button ids
             buttonList: "{that}.options.buttonList",
             morePanelList: "{that}.options.morePanelList",
             // supportedButtonsList may include buttons that are already part of the
@@ -127,9 +128,19 @@
             // TODO: We must ensure we don't show duplicated buttons to the users
             // when moving among the main quickstrip or the more panel.
             supportedButtonsList: "{that}.options.supportedButtonsList",
+
             messages: {
                 // translatable strings go here
-            }
+            },
+
+            // Button catalog as an array. Each button has the following information
+            // { id: "button-name", description: "full description", title: "Button title" }
+            //
+            // The id correspond to the same ids that are provided in buttonList,
+            // morePanelList and supportedButtonsList.
+            //
+            // It can be extended to provide more information.
+            buttonCatalog: "{that}.options.buttonCatalog"
         },
 
         selectors: {

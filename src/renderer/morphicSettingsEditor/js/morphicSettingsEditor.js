@@ -181,6 +181,10 @@
             getButtonTitle: {
                 funcName: "gpii.psp.morphicSettingsEditor.getButtonTitle",
                 args: ["{that}.model.buttonCatalog", "{arguments}.0"]
+            },
+            getButtonDescription: {
+                funcName: "gpii.psp.morphicSettingsEditor.getButtonDescription",
+                args: ["{that}.model.buttonCatalog", "{arguments}.0"]
             }
         },
 
@@ -227,12 +231,21 @@
 
     });
 
+    // TODO: Merge these two functions into one
     gpii.psp.morphicSettingsEditor.getButtonTitle = function (buttonCatalog, buttonId) {
         var button = fluid.find_if(buttonCatalog, function (el) {
             return (el.id === buttonId)? true : false;
         });
 
         return button? button.title: null
+    };
+
+    gpii.psp.morphicSettingsEditor.getButtonDescription = function (buttonCatalog, buttonId) {
+        var button = fluid.find_if(buttonCatalog, function (el) {
+            return (el.id === buttonId)? true : false;
+        });
+
+        return button? button.description: null
     };
 
 })(fluid);

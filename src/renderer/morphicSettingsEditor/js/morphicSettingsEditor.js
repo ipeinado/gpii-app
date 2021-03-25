@@ -24,6 +24,10 @@
     fluid.defaults("gpii.morphicSettingsEditor.repeaterInList", {
         gradeNames: ["gpii.psp.repeater"],
 
+        model: {
+            items: []
+        },
+
         dynamicContainerMarkup: {
             container: "<div class=\"%containerClass fl-focusable\">" +
                        "</div>",
@@ -40,11 +44,45 @@
         }
     });
 
+    fluid.defaults("gpii.morphicSettingsEditor.morePanel.rowRenderer", {
+        gradeNames: ["gpii.morphicSettingsEditor.repeaterInList"],
+
+        model: {
+            items: "{that}.model.item"
+        },
+
+        listeners: {
+            "onCreate.logItems": "{that}.logItems"
+        },
+
+        invokers: {
+            logItems: {
+                this: "console",
+                method: "log",
+                args: ["HOLAAAAA", "{that}.model.items"]
+            }
+        }
+    });
+
     fluid.defaults("gpii.morphicSettingsEditor.qss.buttonPresenter", {
         gradeNames: ["fluid.viewComponent"],
+
         model: {
-            item: ""
+            item: {},
         },
+
+        modelRelay: {
+            target: "{that}.model.items"
+        },
+
+        modelRelay: {
+            source: "item",
+            target: "label",
+            singleTransform: {
+                type: "gpii.morphicSettingsEditor.qss.filterSettings"
+            }
+        }, 
+
         selectors: {
             title: ".flc-qss-btnLabel"
         },
@@ -55,16 +93,13 @@
             displayTitle: {
                 this: "{that}.dom.title",
                 method: "text",
-                args: ["{that}.model.item"]
+                args: ["{that}.model.label"]
             }
         }
     });
 
     fluid.defaults("gpii.morphicSettingsEditor.qss.separatorButtonPresenter", {
         gradeNames: ["fluid.viewComponent"],
-        model: {
-            item: ""
-        },
         listeners: {
             "onCreate.addClasses": "{that}.addClasses"
         },
@@ -77,38 +112,86 @@
         }
     });
 
-    gpii.morphicSettingsEditor.qss.filterSettings = function (settings) {
-        console.log(settings);
-        var newSettings = [];
-        fluid.each(settings, function(item, key) {
-            var buttonName = "";
-            if (typeof(item) === 'object' ) {
-                if (item.hasOwnProperty('buttonName')) {
-                    buttonName = item['buttonName'];
-                }
+    fluid.defaults("gpii.morphicSettingsEditor.qss.emptyButtonPresenter", {
+        gradeNames: "fluid.viewComponent",
+        listeners: {
+            "onCreate.addClasses": "{that}.addClasses"
+        },
+        invokers: {
+            addClasses: {
+                this: "{that}.container",
+                method: "addClass",
+                args: ["fl-qss-emptyBtn"]
             }
-            if (typeof(item) === 'string') {
-                buttonName = item;
+        }
+    });
+
+    fluid.defaults("gpii.morphicSettingsEditor.buttonCatalog.buttonPresenter", {
+        gradeNames: "fluid.rendererComponent",
+        selectors: {
+            buttonLabel: ".flc-buttonCatalog-btnLabel",
+            buttonTag: ".flc-buttonCatalog-btnTag",
+            buttonDescription: ".flc-buttonCatalog-btnDescription"
+        },
+        model: {
+            item: {
+                label: "",
+                tag: "",
+                description: ""
             }
-            newSettings.push(buttonName);
-        });
-        return newSettings;
+        },
+        renderOnInit: true,
+        protoTree: {
+            buttonLabel: "${item.label}",
+            buttonTag: "${item.tag}",
+            buttonDescription: "${item.description}"
+        }
+    });
+
+    gpii.morphicSettingsEditor.qss.filterSettings = function (button) {
+        let buttonName = "";
+        if (typeof(button) === 'object' ) {
+            if (button.hasOwnProperty('buttonName')) {
+                buttonName = button['buttonName'];
+            }
+        }
+        if (typeof(button) === 'string') {
+            buttonName = button;
+        }
+        return buttonName;
     };
 
     gpii.morphicSettingsEditor.qss.getHandlerType = function (that, setting) {
+        console.log(setting);
         if ((typeof(setting) === "string") && (setting === "||")) {
-            return "gpii.morphicSettingsEditor.qss.separatorButtonPresenter";
+             return "gpii.morphicSettingsEditor.qss.separatorButtonPresenter";
+        } else if ((typeof(setting) === "string") && (setting === "")) {
+            return "gpii.morphicSettingsEditor.qss.emptyButtonPresenter";
         } else {
             return "gpii.morphicSettingsEditor.qss.buttonPresenter";
-        }
+        } 
     };
 
     gpii.morphicSettingsEditor.afterButtonMove = function (item, position, movables) {
         console.log("## afterButtonMove - movables: ", movables);
+        console.log("## afterButtonMove - position: ", position);
+        console.log('## afterButtonMove - item: ', item);
     };
 
     gpii.morphicSettingsEditor.testFunction = function (variables) {
         console.log("## testFunction - variables: ", variables);
+    };
+
+    gpii.morphicSettingsEditor.fillRow = function(items) {
+        var itemsArray = items.map(itemArray => {
+            let fullRow = Array(8).fill("");
+            if (itemArray) {
+                fullRow = fullRow.map((item, index) => itemArray[index] ? itemArray[index] : item);
+            }
+            return fullRow;
+        });
+        
+        return itemsArray;
     };
 
     /**
@@ -137,7 +220,7 @@
             movables: ".fl-qss-button",
             dropTargets: ["{that}.dom.buttonList", "{that}.dom.morePanelList"],
             modules: ".fl-qss-button",
-            columns: ".flc-quickSetStrip-main,.flc-quickSetStrip-more-button-grid"
+            columns: ".flc-quickSetStrip-main, .fl-quickSetStrip-more-row, .flc-buttonCatalog-buttonContainer"
         },
 
         events: {
@@ -170,47 +253,65 @@
                 container: "{that}.dom.buttonList",
                 options: {
                     model: {
-                        items: {
-                            expander: {
-                                func: "gpii.morphicSettingsEditor.qss.filterSettings",
-                                args: ["{morphicSettingsEditor}.model.buttonList"]
-                            }
-                        }
-                    },
-                    handlerType: " gpii.morphicSettingsEditor.qss.getHandlerType"
+                        items: "{morphicSettingsEditor}.model.buttonList"
+                    }
                 }
             },
-            morePanel: {
+            
+/*             morePanel: {
                 type: "gpii.morphicSettingsEditor.repeaterInList",
+                container: "{that}.dom.morePanelList",
+                options: {
+                    model: {
+                        items: "{morphicSettingsEditor}.model.morePanelList"
+                    }
+                }
+            },  */
+            
+            morePanel: {
+                type: "gpii.psp.repeater",
                 container: "{that}.dom.morePanelList",
                 options: {
                     model: {
                         items: {
                             expander: {
-                                func: "gpii.morphicSettingsEditor.qss.filterSettings",
-                                args: ["{morphicSettingsEditor}.model.morePanelList"]
+                                funcName: "gpii.morphicSettingsEditor.fillRow",
+                                args: "{morphicSettingsEditor}.model.morePanelList"
                             }
                         }
                     },
-                    handlerType: "gpii.morphicSettingsEditor.qss.getHandlerType"
+                    dynamicContainerMarkup: {
+                        container: "<div id=\"%containerClass\" class=\"fl-quickSetStrip-more-row\"></div>",
+                        containerClassPrefix: "flc-qss-more-row-%id"
+                    },
+                    handlerType: "gpii.morphicSettingsEditor.morePanel.rowRenderer"
                 }
             },
+
             buttonCatalog: {
                 type: "gpii.psp.repeater",
                 container: "{that}.dom.buttonCatalog",
                 options: {
                     model: {
-                        items: "{morphicSettingsEditor}.model.supportedButtonsList"
+                        items: [
+                           {label: "test 1", tag: "website", description: "example description for button 1"},
+                           {label: "test 2", tag: "application", description: "example description for button 2"}
+                        ]
                     },
                     dynamicContainerMarkup: {
-                        container:            "<div class=\"cacafiti\"></div>",
-                        // TODO rename to containerClassTpl
-                        containerClassPrefix: "pulcinello" // preferably altered by the implementor
+                        container: "<div class=\"%containerClass\"></div>",
+                        containerClassPrefix: "flc-buttonCatalog-buttonContainer"
                     },
-                    markup: "<span class=\"flc-qss-btnLabel fl-qss-btnLabel\"></span>",
-                    handlerType: "gpii.morphicSettingsEditor.qss.buttonPresenter"
+                    markup: "<div class=\"flc-buttonCatalog-buttonContainer-button\">" + 
+                            "<div class=\"fl-qss-button fl-focusable\">" + 
+                            "<span class=\"flc-buttonCatalog-btnLabel fl-buttonCatalog-btnLabel\">" + 
+                            "</span></div></div><div class=\"flc-buttonCatalog-buttonContainer-content\">" + 
+                            "<div class=\"flc-buttonCatalog-btnTag\"></div>" + 
+                            "<div class=\"flc-buttonCatalog-btnDescription\"></div></div>",
+                    handlerType: "gpii.morphicSettingsEditor.buttonCatalog.buttonPresenter"
                 }
             },
+
             channelNotifier: {
                 type: "gpii.psp.channelNotifier",
                 options: {

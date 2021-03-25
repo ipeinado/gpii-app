@@ -21,7 +21,7 @@
 
     // TODO: Add i18n support
     jQuery(function () {
-        console.log(windowInitialParams.supportedButtonsList);
+        console.log(windowInitialParams.morePanelList);
         gpii.morphicSettingsEditor(".fl-dialog", {
             model: {
                 buttonList: windowInitialParams.buttonList,

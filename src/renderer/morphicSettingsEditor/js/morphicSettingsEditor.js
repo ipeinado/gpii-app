@@ -21,7 +21,7 @@
     /**
      * Grade creates to be used for rendering the QSS strip and `More panel` buttons.
      */
-    fluid.defaults("gpii.morphicSettingsEditor.repeaterInList", {
+    fluid.defaults("gpii.psp.morphicSettingsEditor.repeaterInList", {
         gradeNames: ["gpii.psp.repeater"],
 
         model: {
@@ -38,7 +38,7 @@
 
         invokers: {
             getHandlerType: {
-                funcName: "gpii.morphicSettingsEditor.qss.getHandlerType",
+                funcName: "gpii.psp.morphicSettingsEditor.qss.getHandlerType",
                 args: ["that", "{arguments}.0"]
             }
         }
@@ -86,7 +86,7 @@
         }
     });
 
-    fluid.defaults("gpii.morphicSettingsEditor.qss.separatorButtonPresenter", {
+    fluid.defaults("gpii.psp.morphicSettingsEditor.qss.separatorButtonPresenter", {
         gradeNames: ["fluid.viewComponent"],
         listeners: {
             "onCreate.addClasses": "{that}.addClasses"
@@ -149,7 +149,7 @@
         return buttonName;
     };
 
-    gpii.morphicSettingsEditor.qss.getHandlerType = function (that, setting) {
+    gpii.psp.morphicSettingsEditor.qss.getHandlerType = function (that, setting) {
         if ((typeof(setting) === "string") && (setting === "||")) {
              return "gpii.morphicSettingsEditor.qss.separatorButtonPresenter";
         } else if ((typeof(setting) === "string") && (setting === "")) {
@@ -167,12 +167,12 @@
         const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.]{0,1}[\d]+/g;
         const [index1, length1, column1, totalCols, index2, length2, column2, totalCols2] = [...item.getAttribute("aria-label").match(NUMERIC_REGEXP).map(Number)];
 
-        if (column1 === column2) {
+/*         if (column1 === column2) {
             [models[column1][index1], models[column1][index2]] = [models[column1][index2], models[column1][index1]]
         } else {
             models[column2][index2] = models[column1][index1]
             models[column1].splice(index1);
-        };
+        }; */
 
         const [qssModel, morePanelModel] = [...models];
         console.log("AFTER QSSMODEL", qssModel);
@@ -198,19 +198,34 @@
     /**
      * Represents the controller for the settings editor.
      */
-    fluid.defaults("gpii.morphicSettingsEditor", {
+    fluid.defaults("gpii.psp.morphicSettingsEditor", {
         gradeNames: ["fluid.reorderer", "fluid.viewComponent"],
 
         layoutHandler: "fluid.moduleLayoutHandler",
 
         model: {
+            // buttonList, morePanelList and supportedButtonsList are arrays of
+            // button ids
             buttonList: "{that}.options.buttonList",
             morePanelList: "{that}.options.morePanelList",
             // supportedButtonsList may include buttons that are already part of the
             // buttonList or the morePanelList.
             // TODO: We must ensure we don't show duplicated buttons to the users
             // when moving among the main quickstrip or the more panel.
-            supportedButtonsList: "{that}.options.supportedButtonsList"
+            supportedButtonsList: "{that}.options.supportedButtonsList",
+
+            messages: {
+                // translatable strings go here
+            },
+
+            // Button catalog as an array. Each button has the following information
+            // { id: "button-name", description: "full description", title: "Button title" }
+            //
+            // The id correspond to the same ids that are provided in buttonList,
+            // morePanelList and supportedButtonsList.
+            //
+            // It can be extended to provide more information.
+            buttonCatalog: "{that}.options.buttonCatalog"
         },
 
         selectors: {
@@ -258,7 +273,7 @@
 
         components: {
             qss: {
-                type: "gpii.morphicSettingsEditor.repeaterInList",
+                type: "gpii.psp.morphicSettingsEditor.repeaterInList",
                 container: "{that}.dom.buttonList",
                 options: {
                     model: {
@@ -322,5 +337,22 @@
         }
 
     });
+
+    // TODO: Merge these two functions into one
+    gpii.psp.morphicSettingsEditor.getButtonTitle = function (buttonCatalog, buttonId) {
+        var button = fluid.find_if(buttonCatalog, function (el) {
+            return (el.id === buttonId)? true : false;
+        });
+
+        return button? button.title: null
+    };
+
+    gpii.psp.morphicSettingsEditor.getButtonDescription = function (buttonCatalog, buttonId) {
+        var button = fluid.find_if(buttonCatalog, function (el) {
+            return (el.id === buttonId)? true : false;
+        });
+
+        return button? button.description: null
+    };
 
 })(fluid);

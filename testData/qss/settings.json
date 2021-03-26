@@ -418,7 +418,8 @@
             "type": "separator",
             "title": ""
         },
-        "buttonTypes": ["separator"]
+        "buttonTypes": ["separator"],
+        "messageKey": "morphic-separator"
     }, {
         "id": "separator-visible",
         "path": "separator",
@@ -426,7 +427,8 @@
             "type": "separator",
             "title": ""
         },
-        "buttonTypes": ["separator", "separatorVisible"]
+        "buttonTypes": ["separator", "separatorVisible"],
+        "messageKey": "morphic-separator-visible"
     }, {
         "id": "grid",
         "path": "grid",
@@ -434,7 +436,8 @@
             "type": "grid",
             "title": ""
         },
-        "buttonTypes": ["grid", "grid"]
+        "buttonTypes": ["grid", "grid"],
+        "messageKey": "morphic-grid"
     }, {
         "id": "grid-visible",
         "path": "grid",
@@ -442,7 +445,8 @@
             "type": "grid",
             "title": ""
         },
-        "buttonTypes": ["grid", "gridVisible"]
+        "buttonTypes": ["grid", "gridVisible"],
+        "messageKey": "morphic-grid-visible"
     }, {
         "id": "service-more",
         "path": "more",

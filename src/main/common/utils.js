@@ -455,9 +455,21 @@ gpii.app.filterButtonList = function (siteConfigButtonList, availableButtons) {
     return matchedList.concat(afterList);
 };
 
+// TODO: Add doc
 gpii.app.getSupportedButtonsList = function () {
     var allButtons = fluid.require("%gpii-app/testData/qss/settings.json");
     return fluid.getMembers(allButtons, "id");
+};
+
+
+// TODO: Add doc
+gpii.app.getSupportedButtonMessageKey = function (buttonId) {
+    var allButtons = fluid.require("%gpii-app/testData/qss/settings.json");
+    var button = fluid.find_if(allButtons, function (el) {
+        return (el.id === buttonId)? true: false;
+    });
+
+    return button.messageKey? button.messageKey: "";
 };
 
 

@@ -49,18 +49,6 @@
 
         model: {
             items: "{that}.model.item"
-        },
-
-        listeners: {
-            "onCreate.logItems": "{that}.logItems"
-        },
-
-        invokers: {
-            logItems: {
-                this: "console",
-                method: "log",
-                args: ["HOLAAAAA", "{that}.model.items"]
-            }
         }
     });
 
@@ -162,7 +150,6 @@
     };
 
     gpii.morphicSettingsEditor.qss.getHandlerType = function (that, setting) {
-        console.log(setting);
         if ((typeof(setting) === "string") && (setting === "||")) {
              return "gpii.morphicSettingsEditor.qss.separatorButtonPresenter";
         } else if ((typeof(setting) === "string") && (setting === "")) {
@@ -172,15 +159,29 @@
         } 
     };
 
-    gpii.morphicSettingsEditor.afterButtonMove = function (item, position, movables) {
-        console.log("## afterButtonMove - movables: ", movables);
-        console.log("## afterButtonMove - position: ", position);
-        console.log('## afterButtonMove - item: ', item);
+    gpii.morphicSettingsEditor.afterButtonMove = function (that, item, position, movables) {
+        let models = [that.model.morePanelList, that.model.buttonList];
+
+        console.log("BEFORE:", models);
+        
+        const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.]{0,1}[\d]+/g;
+        const [index1, length1, column1, totalCols, index2, length2, column2, totalCols2] = [...item.getAttribute("aria-label").match(NUMERIC_REGEXP).map(Number)];
+
+        if (column1 === column2) {
+            [models[column1][index1], models[column1][index2]] = [models[column1][index2], models[column1][index1]]
+        } else {
+            models[column2][index2] = models[column1][index1]
+            models[column1].splice(index1);
+        };
+
+        const [qssModel, morePanelModel] = [...models];
+        console.log("AFTER QSSMODEL", qssModel);
+        console.log("ATER MORE PANEL MODEL", morePanelModel);
     };
 
-    gpii.morphicSettingsEditor.testFunction = function (variables) {
-        console.log("## testFunction - variables: ", variables);
-    };
+    gpii.morphicSettingsEditor.updateModels = function(item, position) {
+        console.log("ON MOOOOOVE ITEM:", item);
+    }
 
     gpii.morphicSettingsEditor.fillRow = function(items) {
         var itemsArray = items.map(itemArray => {
@@ -220,11 +221,12 @@
             movables: ".fl-qss-button",
             dropTargets: ["{that}.dom.buttonList", "{that}.dom.morePanelList"],
             modules: ".fl-qss-button",
-            columns: ".flc-quickSetStrip-main, .fl-quickSetStrip-more-row, .flc-buttonCatalog-buttonContainer"
+            columns: ".flc-quickSetStrip-main, .flc-quickSetStrip-more-button-grid, .flc-buttonCatalog-buttonContainer"
         },
 
         events: {
-            onOpenMYOBDialog: null
+            onOpenMYOBDialog: null,
+            afterMove: null
         },
 
         listeners: {
@@ -244,7 +246,14 @@
                 args: ["{arguments}.0"]
             },
 
-            "afterMove.reorderButtons": "gpii.morphicSettingsEditor.afterButtonMove"
+            "onMove.updateModels": {
+                funcName: "gpii.morphicSettingsEditor.updateModels"
+            },
+
+            "afterMove.reorderButtons": {
+                funcName: "gpii.morphicSettingsEditor.afterButtonMove",
+                args: ["{morphicSettingsEditor}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
+            }
         },
 
         components: {
@@ -257,16 +266,6 @@
                     }
                 }
             },
-            
-/*             morePanel: {
-                type: "gpii.morphicSettingsEditor.repeaterInList",
-                container: "{that}.dom.morePanelList",
-                options: {
-                    model: {
-                        items: "{morphicSettingsEditor}.model.morePanelList"
-                    }
-                }
-            },  */
             
             morePanel: {
                 type: "gpii.psp.repeater",

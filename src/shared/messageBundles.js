@@ -103,7 +103,7 @@ fluid.defaults("gpii.app.messageBundles", {
         messages: {}
     },
 
-    defaultLocale: "es-ES",
+    defaultLocale: "en-US",
 
     messageBundlesPath: "build/gpii-app-messageBundles.json",
 

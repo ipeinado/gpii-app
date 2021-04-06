@@ -48,7 +48,7 @@
                 func: "gpii.psp.morphicSettingsEditor.getButtonInfo",
                 args: ["{morphicSettingsEditor}.model.buttonCatalog", "{that}.model.item"]
             }
-        }, 
+        },
 
         selectors: {
             title: ".flc-qss-btnLabel"
@@ -56,7 +56,7 @@
 
         decorators: {
             identify: "{that}.item.id"
-        },  
+        },
 
         events: {
             onContextMenuHandler: null
@@ -120,7 +120,7 @@
             buttonDescription: ".flc-buttonCatalog-btnDescription"
         },
         model: {
-            tag: "" 
+            tag: ""
         },
         modelRelay: {
             target: "button",
@@ -131,7 +131,7 @@
             }
         },
         renderOnInit: true,
-        
+
         listeners: {
             "onCreate.setClasses": {
                 funcName: "gpii.psp.morphicSettingsEditor.qss.setClasses",
@@ -158,7 +158,7 @@
     });
 
     /**
-     * 
+     *
      * @param button
      * Utility function to add classes to the botton depending on the id of the button.
      * Information about the type of button should probably be provided in the button
@@ -166,7 +166,7 @@
      */
 
     gpii.psp.morphicSettingsEditor.qss.setClasses = function(button) {
-        
+
         var qssButton = button.container.hasClass("fl-qss-button") ? button.container : button.container.find(".fl-qss-button");
 
         if (typeof(button.model.item) === "string") {
@@ -193,14 +193,14 @@
                 default:
                     break;
             }
-        }   
+        }
     };
 
     /**
-     * 
-     * @param {*} qssButtons 
-     * @param {*} morePanelButtons 
-     * @param {*} button 
+     *
+     * @param {*} qssButtons
+     * @param {*} morePanelButtons
+     * @param {*} button
      * Add tags to the buttons in the button catalog, depending whether thay are part of any button holder.
      */
 
@@ -208,7 +208,7 @@
 
         let id = button.model.item,
             tag;
-        
+
         if (qssButtons.indexOf(id) !== -1) {
             tag = "In QSS";
             button.container.find(".fl-qss-button").removeClass("fl-qss-button-movable");
@@ -218,14 +218,14 @@
             tag = "In More Panel";
             button.container.find(".fl-qss-button").removeClass("fl-qss-button-movable");
         };
-        
+
         button.applier.change("tag", tag);
     };
 
     /**
      * This function updates the models after a button has moved.
-     * 
-     * It uses the aria-label 
+     *
+     * It uses the aria-label
      */
     gpii.psp.morphicSettingsEditor.updateModels = function (that, item, position, movables) {
         let models = [fluid.flatten(that.model.morePanelList), that.model.buttonList];
@@ -255,7 +255,7 @@
         });
 
         switch (moduleIndex) {
-            case 1: 
+            case 1:
                 // The destination is the 'more' panel
                 console.log("DESTINATION IS MORE PANEL", that.model.morePanelList);
                 break;
@@ -269,7 +269,7 @@
             default:
                 break;
         }; */
-        
+
         const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.]{0,1}[\d]+/g;
         const [index1, length1, column1, totalCols, index2, length2, column2, totalCols2] = [...item.getAttribute("aria-label").match(NUMERIC_REGEXP).map(Number)];
 
@@ -281,7 +281,7 @@
             if (column1 !== 3) {
                 models[column1 - 1].splice(index1 - 1, 1);
             }
-            
+
         };
 
         const morePanelModel = [models[0].splice(0, 8), models[0].splice(0, 8), models[0]]
@@ -296,7 +296,7 @@
 
     /**
      * This function is the opposite to the previous one, and returns an
-     * three arrays of arrays from an unique array 
+     * three arrays of arrays from an unique array
      */
     gpii.psp.morphicSettingsEditor.buildRows = function(items) {
         let allItems = Array(24 - items.length).fill(undefined).concat(items);
@@ -326,14 +326,14 @@
     gpii.psp.morphicSettingsEditor.setModules = function(that) {
         console.log("ON CREATE MORHICSETTINGSEDITOR", that);
 
-        var numItemsQSS = that.model.buttonList.length 
+        var numItemsQSS = that.model.buttonList.length
                           - that.model.buttonList.filter(item => item === "||").length
                           - 3;
         if (numItemsQSS > 8) {
            // document.querySelector(".flc-quickSetStrip-main").classList.add("module-locked");
            that.options.selectors.columns = ".flc-quickSetStrip-more-button-grid, .flc-buttonCatalog-buttonList"
         }
-    };  
+    };
 
     /**
      * Represents the controller for the settings editor.
@@ -341,7 +341,7 @@
     fluid.defaults("gpii.psp.morphicSettingsEditor", {
         gradeNames: ["fluid.viewComponent", "fluid.reorderer"],
 
-        layoutHandler: "fluid.moduleLayoutHandler", 
+        layoutHandler: "fluid.moduleLayoutHandler",
 
         model: {
             // buttonList, morePanelList and supportedButtonsList are arrays of
@@ -425,7 +425,7 @@
                     }
                 }
             },
-            
+
             morePanel: {
                 type: "gpii.psp.morphicSettingsEditor.repeaterInList",
                 container: "{that}.dom.morePanelList",
@@ -452,11 +452,11 @@
                         container: "<div class=\"%containerClass\"></div>",
                         containerClassPrefix: "flc-buttonCatalog-buttonContainer"
                     },
-                    markup: "<div class=\"flc-buttonCatalog-buttonContainer-button\">" + 
-                            "<div class=\"fl-qss-button fl-qss-button-movable fl-focusable\">" + 
-                            "<span class=\"flc-buttonCatalog-btnLabel fl-buttonCatalog-btnLabel\">" + 
-                            "</span></div></div><div class=\"flc-buttonCatalog-buttonContainer-content\">" + 
-                            "<div class=\"flc-buttonCatalog-btnTag\"></div>" + 
+                    markup: "<div class=\"flc-buttonCatalog-buttonContainer-button\">" +
+                            "<div class=\"fl-qss-button fl-qss-button-movable fl-focusable\">" +
+                            "<span class=\"flc-buttonCatalog-btnLabel fl-buttonCatalog-btnLabel\">" +
+                            "</span></div></div><div class=\"flc-buttonCatalog-buttonContainer-content\">" +
+                            "<div class=\"flc-buttonCatalog-btnTag\"></div>" +
                             "<div class=\"flc-buttonCatalog-btnDescription\"></div></div>",
                     handlerType: "gpii.psp.morphicSettingsEditor.buttonCatalog.buttonPresenter"
                 }
@@ -501,9 +501,9 @@
                 var button = fluid.find_if(buttonCatalog, function (el) {
                     return (el.id === buttonId)? true : false;
                 });
-                buttonObject = button ? { 
-                    id: buttonId, 
-                    title: button.title, 
+                buttonObject = button ? {
+                    id: buttonId,
+                    title: button.title,
                     description: button.description }: null;
                 break;
             case "object":
@@ -521,7 +521,7 @@
         }
 
         return buttonObject;
-       
+
     };
 
 })(fluid);

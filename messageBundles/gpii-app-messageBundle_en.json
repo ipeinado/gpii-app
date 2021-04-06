@@ -39,6 +39,17 @@
     "gpii_psp_makeYourOwnButtonEditor_descriptionPlaceholder": "Enter description",
     "gpii_psp_makeYourOwnButtonEditor_saveButtonLabel": "Save button",
 
+    "gpii_psp_smartworkLogin_usernameLabel": "Username",
+    "gpii_psp_smartworkLogin_usernamePlaceholder": "Enter your smartwork user",
+    "gpii_psp_smartworkLogin_passwordLabel": "Password",
+    "gpii_psp_smartworkLogin_passwordPlaceholder": "Enter your password",
+    "gpii_psp_smartworkLogin_loginButtonLabel": "Login",
+    "gpii_psp_smartworkLogin_logoutButtonLabel": "Logout",
+    "gpii_psp_smartworkLogin_loginSuccess": "Login succeeded",
+    "gpii_psp_smartworkLogin_loginFail": "Invalid Credentials",
+    "gpii_psp_smartworkLogin_logoutWarning": "When logging out, the Smartwork credentials will be removed from your system and you will be keyed out from Morphic",
+    "gpii_psp_smartworkLogin_logoutSuccess": "Successfully removed Smartwork credentials from the system",
+
     "gpii_qss_toggleButtonPresenter_caption": "[now ON]",
     "gpii_qss_volumeButtonPresenter_caption": "(Audio Muted)",
 

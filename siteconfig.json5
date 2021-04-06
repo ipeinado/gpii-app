@@ -124,7 +124,9 @@
                 "popupText": "<p>Abrir Guia do Utilizador.</p>"
             },
             "||",
+            "service-save",
             "service-undo",
+            "service-saved-settings",
             "service-reset-all",
             "service-close"
         ],
@@ -251,5 +253,12 @@
     },
 
     // Metrics switch (read by the service): "<morphic>:<metrics>"
-    metricsSwitch: "on:off" // (eg, "on:on"=both on (default), "off:on"=metrics only)
+    metricsSwitch: "on:off", // (eg, "on:on"=both on (default), "off:on"=metrics only)
+
+    installOnDemand: {
+        packageSources: "https://iod.smartwork.gpii.net",
+        trustedKeys: {
+            "iodSmartwork": "MsSOamAlcXVCZMAd8zE0JIw2WAmLSKhtG49ZbX+Qt4Y="
+        }
+    }
 }

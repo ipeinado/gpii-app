@@ -61,6 +61,10 @@ fluid.defaults("gpii.app.menuInApp", {
             args: ["{gpii.app}.diagnosticsCollector", "{gpii.app}.settingsDir"]
         },
 
+        "onSmartworkSSO.openSmartworkLoginDialog": {
+            listener: "{gpii.app}.events.openSmartworkLoginDialog.fire"
+        },
+
         // onKeyOut event is fired when a keyed-in user keys out through the task tray.
         // This should result in:
         // 1. key out the currently keyed in user
@@ -109,6 +113,7 @@ fluid.defaults("gpii.app.menuInAppDev", {
                     "{that}.options.locales",
                     "{that}.options.themes",
                     "{that}.options.snapsets",
+                    "{that}.options.smartworkSSO",
                     "{that}.model.showAbout",
                     "@expand:gpii.app.menu.getSeparatorItem()",
                     "{that}.model.keyOut",
@@ -354,6 +359,10 @@ fluid.defaults("gpii.app.menu", {
             openQss:    null
         }
     },
+    smartworkSSO: {
+        label: "SmartWork SSO",
+        click: "onSmartworkSSO"
+    },
     modelRelay: {
         "keyedInSnapset": {
             target: "keyedInSnapset",
@@ -445,6 +454,7 @@ fluid.defaults("gpii.app.menu", {
                     "{that}.model.showCaptureTool",
                     "{that}.model.showCaptureDiagnostics",
                     "{that}.model.keyedInSnapset",
+                    "{that}.options.smartworkSSO",
                     "{that}.model.showAbout",
                     "@expand:gpii.app.menu.getSeparatorItem()",
                     "{that}.model.keyOut"
@@ -460,6 +470,7 @@ fluid.defaults("gpii.app.menu", {
         onQss:                        null,
         onCaptureTool:                null,
         onCaptureDiagnostics:         null,
+        onSmartworkSSO:               null,
         onAbout:                      null,
         onActivePreferenceSetAltered: null,
         onKeyOut:                     null

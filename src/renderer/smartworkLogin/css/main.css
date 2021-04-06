@@ -1,0 +1,24 @@
+html,
+body {
+    height: 100%;
+}
+
+.centered-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.smartwork-logo {
+    max-width: 75%;
+}
+
+.smartwork-login-form-label {
+    font-weight: bold;
+    font-size: large;
+}
+
+.smartwork-feedbackLabel {
+    max-width: 80%;
+}

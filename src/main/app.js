@@ -25,6 +25,7 @@ require("./common/utils.js");
 require("./common/ws.js");
 require("./dialogs/dialogManager.js");
 require("./dialogs/captureToolDialog.js");
+require("./dialogs/smartworkLoginDialog.js");
 require("./storage.js");
 require("./factsManager.js");
 require("./gpiiConnector.js");
@@ -33,6 +34,7 @@ require("./qss.js");
 require("./settingsBroker.js");
 require("./shortcutsManager.js");
 require("./siteConfigurationHandler.js");
+require("./smartworkLoginManager.js");
 require("./surveys/surveyManager.js");
 require("./storage.js");
 require("./tray.js");
@@ -264,6 +266,70 @@ fluid.defaults("gpii.app", {
                 }
             }
         },
+        smartworkLoginDialog: {
+            type: "gpii.app.smartworkLoginDialog",
+            createOnEvent: "openSmartworkLoginDialog",
+            //createOnEvent: "onPSPPrerequisitesReady"
+            options: {
+                listeners: {
+                    "onSmartworkLoginRequestArrived.logIntoSmartwork": {
+                        func: "{smartworkLoginManager}.logIntoSmartwork",
+                        args: "{arguments}.0"
+                    },
+                    "{smartworkLoginManager}.events.onLoginSucceeded": {
+                        func: "{smartworkLoginDialog}.channelNotifier.events.onLoginSucceeded.fire"
+                    },
+                    "{smartworkLoginManager}.events.onLoginFailed": {
+                        func: "{smartworkLoginDialog}.channelNotifier.events.onLoginFailed.fire"
+                    },
+
+                    "onSmartworkLogoutRequestArrived.logoutFromSmartwork": {
+                        func: "{smartworkLoginManager}.logoutFromSmartwork"
+                    },
+                    "{smartworkLoginManager}.events.onLogoutSucceeded": {
+                        func: "{smartworkLoginDialog}.channelNotifier.events.onLogoutSucceeded.fire"
+                    },
+                    "{smartworkLoginManager}.events.onLogoutFailed": {
+                        func: "{smartworkLoginDialog}.channelNotifier.events.onLogoutFailed.fire"
+                    }
+                },
+                // This indicates whether the user can login or logout
+                smartworkCredentials: "{smartworkLoginManager}.model.username"
+            }
+        },
+        smartworkLoginManager: {
+            type: "gpii.app.smartworkLoginManager",
+            createOnEvent: "onPSPReadyForKeyIn",
+            options: {
+                loginInfo: {
+                    isEnvironmentalLogin: true
+                },
+                listeners: {
+                    "onNoCredentialsFound.openLoginDialog": {
+                        func: "{app}.events.openSmartworkLoginDialog.fire"
+                    },
+                    "onCredentialsFound.keyUserIn": {
+                        func: "{app}.keyIn",
+                        args: [
+                            "{smartworkLoginManager}.model.gpiiKey",
+                            "{smartworkLoginManager}.options.loginInfo"
+                        ]
+                    },
+
+                    "onLoginSucceeded.keyUserIn": {
+                        func: "{app}.keyIn",
+                        args: [
+                            "{smartworkLoginManager}.model.gpiiKey",
+                            "{smartworkLoginManager}.options.loginInfo"
+                        ]
+                    },
+                    "onLogoutSucceeded.keyUserOut": {
+                        func: "{app}.keyOut"
+                    }
+
+                }
+            }
+        },
         diagnosticsCollector: {
             type: "gpii.app.diagnosticsCollector",
             createOnEvent: "onPSPPrerequisitesReady"
@@ -393,6 +459,7 @@ fluid.defaults("gpii.app", {
         onPSPReady: null,
 
         onOpenCaptureTool: null,
+        openSmartworkLoginDialog: null,
 
         onKeyedIn: null,
         onKeyedOut: null,
@@ -457,7 +524,7 @@ fluid.defaults("gpii.app", {
         },
         keyIn: {
             funcName: "gpii.app.keyIn",
-            args: ["{lifecycleManager}", "{arguments}.0"] // token
+            args: ["{lifecycleManager}", "{arguments}.0", "{arguments}.1"] // token, loginInfo
         },
         keyOut: {
             funcName: "gpii.app.keyOut",
@@ -602,10 +669,11 @@ gpii.app.fireAppReady = function (fireFn) {
   * Keys a user into the GPII.
   * @param {Component} lifecycleManager - The `gpii.lifecycleManager` instance.
   * @param {String} token - The token to key in with.
+  * @param {Object} loginInfo - Additional loginInfo such as isEnvironmentalLogin.
   * @return {Promise} A promise that will be resolved/rejected when the request is finished.
   */
-gpii.app.keyIn = function (lifecycleManager, token) {
-    return lifecycleManager.performLogin(token);
+gpii.app.keyIn = function (lifecycleManager, token, loginInfo) {
+    return lifecycleManager.performLogin(token, loginInfo);
 };
 
 /**

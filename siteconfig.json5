@@ -124,7 +124,9 @@
                 "popupText": "<p>Abrir Guia do Utilizador.</p>"
             },
             "||",
+            "service-save",
             "service-undo",
+            "service-saved-settings",
             "service-reset-all",
             "service-close"
         ],

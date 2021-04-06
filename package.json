@@ -16,10 +16,12 @@
         "gpii-express": "1.0.15",
         "gpii-handlebars": "2.1.0",
         "infusion": "3.0.0-dev.20190328T144119Z.ec44dbfab",
+        "keytar": "7.4.0",
         "nan": "2.14.0",
         "node-jqunit": "1.1.8",
         "request": "2.88.0",
         "uuid": "8.3.1",
+        "uuid-by-string": "3.0.2",
         "winstrap": "0.5.12",
         "ws": "6.1.2"
     },

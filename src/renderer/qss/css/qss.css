@@ -205,7 +205,14 @@ body {
 .fl-quickSetStrip-more {
     display: none;
     position: relative;
-    width: 596px;
+    /*
+     * This width is calculated based on the button's width + its padding.
+     * Each button has 54px width + 5px horizontal padding, 59.
+     * We want 3 rows with 8 buttons each, this is 59*8 = 472px.
+     * Then, we take into account the morePanel horizontal padding, 5px
+     * plus the border size, which is 1px.
+     */
+    width: 478px;
     padding: 5px 5px 10px 5px;
 
     background: #fff;

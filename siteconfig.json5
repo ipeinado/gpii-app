@@ -244,7 +244,7 @@
     },
 
     // URL to the reset to standard profile. If no provided, the system will use a fallback one
-    resetToStandardProfileUrl: "https://raw.githubusercontent.com/GPII/universal/master/testData/defaultSettings/defaultSettings.win32.json5",
+    resetToStandardProfileUrl: "https://raw.githubusercontent.com/javihernandez/universal/smartwork/testData/defaultSettings/defaultSettings.win32.json5",
 
     // See possible values at %gpii-windows/gpii/node_modules/userListeners/src/windowsLogin.js
     autoLogin: {

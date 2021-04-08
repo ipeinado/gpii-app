@@ -59,7 +59,8 @@
         },
 
         events: {
-            onContextMenuHandler: null
+            onContextMenuHandler: null,
+            onKeydown: null
         },
 
         listeners: {
@@ -72,26 +73,43 @@
                 method: "contextmenu",
                 args: ["{that}.events.onContextMenuHandler.fire"]
             },
-            "onContextMenuHandler.displayContextMenu": "{that}.displayContextMenu"
+            "onContextMenuHandler.displayContextMenu": {
+                funcName: "gpii.psp.morphicSettingsEditor.qss.displayContextMenu",
+                args: ["{that}", "{morphicSettingsEditor}.contextMenu"]
+            },
+            "onCreate.addKeydownHandler": {
+                this: "{that}.container",
+                method: "keydown",
+                args: ["{that}.events.onKeydown.fire"]
+            },
+            "onKeydown.log": {
+                funcName: "gpii.psp.morphicSettingsEditor.buttonKeydownHandler",
+                args: ["{arguments}.0", "{that}", "{morphicSettingsEditor}"]
+            }
         },
 
         renderOnInit: true,
 
         protoTree: {
             title: "${button.title}"
-        },
-
-        invokers: {
-            /**
-             * Infrastructure to start building the context menu with actions
-             */
-            displayContextMenu: {
-                this: "console",
-                method: "log",
-                args: ["CONTEXT MENUING"]
-            }
         }
     });
+    
+    gpii.psp.morphicSettingsEditor.buttonKeydownHandler = function(event, button, mse) {
+        if ((event.key === "Backspace") || (event.key === "Delete")) {
+            gpii.psp.morphicSettingsEditor.qss.removeButton(button.model.index, mse);
+        }
+    }
+
+    gpii.psp.morphicSettingsEditor.qss.displayContextMenu = function(that, contextMenu) {
+        console.log("CONTEXT MENUING:", that, contextMenu);
+        var buttonModel = that.model;
+        contextMenu.applier.change("caller", buttonModel);
+        contextMenu.container.css("visibility", "visible");
+        contextMenu.container.css("opacity", 1);
+        contextMenu.container.css("top", that.container[0].offsetTop + that.container[0].parentNode.offsetTop + 40);
+        contextMenu.container.css("left", that.container[0].offsetLeft + that.container[0].parentNode.offsetLeft +  40);
+    };
 
     fluid.defaults("gpii.psp.morphicSettingsEditor.qss.separatorButtonPresenter", {
         gradeNames: ["fluid.viewComponent"],
@@ -289,9 +307,6 @@
 
         that.applier.change("morePanelList", morePanelModel);
         that.applier.change("buttonList", qssModel);
-
-        console.log("THATTTTT", that);
-        that.dom.refresh(that.buttonCatalog);
     };
 
     /**
@@ -324,15 +339,50 @@
     };
 
     gpii.psp.morphicSettingsEditor.setModules = function(that) {
-        console.log("ON CREATE MORHICSETTINGSEDITOR", that);
-
+        console.log("SETTING MODULES", that);
         var numItemsQSS = that.model.buttonList.length
                           - that.model.buttonList.filter(item => item === "||").length
                           - 3;
         if (numItemsQSS > 8) {
            // document.querySelector(".flc-quickSetStrip-main").classList.add("module-locked");
-           that.options.selectors.columns = ".flc-quickSetStrip-more-button-grid, .flc-buttonCatalog-buttonList"
+           that.options.columns = ".flc-quickSetStrip-more"
         }
+    };
+
+    fluid.defaults("gpii.psp.morphicSettingsEditor.contextMenu", {
+        gradeNames: "fluid.rendererComponent",
+        model: {
+            caller: null
+        },
+        selectors: {
+            removeLink: ".mor-buttonContextMenu-item-remove"
+        },
+        events: {
+            onRemoveClick: null
+        },
+        protoTree: {
+            removeLink: "${actions.remove}"
+        },
+        renderOnInit: true,
+        listeners: {
+            "onCreate.addRemoveClickHandler": {
+                this: "{that}.container",
+                method: "click",
+                args: ["{that}.events.onRemoveClick.fire"]
+            }
+        }
+    });
+
+    gpii.psp.morphicSettingsEditor.qss.removeButton = function(itemIndex, settingsEditor) {
+        // var itemIndex = that.model.caller.index;
+        var buttonList = settingsEditor.model.buttonList;
+        console.log("BUTTON LIST BEFORE", settingsEditor.model.buttonList);
+        buttonList.splice(itemIndex, 1);
+        settingsEditor.applier.change("buttonList", buttonList);
+        console.log("SETTINGS EDITOR AFTER", settingsEditor.model.buttonList);
+        settingsEditor.activeItem.remove();
+        settingsEditor.contextMenu.container.css("visibility", "hidden");
+        settingsEditor.contextMenu.container.css("opacity", 0);
     };
 
     /**
@@ -372,13 +422,14 @@
         selectors: {
             openMYOBButton: ".flc-morphicSettingsEditor-myobButton",
             buttonList: ".flc-quickSetStrip-main",
-            morePanelList: ".flc-quickSetStrip-more-button-grid",
+            morePanelList: ".fl-quickSetStrip-more",
+            qssContextMenu: ".mor-buttonContextMenu",
             buttonCatalog: ".flc-buttonCatalog-buttonList",
             movables: ".fl-qss-button-movable",
             dropTargets: ["{that}.dom.morePanelList", "{that}.dom.buttonCatalog"],
             modules: ".fl-qss-button-movable",
             lockedModules: ".module-locked",
-            columns: ".flc-quickSetStrip-main, .flc-quickSetStrip-more-button-grid, .flc-buttonCatalog-buttonList"
+            columns: ".flc-quickSetStrip-main, .fl-quickSetStrip-more, .flc-buttonCatalog-buttonList"
         },
 
         events: {
@@ -436,6 +487,24 @@
                                 func: "fluid.flatten",
                                 args: "{morphicSettingsEditor}.model.morePanelList"
                             }
+                        }
+                    }
+                }
+            },
+
+            contextMenu: {
+                type: "gpii.psp.morphicSettingsEditor.contextMenu",
+                container: "{morphicSettingsEditor}.dom.qssContextMenu",
+                options: {
+                    model: {
+                        actions: {
+                            remove: "Remove button from QSS"
+                        }
+                    },
+                    listeners: {
+                        "onRemoveClick.removeButton": {
+                            funcName: "gpii.psp.morphicSettingsEditor.qss.removeButton",
+                            args: ["{that}.model.caller.index", "{morphicSettingsEditor}"]
                         }
                     }
                 }

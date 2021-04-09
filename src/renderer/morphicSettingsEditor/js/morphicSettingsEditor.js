@@ -383,6 +383,7 @@
 
         events: {
             onOpenMYOBDialog: null,
+            onMYOBCreated: null,
             afterMove: null,
             onMove: null
         },
@@ -412,6 +413,13 @@
             "afterMove.reorderButtons": {
                 funcName: "gpii.psp.morphicSettingsEditor.updateModels",
                 args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
+            }
+        },
+
+        invokers: {
+            addNewMYOB: {
+                funcName: "gpii.psp.morphicSettingsEditor.addNewMYOB",
+                args: ["{that}", "{arguments}.0"]
             }
         },
 
@@ -469,10 +477,29 @@
                         onOpenMYOBDialog: null
                     }
                 }
+            },
+            channelListener: {
+                type: "gpii.psp.channelListener",
+                options: {
+                    events: {
+                        onMYOBCreated: null
+                    },
+                    listeners: {
+                        "onMYOBCreated.debug": {
+                            func: "{morphicSettingsEditor}.addNewMYOB",
+                            args: "{arguments}.0"
+                        }
+                    }
+                }
             }
         }
 
     });
+
+    gpii.psp.morphicSettingsEditor.addNewMYOB = function (that, button) {
+        console.log("### at addNewMYOB - button: ", button);
+        // TODO: Implement adding the created button
+    };
 
     // TODO: Merge these two functions into one
     gpii.psp.morphicSettingsEditor.getButtonTitle = function (buttonCatalog, buttonId) {

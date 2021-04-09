@@ -75,6 +75,10 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
             args: ["### morphicSettingsEditor - MYOB Created: ", "{arguments}.0"]
         },
 
+        "onMYOBCreated.notifyRenderer": {
+            func: "{channelNotifier}.events.onMYOBCreated.fire"
+        },
+
         "onMYOBCreated.destroyMYOBDialog": {
             funcName: "gpii.app.morphicSettingsEditor.destroyMYOBDialog",
             args: "{that}"
@@ -107,6 +111,14 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
             //         "description": "The full description of the button..."
             //     }
             // }
+        },
+        channelNotifier: {
+            type: "gpii.app.channelNotifier",
+            options: {
+                events: {
+                    onMYOBCreated: null
+                }
+            }
         },
         channelListener: {
             type: "gpii.app.channelListener",

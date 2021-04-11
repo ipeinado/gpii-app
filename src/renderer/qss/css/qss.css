@@ -205,7 +205,16 @@ body {
 .fl-quickSetStrip-more {
     display: none;
     position: relative;
-    width: 596px;
+    /*
+     * This width is calculated based on the button's width + its padding.
+     * Each button has 54px width + 5px horizontal padding, 59.
+     * We want 3 rows with 8 buttons each, this is 59*8 = 472px.
+     * Then, we take into account the morePanel horizontal padding, 5px
+     * plus the border size, which is 1px. This results in 478px.
+     * Also, we have to take into account the more button grid padding-right, 22px.
+     * This results in 500px.
+     */
+    width: 500px;
     padding: 5px 5px 10px 5px;
 
     background: #fff;
@@ -221,6 +230,8 @@ body {
     margin-top: 7px;
     max-height: 177px;
     overflow-y: auto;
+    float: right;
+    padding-right: 21px;
 }
 
 .fl-quickSetStrip-more-button-grid::-webkit-scrollbar {
@@ -247,11 +258,12 @@ body {
 .fl-more-closeButton {
     position: absolute;
     top: 0;
-    right: 0;
+    right: -2;
     display: flex;
     flex-direction: column;
     justify-content: center;
     border: none;
+    padding-bottom: 10px;
 }
 
 .fl-qss-btnId-service-more.fl-activated {
@@ -307,7 +319,7 @@ body {
     color: white;
     font: bold 8px "Segoe UI", "Sans-Serif";
     text-align: left;
-    
+
     line-height: 10px;
     cursor: pointer;
     user-select: none;

@@ -644,7 +644,7 @@ gpii.app.qssWrapper.loadSettings = function (assetsManager, installedLanguages, 
         morePanelSettings = [], // by default the more panel is empty
         multiplier = 1000; // the precision multiplier should match the one used in the qssBaseStepperWidget
 
-    var morePanelCols = 10, // fixed by specs
+    var morePanelCols = 8, // fixed by specs
         morePanelFillGridElement = "x"; // which grid element to use to auto-fill ("x" for a visible separator; "-"" for invisible)
 
     var mergeSettings = {};

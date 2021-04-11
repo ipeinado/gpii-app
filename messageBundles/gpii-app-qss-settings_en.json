@@ -188,7 +188,7 @@
     "gpii_app_qss_settings_morphic-userSettings": {
         "tooltip": "<p>Change the Morphic QuickStrip user settings</p>",
         "title": "Morphic User Settings",
-        "tip": "<p>Morphic User Settings</p><p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>",
+        "tip": "<p>Morphic User Settings</p><p>Change the look and feel of the Morphic Quickstrip.</p>",
         "footerTip": "<p><b>More Morphic settings</b><p>",
         "sidecar": "<h2>Title to be described</h2><p>Text to be described</p><p>Note that you can provide <b>HTML <i>Markup</i></b> here. Look at <i>messageBundles/gpii-app-qss-settings_en.json</i> to see some examples of the <i>sidecar</i> or <i>sidecarWithSettings</i> blocks.",
         "description": "This buttons allow you to change some settings of Morphic."

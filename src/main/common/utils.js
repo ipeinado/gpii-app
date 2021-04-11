@@ -455,6 +455,24 @@ gpii.app.filterButtonList = function (siteConfigButtonList, availableButtons) {
     return matchedList.concat(afterList);
 };
 
+// TODO: Add doc
+gpii.app.getSupportedButtonsList = function () {
+    var allButtons = fluid.require("%gpii-app/testData/qss/settings.json");
+    return fluid.getMembers(allButtons, "id");
+};
+
+
+// TODO: Add doc
+gpii.app.getSupportedButtonMessageKey = function (buttonId) {
+    var allButtons = fluid.require("%gpii-app/testData/qss/settings.json");
+    var button = fluid.find_if(allButtons, function (el) {
+        return (el.id === buttonId)? true: false;
+    });
+
+    return button.messageKey? button.messageKey: "";
+};
+
+
 /**
  * The function gets the current qss.morePanelList data and makes a proper list for rendering
  * it will auto-fill any empty rows, or end of cols with the `fill` grid element

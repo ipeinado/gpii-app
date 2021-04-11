@@ -416,7 +416,7 @@
 
             // Handle specific edge case applicable only for the mouse speed stepper.
             // Can be used also in cases where the stepper indicators need to be horizontally located.
-            if (setting.id === "mouseSpeed") {
+            if ((setting.id === "mouseSpeed") || (setting.id === "tooltipDisplayDelay") || (setting.id === "scaleFactor")) {
                 for (
                     indicatorValue = setting.schema.min;
                     indicatorValue <= setting.schema.max;

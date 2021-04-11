@@ -28,7 +28,6 @@ require("../../../shared/channelUtils.js");
 fluid.defaults("gpii.app.qss", {
     gradeNames: ["gpii.app.dialog", "gpii.app.dialog.offScreenHidable", "gpii.app.blurrable"],
 
-
     dialogContentMetrics: {
         // metrics are in px
         // The width of the logo together with its left and right margins
@@ -50,7 +49,9 @@ fluid.defaults("gpii.app.qss", {
         // Whether blurring should be respected by the dialog
         closeQssOnBlur: null,
         // Make the window consume the desktop work area.
-        appBarQss: null
+        appBarQss: null,
+        // Whether the links should be opened in Chrome always
+        alwaysUseChrome: null
     },
 
     modelListeners: {
@@ -102,7 +103,9 @@ fluid.defaults("gpii.app.qss", {
         // until it has signalled readiness via onDialogReady (GPII-3818)
         onSettingUpdatedUnbottled: null,
 
-        onUndoIndicatorChanged: null
+        onUndoIndicatorChanged: null,
+
+        onAlwaysUseChromeChanged: null
     },
     listeners: {
         "onSettingUpdated.bottle": {
@@ -123,7 +126,8 @@ fluid.defaults("gpii.app.qss", {
                     onSettingUpdated: "{qss}.events.onSettingUpdatedUnbottled",
                     onQssLogoToggled: "{qss}.events.onQssLogoToggled",
                     onUndoIndicatorChanged: "{qss}.events.onUndoIndicatorChanged",
-                    onIsKeyedInChanged: null
+                    onIsKeyedInChanged: null,
+                    onAlwaysUseChromeChanged: null
                 },
                 listeners: {
                     onSettingUpdated: {
@@ -134,6 +138,12 @@ fluid.defaults("gpii.app.qss", {
                 modelListeners: {
                     "{qss}.model.isKeyedIn": {
                         "this": "{that}.events.onIsKeyedInChanged",
+                        method: "fire",
+                        args: ["{change}.value"],
+                        excludeSource: "init"
+                    },
+                    "{qss}.model.alwaysUseChrome": {
+                        "this": "{that}.events.onAlwaysUseChromeChanged",
                         method: "fire",
                         args: ["{change}.value"],
                         excludeSource: "init"

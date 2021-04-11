@@ -62,6 +62,7 @@
             "launch-documorph":  "gpii.qss.launchDocuMorphPresenter",
             "volume":            "gpii.qss.volumeButtonPresenter",
             "mouse":             "gpii.qss.widgetButtonPresenter",
+            "morphic":           "gpii.qss.widgetButtonPresenter",
             "snipping-tool":     "gpii.qss.snippingToolPresenter",
             "disabled":          "gpii.qss.disabledButtonPresenter",
             // custom button grades
@@ -432,7 +433,8 @@
 
         model: {
             isKeyedIn: false,
-            settings: []
+            settings: [],
+            alwaysUseChrome: "{gpii.qss}.options.siteConfig.alwaysUseChrome"
         },
 
         selectors: {
@@ -505,7 +507,9 @@
                         onSettingUpdated: null,
                         onIsKeyedInChanged: null,
 
-                        onUndoIndicatorChanged: "{quickSetStripList}.events.onUndoIndicatorChanged"
+                        onUndoIndicatorChanged: "{quickSetStripList}.events.onUndoIndicatorChanged",
+
+                        onAlwaysUseChromeChanged: null
                     },
                     listeners: {
                         onSettingUpdated: {
@@ -517,6 +521,9 @@
                         },
                         onIsKeyedInChanged: {
                             func: "{gpii.qss}.updateIsKeyedIn"
+                        },
+                        onAlwaysUseChromeChanged: {
+                            func: "{gpii.qss}.updateAlwaysUseChrome"
                         }
                     }
                 }
@@ -555,6 +562,10 @@
         invokers: {
             updateIsKeyedIn: {
                 changePath: "isKeyedIn",
+                value: "{arguments}.0"
+            },
+            updateAlwaysUseChrome: {
+                changePath: "alwaysUseChrome",
                 value: "{arguments}.0"
             }
         }

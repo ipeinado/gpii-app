@@ -250,7 +250,7 @@
                 funcName: "gpii.windows.openUrl",
                 args: [
                     "{that}.model.item.schema.url", // using the url from the custom button's schema
-                    "{gpii.qss}.options.siteConfig.alwaysUseChrome"
+                    "{gpii.qss}.model.alwaysUseChrome"
                 ]
             }
         }
@@ -366,7 +366,7 @@
                 funcName: "gpii.windows.openUrl",
                 args: [
                     "{gpii.qss}.options.siteConfig.urls.cloudFolder",  // siteConfig's cloud folder url
-                    "{gpii.qss}.options.siteConfig.alwaysUseChrome" // Override the OS default browser.
+                    "{gpii.qss}.model.alwaysUseChrome" // Override the OS default browser.
                 ]
             }
         }
@@ -384,7 +384,7 @@
                 funcName: "gpii.windows.openUrl",
                 args: [
                     "{gpii.qss}.options.siteConfig.urls.customizeQss",  // siteConfig's url
-                    "{gpii.qss}.options.siteConfig.alwaysUseChrome" // Override the OS default browser.
+                    "{gpii.qss}.model.alwaysUseChrome" // Override the OS default browser.
                 ]
             }
         }
@@ -402,7 +402,7 @@
                 funcName: "gpii.windows.openUrl",
                 args: [
                     "{gpii.qss}.options.siteConfig.urls.myGoogleDrive",  // siteConfig's url
-                    "{gpii.qss}.options.siteConfig.alwaysUseChrome" // Override the OS default browser.
+                    "{gpii.qss}.model.alwaysUseChrome" // Override the OS default browser.
                 ]
             }
         }
@@ -420,7 +420,7 @@
                 funcName: "gpii.windows.openUrl",
                 args: [
                     "{gpii.qss}.options.siteConfig.urls.myOneDrive",  // siteConfig's url
-                    "{gpii.qss}.options.siteConfig.alwaysUseChrome" // Override the OS default browser.
+                    "{gpii.qss}.model.alwaysUseChrome" // Override the OS default browser.
                 ]
             }
         }
@@ -438,7 +438,7 @@
                 funcName: "gpii.windows.openUrl",
                 args: [
                     "{gpii.qss}.options.siteConfig.urls.myDropbox",  // siteConfig's url
-                    "{gpii.qss}.options.siteConfig.alwaysUseChrome" // Override the OS default browser.
+                    "{gpii.qss}.model.alwaysUseChrome" // Override the OS default browser.
                 ]
             }
         }

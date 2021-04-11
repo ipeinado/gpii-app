@@ -23,6 +23,7 @@ require("./dialogs/quickSetStrip/qssTooltipDialog.js");
 require("./dialogs/quickSetStrip/qssWidgetDialog.js");
 require("./dialogs/quickSetStrip/qssNotificationDialog.js");
 require("./common/undoStack.js");
+require("../shared/utils.js");
 
 /**
  * A component which coordinates the operation of all QSS related components
@@ -107,7 +108,12 @@ fluid.defaults("gpii.app.qssWrapper", {
         // user preferences
         closeQssOnBlur: false,
         appBarQss: false,
-        disableRestartWarning: false
+        disableRestartWarning: false,
+        alwaysUseChrome: "{that}.options.siteConfig.alwaysUseChrome",
+        buttonLists: {
+            buttonList: "{that}.options.siteConfig.buttonList",
+            morePanelList: "{that}.options.siteConfig.morePanelList"
+        }
     },
 
     events: {
@@ -179,7 +185,21 @@ fluid.defaults("gpii.app.qssWrapper", {
                 args: ["{change}.value"],
                 excludeSource: ["init"]
             }
-        ]
+        ],
+
+        buttonLists: [{
+            funcName: "gpii.app.qssWrapper.buttonListsUpdated",
+            args: [
+                "{that}",
+                "{change}.transaction.oldHolder.lifecycleStatus",
+                "{assetsManager}",
+                "{systemLanguageListener}.model.installedLanguages",
+                "{messageBundles}.model.locale",
+                "{messageBundles}.model.messages"
+            ],
+            excludeSource: "init",
+            includeSource: "settingsHandler.update"
+        }]
     },
 
     invokers: {
@@ -249,7 +269,12 @@ fluid.defaults("gpii.app.qssWrapper", {
             type: "gpii.app.undoInWrapper"
         },
         qss: {
-            type: "gpii.app.qssInWrapper"
+            type: "gpii.app.qssInWrapper",
+            options: {
+                model: {
+                    alwaysUseChrome: "{qssWrapper}.model.alwaysUseChrome"
+                }
+            }
         },
         qssWidget: {
             type: "gpii.app.qssWidget",
@@ -758,6 +783,40 @@ gpii.app.qssWrapper.loadSettings = function (assetsManager, installedLanguages, 
 };
 
 /**
+ * Update qssWrapper settings according to the changes made on buttonList and
+ * morePanelList as the result of a user key-in/out
+ * @param {Component} that - The `gpii.app.qssWrapper` instance.
+ */
+gpii.app.qssWrapper.buttonListsUpdated = function (that, componentStatus, assetsManager, installedLanguages, locale, messageBundles) {
+    // We skip any updates to the model if the lifecycleStatus is constructing
+    if (componentStatus === "constructing") return;
+
+    var updates = {
+        buttonList: that.model.buttonLists.buttonList,
+        morePanelList: that.model.buttonLists.morePanelList
+    }
+
+    var newSettings = gpii.app.qssWrapper.loadSettings(
+        assetsManager, installedLanguages, locale, messageBundles,
+        that.options.settingOptions, that.options.settingsFixturePath, updates);
+
+    gpii.app.applier.replace(that.applier, "settings", newSettings, "buttonLists.updated");
+
+    // TODO: Find a different way to achieve the propagation of these
+    that.qss.options.config.params.settings = that.model.settings;
+    that.qss.options.config.params.siteConfig.alwaysUseChrome = that.model.alwaysUseChrome;
+    that.qss.dialog.reload();
+
+    // Final tweaks after the reload
+    // Re-scale to force redrawing of the buttons - calling fitToScreen didn't work
+    var scaleFactor = that.model.scaleFactor;
+    that.applier.change("scaleFactor", scaleFactor + 0.1);
+    that.applier.change("scaleFactor", scaleFactor);
+    // TODO: Find a way to restart the appBarQss behavior
+};
+
+
+/**
  * Find a QSS setting by its path.
  * @param {Object[]} settings - The QSS settings list
  * @param {String} path - The path of the searched setting
@@ -842,10 +901,16 @@ gpii.app.qssWrapper.getButtonPosition = function (qss, buttonElemMetrics) {
  */
 gpii.app.qssWrapper.applySettingTranslation = function (qssSettingMessages, setting) {
     var translatedSetting = fluid.copy(setting),
-        message = qssSettingMessages[translatedSetting.messageKey];
+        message = qssSettingMessages[translatedSetting.messageKey],
+        // TODO: Solve this workaround to avoid these kind of settings to be processed
+        // during this step. This is required because we need to provide a translation
+        // for the separator and grid type of buttons from the settings.json in order for them
+        // to be shown in the morphic settings editor
+        path = setting.path,
+        forbiddenPaths = ["grid", "separator"];
 
     // translation of the main settings
-    if (message) {
+    if ((message) && (!forbiddenPaths.includes(path))) {
         translatedSetting.tooltip = message.tooltip;
         translatedSetting.tip = message.tip;
 
@@ -954,8 +1019,10 @@ gpii.app.qssWrapper.updateLanguageSettingOptions = function (that, locale, insta
  * @param {Component} qssWidget - The `gpii.app.qssWidget` instance.
  * @param {Object} updatedSetting - The new setting.
  */
-gpii.app.qssWidget.updateIfMatching = function (qssWidget, updatedSetting) {
-    if (qssWidget.model.setting.path === updatedSetting.path) {
+gpii.app.qssWidget.updateIfMatching = function (qssWidget, updatedSetting, change) {
+    // Do nothing if there's no updatedSetting. This is useful when there was an
+    // update to the lists of buttons that the quickstrip displays.
+    if (updatedSetting && (qssWidget.model.setting.path === updatedSetting.path)) {
         qssWidget.events.onSettingUpdated.fire(updatedSetting);
     }
 };

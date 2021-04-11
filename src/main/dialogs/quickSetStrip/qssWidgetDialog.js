@@ -40,7 +40,7 @@ fluid.defaults("gpii.app.qssWidget", {
     extraVerticalOffset: 7,
 
     // A list of QSS setting types for which this widget is applicable.
-    supportedSettings: ["string", "number", "boolean", "screenCapture", "openUSB", "volume", "office", "translateTools", "mouse", "mySavedSettings"],
+    supportedSettings: ["string", "number", "boolean", "screenCapture", "openUSB", "volume", "office", "translateTools", "mouse", "morphic", "mySavedSettings"],
 
     model: {
         setting: {}
@@ -122,7 +122,10 @@ fluid.defaults("gpii.app.qssWidget", {
                     onLearnMoreClicked: null,
                     onMetric: null,
                     onMetricState: null,
-                    onMorePanelClosed: null
+                    onMorePanelClosed: null,
+
+                    // Morphic Settings Widget related events
+                    onQssOpenEditorRequested: null
                 },
                 listeners: {
                     onMorePanelClosed: {
@@ -191,6 +194,9 @@ fluid.defaults("gpii.app.qssWidget", {
                             "{qssWidget}.dialog",
                             "{arguments}.0" // messageChannel
                         ]
+                    },
+                    onQssOpenEditorRequested: {
+                        func: "{app}.events.onOpenMorphicEditor.fire"
                     }
                 }
             }

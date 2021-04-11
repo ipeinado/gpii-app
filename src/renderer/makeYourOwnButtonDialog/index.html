@@ -1,0 +1,71 @@
+<html>
+
+    <head>
+        <title>Make Your Own Button</title>
+        <link rel="stylesheet" href="../../../node_modules/winstrap/dist/css/winstrap.min.css">
+        <link rel="stylesheet" href="../common/css/button.css">
+        <link rel="stylesheet" href="../common/css/dialog.css">
+        <link rel="stylesheet" href="../common/css/titlebar.css">
+        <link rel="stylesheet" href="../qss/css/qss.css">
+        <link rel="stylesheet" href="./css/myobEditor.css">
+
+        <script type="text/javascript" src="../../../node_modules/infusion/src/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../node_modules/infusion/dist/infusion-all.js"></script>
+
+        <script type="text/javascript" src="../common/js/widgets.js"></script>
+        <script type="text/javascript" src="../common/js/titlebar.js"></script>
+
+        <script type="text/javascript" src="../qss/js/qss.js"></script>
+        <script type="text/javascript" src="../qss/js/qssButtons.js"></script>
+
+        <script type="text/javascript" src="../../../node_modules/gpii-binder/src/js/binder.js"></script>
+
+        <script type="text/javascript" src="js/makeYourOwnButtonEditor.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+
+        <script type="text/javascript" src="../../shared/channelUtils.js"></script>
+        <script type="text/javascript" src="../common/js/utils.js"></script>
+        <script type="text/javascript" src="../common/js/channelUtils.js"></script>
+
+        <script type="text/javascript" src="../../shared/messageBundles.js"></script>
+        <script type="text/javascript" src="../common/js/messageBundles.js"></script>
+    </head>
+
+    <body style="overflow: auto;">
+        <div class="fl-dialog">
+            <div class="container">
+                <h2>Make Your Own Button</h2>
+
+                <div class="fl-qss-button fl-focusable fl-qss-largeButton fl-qss-btnId-MakeYourOwn fl-qss-settingButton fl-btn-makeYourOwnButtonEditor">
+                    <span class="flc-myobEditor-btnPreviewLabel fl-qss-btnLabel fl-btn-makeYourOwnButtonEditor-label"></span>
+                </div>
+
+                <form>
+                    <label for="inputName" class="flc-myobEditor-nameLabel"></label>
+                    <input type="text" id="inputName" class="flc-myobEditor-nameInput form-control" required autofocus>
+
+                    <label for="inputType" class="flc-myobEditor-typeLabel"></label>
+                    <div class="form-group">
+                        <select class="flc-myobEditor-typeInput form-control fl-myob-saveBtn" id="inputType" required>
+                            <option class="flc-myobEditor-typeOptionWeb" selected value="WEB"></option>
+                            <option class="flc-myobEditor-typeOptionApp" value="APP"></option>
+                        </select>
+                    </div>
+
+                    <label for="inputData" class="flc-myobEditor-dataLabel"></label>
+                    <input type="text" id="inputData" class="flc-myobEditor-dataInput form-control" required autofocus>
+
+                    <label for="inputPopup" class="flc-myobEditor-popupLabel"></label>
+                    <input type="text" id="inputPopup" class="flc-myobEditor-popupInput form-control" required autofocus>
+
+                    <label for="inputDescription" class="flc-myobEditor-descriptionLabel"></label>
+                    <input type="text" id="inputDescription" class="flc-myobEditor-descriptionInput form-control" autofocus>
+
+                    <button type="button" class="flc-myobEditor-saveButton btn btn-lg btn-primary btn-block fl-myob-saveBtn"></button>
+                </form>
+
+            </div>
+        </div>
+    </body>
+
+</html>

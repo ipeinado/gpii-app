@@ -332,14 +332,85 @@
         "tabindex": 225,
         "messageKey": "common-colorVision",
         "value": 0,
-        "styles": {
-            "regular-contrast": {
-                "background": "#ffffff",
-                "color": "#0073bd",
-                "border-color": "#0073bd"
+        "learnMoreLink": "https://morphic.world/help/qsshelp#color-vision"
+    }, {
+        "id": "morphic",
+        "path": "morphic",
+        "schema": {
+            "type": "morphic"
+        },
+        "settings": {
+            "alwaysUseChrome": {
+                "id": "alwaysUseChrome",
+                "path": "http://registry\\.gpii\\.net/applications/net\\.gpii\\.morphic.alwaysUseChrome",
+                "schema": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "value": false,
+                "messageKey": "morphic-alwaysUseChrome"
+            },
+            "appBarQss": {
+                "id": "appBarQss",
+                "path": "http://registry\\.gpii\\.net/applications/net\\.gpii\\.morphic.appBarQss",
+                "schema": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "value": true,
+                "messageKey": "morphic-appBarQss"
+            },
+            "closeQssOnClickOutside": {
+                "id": "closeQssOnClickOutside",
+                "path": "http://registry\\.gpii\\.net/applications/net\\.gpii\\.morphic.closeQssOnClickOutside",
+                "schema": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "value": false,
+                "messageKey": "morphic-closeQssOnClickOutside"
+            },
+            "disableRestartWarning": {
+                "id": "disableRestartWarning",
+                "path": "http://registry\\.gpii\\.net/applications/net\\.gpii\\.morphic.disableRestartWarning",
+                "schema": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "value": true,
+                "messageKey": "morphic-disableRestartWarning"
+            },
+            "tooltipDisplayDelay": {
+                "id": "tooltipDisplayDelay",
+                "path": "http://registry\\.gpii\\.net/applications/net\\.gpii\\.morphic.tooltipDisplayDelay",
+                "schema": {
+                    "type": "number",
+                    "default": 500,
+                    "min": 500,
+                    "max": 3000,
+                    "divisibleBy": 500
+                },
+                "value": 500,
+                "messageKey": "morphic-tooltipDisplayDelay"
+            },
+            "scaleFactor": {
+                "id": "scaleFactor",
+                "path": "http://registry\\.gpii\\.net/applications/net\\.gpii\\.morphic.scaleFactor",
+                "schema": {
+                    "type": "number",
+                    "default": 1.2,
+                    "min": 0.8,
+                    "max": 1.5,
+                    "divisibleBy": 0.1
+                },
+                "value": 1.2,
+                "messageKey": "morphic-scaleFactor"
             }
         },
-        "learnMoreLink": "https://morphic.world/help/qsshelp#color-vision"
+        "buttonTypes": ["largeButton", "settingButton"],
+        "tabindex": 229,
+        "messageKey": "morphic-userSettings",
+        "learnMoreLink": "https://morphic.world/help/qsshelp"
     }, {
         "id": "separator",
         "path": "separator",
@@ -347,7 +418,8 @@
             "type": "separator",
             "title": ""
         },
-        "buttonTypes": ["separator"]
+        "buttonTypes": ["separator"],
+        "messageKey": "morphic-separator"
     }, {
         "id": "separator-visible",
         "path": "separator",
@@ -355,7 +427,8 @@
             "type": "separator",
             "title": ""
         },
-        "buttonTypes": ["separator", "separatorVisible"]
+        "buttonTypes": ["separator", "separatorVisible"],
+        "messageKey": "morphic-separator-visible"
     }, {
         "id": "grid",
         "path": "grid",
@@ -363,7 +436,8 @@
             "type": "grid",
             "title": ""
         },
-        "buttonTypes": ["grid", "grid"]
+        "buttonTypes": ["grid", "grid"],
+        "messageKey": "morphic-grid"
     }, {
         "id": "grid-visible",
         "path": "grid",
@@ -371,7 +445,8 @@
             "type": "grid",
             "title": ""
         },
-        "buttonTypes": ["grid", "gridVisible"]
+        "buttonTypes": ["grid", "gridVisible"],
+        "messageKey": "morphic-grid-visible"
     }, {
         "id": "service-more",
         "path": "more",

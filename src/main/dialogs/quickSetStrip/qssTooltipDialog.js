@@ -49,7 +49,8 @@ fluid.defaults("gpii.app.qssTooltipDialog", {
             defaultDirection: "right",
             leftDirection: "left",
             centerDirection: "center"
-        }
+        },
+        showDelay: 500,
     },
 
     modelRelay: {
@@ -65,8 +66,6 @@ fluid.defaults("gpii.app.qssTooltipDialog", {
             }
         }
     },
-
-    showDelay: 500,
 
     config: {
         showInactive: true, // not focused when shown

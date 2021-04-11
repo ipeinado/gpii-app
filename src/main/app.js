@@ -4,6 +4,7 @@
  * A component that represents the whole PSP. It wraps all of the PSP's functionality and also provides information on whether there's someone keyIn or not.
  * Copyright 2016 Steven Githens
  * Copyright 2016-2017 OCAD University
+ * Copyright 2020-2021 Raising the Floor - International
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this License.
@@ -25,14 +26,17 @@ require("./common/utils.js");
 require("./common/ws.js");
 require("./dialogs/dialogManager.js");
 require("./dialogs/captureToolDialog.js");
+require("./dialogs/morphicSettingsEditor.js");
 require("./dialogs/smartworkLoginDialog.js");
 require("./storage.js");
 require("./factsManager.js");
 require("./gpiiConnector.js");
 require("./menu.js");
 require("./qss.js");
+require("./qssUserSettings.js");
 require("./settingsBroker.js");
 require("./shortcutsManager.js");
+require("./settingsHandlerConnector.js")
 require("./siteConfigurationHandler.js");
 require("./smartworkLoginManager.js");
 require("./surveys/surveyManager.js");
@@ -165,6 +169,50 @@ fluid.defaults("gpii.app", {
                 }
             }
         },
+        qssUserSettings: {
+            type: "gpii.app.qssUserSettings",
+            createOnEvent: "onQSSDialogReady",
+            options: {
+                model: {
+                    settings: {
+                        scaleFactor: "{qssWrapper}.model.scaleFactor",
+                        closeQssOnClickOutside: "{qssWrapper}.model.closeQssOnBlur",
+                        tooltipDisplayDelay: "{qssWrapper}.qssTooltip.model.showDelay",
+                        alwaysUseChrome: "{qssWrapper}.model.alwaysUseChrome",
+                        buttonList: "{qssWrapper}.model.buttonLists.buttonList",
+                        morePanelList: "{qssWrapper}.model.buttonLists.morePanelList",
+                        appBarQss: "{app}.model.preferences.appBarQss",
+                        disableRestartWarning: "{app}.model.preferences.disableRestartWarning",
+                        openQssShortcut: "{app}.model.preferences.gpiiAppShortcut"
+                    }
+                },
+                listeners: {
+                    "{gpii.app}.events.newSettingsArrived": {
+                        func: "{that}.applier.change",
+                        args: ["settings", "{arguments}.0"]
+                    }
+                }
+            }
+        },
+        settingsHandlerConnector: {
+            type: "gpii.app.settingsHandlerConnector",
+            createOnEvent: "onQSSDialogReady",
+            options: {
+                events: {
+                    newSettingsArrived: "{gpii.app}.events.newSettingsArrived"
+                },
+                modelListeners: {
+                    "{qssUserSettings}.model.settings": {
+                        funcName: "gpii.app.settingsHandlerConnector.qssUserSettingsChanged",
+                        args: [
+                            "{settingsHandlerConnector}",
+                            "{change}"
+                        ],
+                        includeSource: "init"
+                    }
+                }
+            }
+        },
         dialogManager: {
             type: "gpii.app.dialogManager",
             createOnEvent: "onPSPPrerequisitesReady",
@@ -263,6 +311,22 @@ fluid.defaults("gpii.app", {
                     isKeyedIn: "{app}.model.isKeyedIn",
                     keyedInUserToken: "{app}.model.keyedInUserToken",
                     preferences: "{pspChannel}.model.preferences"
+                }
+            }
+        },
+        morphicSettingsEditor: {
+            type: "gpii.app.morphicSettingsEditor",
+            createOnEvent: "onOpenMorphicEditor",
+            options: {
+                buttonList: "{configurationHandler}.options.siteConfig.qss.buttonList",
+                morePanelList: "{configurationHandler}.options.siteConfig.qss.morePanelList",
+                supportedButtonsList: "@expand:gpii.app.getSupportedButtonsList()",
+                listeners: {
+                    "onSaveButtonClicked.saveApplyAndCloseSettingsEditor": {
+                        func: "{app}.saveApplyAndCloseSettingsEditor",
+                        //     buttonList       morePanelList
+                        args: ["{arguments}.0", "{arguments}.1"]
+                    }
                 }
             }
         },
@@ -459,12 +523,17 @@ fluid.defaults("gpii.app", {
         onPSPReady: null,
 
         onOpenCaptureTool: null,
+
+        onOpenMorphicEditor: null,
+
         openSmartworkLoginDialog: null,
 
         onKeyedIn: null,
         onKeyedOut: null,
 
-        onBlur: null
+        onBlur: null,
+
+        newSettingsArrived: null
     },
     listeners: {
         "onCreate.appReady": {
@@ -541,6 +610,10 @@ fluid.defaults("gpii.app", {
         getEnvironmentalLoginKey: {
             funcName: "gpii.app.getEnvironmentalLoginKey",
             args: ["{lifecycleManager}.model.lastEnvironmentalLoginGpiiKey", "{arguments}.0", "{arguments}.1"]
+        },
+        saveApplyAndCloseSettingsEditor: {
+            funcName: "gpii.app.saveApplyAndCloseSettingsEditor",
+            args: ["{that}", "{flowManager}", "{arguments}.0", "{arguments}.1"]
         },
         exit: {
             funcName: "gpii.app.exit",
@@ -762,6 +835,28 @@ gpii.app.windowMessage = function (that, hwnd, msg, wParam, lParam, result) {
         that.exit();
         result.value = 0;
     }
+};
+
+gpii.app.saveApplyAndCloseSettingsEditor = function (that, flowManager, buttonList, morePanelList) {
+    var payload = {
+        "contexts": {
+            "gpii-default": {
+                "preferences": {
+                    "http://registry.gpii.net/applications/net.gpii.morphic": {
+                      "buttonList": buttonList,
+                      "morePanelList": morePanelList
+                    }
+                }
+            }
+        }
+    };
+
+    // Save buttonList and morePanelList prefs
+    flowManager.savePreferences(that.model.keyedInUserToken, payload);
+    // Destroy the settings editor
+    that.morphicSettingsEditor.destroy();
+    // reApplyPreferences
+    that.reApplyPreferences();
 };
 
 // A wrapper that wraps gpii.app as a subcomponent. This is the grade need by configs/app.json

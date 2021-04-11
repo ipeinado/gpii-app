@@ -15,6 +15,14 @@
                 },
                 "target": "{that gpiiConnector}.options.config"
             },
+            "distributeBrowserChannelConnector": {
+                "record": {
+                    "hostname": "localhost",
+                    "port": 8081,
+                    "path": "/browserChannel"
+                },
+                "target": "{that settingsHandlerConnector}.options.config"
+            },
             "distributeDevPcpChannelConnector": {
                 "record": "gpii.app.dev.gpiiConnector",
                 "target": "{that gpiiConnector}.options.gradeNames"

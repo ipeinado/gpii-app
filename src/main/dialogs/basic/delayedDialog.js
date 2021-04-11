@@ -27,8 +27,10 @@ fluid.registerNamespace("gpii.app.dialog");
 fluid.defaults("gpii.app.delayedDialog", {
     gradeNames: ["gpii.app.timer"],
 
-    // the desired delay in milliseconds
-    showDelay: null,
+    model: {
+        // the desired delay in milliseconds
+        showDelay: null
+    },
 
     listeners: {
         onTimerFinished: {
@@ -42,7 +44,7 @@ fluid.defaults("gpii.app.delayedDialog", {
             funcName: "gpii.app.delayedDialog.showWithDelay",
             args: [
                 "{that}",
-                "{that}.options.showDelay",
+                "{that}.model.showDelay",
                 "{arguments}" // showArgs
             ]
         },

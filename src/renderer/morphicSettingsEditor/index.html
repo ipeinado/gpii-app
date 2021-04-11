@@ -1,0 +1,61 @@
+<html>
+
+    <head>
+        <title>Morphic Settings Editor</title>
+        <link rel="stylesheet" href="../../../node_modules/winstrap/dist/css/winstrap.min.css">
+        <link rel="stylesheet" href="../common/css/button.css">
+        <link rel="stylesheet" href="../common/css/dialog.css">
+        <link rel="stylesheet" href="../common/css/titlebar.css">
+        <link rel="stylesheet" href="../qss/css/qss.css">
+        <link rel="stylesheet" href="./css/morphicSettingsEditor.css">
+
+        <script type="text/javascript" src="../../../node_modules/infusion/src/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../node_modules/infusion/dist/infusion-all.js"></script>
+
+        <script type="text/javascript" src="../common/js/widgets.js"></script>
+        <script type="text/javascript" src="../common/js/titlebar.js"></script>
+
+        <script type="text/javascript" src="../common/js/elementRepeater.js"></script>
+        <script type="text/javascript" src="../qss/js/qss.js"></script>
+        <script type="text/javascript" src="../qss/js/qssButtons.js"></script>
+        <script type="text/javascript" src="js/morphicSettingsEditor.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+
+        <script type="text/javascript" src="../../shared/channelUtils.js"></script>
+        <script type="text/javascript" src="../common/js/utils.js"></script>
+        <script type="text/javascript" src="../common/js/channelUtils.js"></script>
+
+        <script type="text/javascript" src="../../shared/messageBundles.js"></script>
+        <script type="text/javascript" src="../common/js/messageBundles.js"></script>
+    </head>
+
+    <body style="overflow: auto;">
+        <div class="fl-dialog">
+            <h1>Morphic Settings Editor</h1>
+
+            <div class="flc-quickSetStrip fl-qss">
+                <div class="flc-quickSetStrip-more fl-quickSetStrip-more">
+                    <button class="flc-quickSetStrip-more-close fl-focusable fl-qss-closeButton fl-more-closeButton" tabindex="999">×</button>
+                    <div class="flc-quickSetStrip-more-button-grid fl-mse-more-button-grid">
+                    </div>
+                </div>
+
+                <div class="flc-quickSetStrip-main fl-quickSetStrip-main">
+                    <img class="flc-qss-logo fl-qss-logo" src="../../icons/Morphic-QuickStrip-logo.svg">
+                </div>
+            </div>
+
+            <div class="flc-buttonCatalog">
+                <div class="flc-buttonCatalog-header">
+                    <h2>Button Catalog</h2>
+                    <button type="button" class="flc-morphicSettingsEditor-myobButton btn btn-lg btn-primary">Make Your Own Button</button>
+                </div>
+                <div class="flc-buttonCatalog-buttonList">
+                </div>
+            </div>
+
+            <button type="button" class="flc-morphicSettingsEditor-saveButton btn btn-lg btn-primary">Save & Apply</button>
+        </div>
+    </body>
+
+</html>

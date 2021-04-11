@@ -178,10 +178,11 @@ gpii.app.resizable.computeScaleFactor = function (that) {
 gpii.app.resizable.fitToScreen = function (that) {
     // check for preventing a weird bug related to GPII-3822
     if (that.typeName !== "gpii.app.qssTooltipDialog") {
-        // getting the scale factor
-        var scaleFactor = that.computeScaleFactor();
+        // Getting the recommended scale factor and decide whether the current
+        // scaleFactor is appropriate or not. If not, then use the computed one.
+        var scaleFactor = Math.min(that.model.scaleFactor, that.computeScaleFactor());
 
-        // changing the scale factor only if its different in the current one
+        // Changing the scale factor only if the current one won't fit
         if (scaleFactor !== that.model.scaleFactor) {
             that.applier.change("scaleFactor", scaleFactor);
         }

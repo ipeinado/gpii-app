@@ -25,6 +25,7 @@
         <script type="text/javascript" src="js/qssMySavedSettingsWidget.js"></script>
         <script type="text/javascript" src="js/qssTranslateToolsWidget.js"></script>
         <script type="text/javascript" src="js/qssMouseWidget.js"></script>
+        <script type="text/javascript" src="js/qssMorphicWidget.js"></script>
         <script type="text/javascript" src="js/qssBaseStepperWidget.js"></script>
         <script type="text/javascript" src="js/qssStepperWidget.js"></script>
         <script type="text/javascript" src="js/qssToggleWidget.js"></script>
@@ -60,7 +61,7 @@
                     <div class="flc-titlebar fl-titlebar">
                         <div class="flc-closeBtn fl-closeBtn btn btn-regular fl-focusable" role="button" tabindex="0" aria-label="Close">&#x2715;</div>
                     </div>
-                    
+
                     <!-- the Stepper Widget -->
                     <div class="flc-qssStepperWidget fl-scrollable fl-qssStepperWidget">
                         <div class="flc-qssWidget-tip fl-qssWidget-tip"></div>
@@ -151,7 +152,7 @@
                                         <span class="flc-switchUI-on fl-switchUILabel"></span>
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
 
@@ -257,7 +258,119 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- the Morphic User Settings Widget -->
+                    <div class="flc-qssMorphicWidget fl-dialog-content fl-scrollable fl-qssMouseWidget">
+                      <!-- Widget's tip and title -->
+                      <div class="flc-qssWidget-tip fl-qssWidget-tip"></div>
+
+                        <div class="fl-qssMorphicUserSettings">
+                          <!-- Morphic Widget Toggle: Always Use Chrome -->
+                          <div class="flc-qssMorphicWidget-alwaysUseChrome fl-dialog-content fl-scrollable fl-qssToggleWidget fl-qssMouseWidgetToggle">
+                              <div class="flc-qssMorphicWidgetToggle-settingTitle fl-qssToggleWidget-settingTitle"></div>
+
+                              <div class="flc-toggleButton fl-switchUI">
+                                  <div class="flc-switchUI-control fl-switchUI-control fl-focusable">
+                                      <span class="flc-switchUI-off fl-switchUILabel"></span>
+                                      <span class="fl-switchUI-controlKnob"></span>
+                                      <span class="flc-switchUI-on fl-switchUILabel"></span>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <!-- Morphic Widget Toggle: App Bar Qss -->
+                          <div class="flc-qssMorphicWidget-appBarQss fl-dialog-content fl-scrollable fl-qssToggleWidget fl-qssMouseWidgetToggle">
+                              <div class="flc-qssMorphicWidgetToggle-settingTitle fl-qssToggleWidget-settingTitle"></div>
+
+                              <div class="flc-toggleButton fl-switchUI">
+                                  <div class="flc-switchUI-control fl-switchUI-control fl-focusable">
+                                      <span class="flc-switchUI-off fl-switchUILabel"></span>
+                                      <span class="fl-switchUI-controlKnob"></span>
+                                      <span class="flc-switchUI-on fl-switchUILabel"></span>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <!-- Morphic Widget Toggle: Close QSS on click outside -->
+                          <div class="flc-qssMorphicWidget-closeQssOnClickOutside fl-dialog-content fl-scrollable fl-qssToggleWidget fl-qssMouseWidgetToggle">
+                              <div class="flc-qssMorphicWidgetToggle-settingTitle fl-qssToggleWidget-settingTitle"></div>
+
+                              <div class="flc-toggleButton fl-switchUI">
+                                  <div class="flc-switchUI-control fl-switchUI-control fl-focusable">
+                                      <span class="flc-switchUI-off fl-switchUILabel"></span>
+                                      <span class="fl-switchUI-controlKnob"></span>
+                                      <span class="flc-switchUI-on fl-switchUILabel"></span>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <!-- Morphic Widget Toggle: Disable Restart Warning -->
+                          <div class="flc-qssMorphicWidget-disableRestartWarning fl-dialog-content fl-scrollable fl-qssToggleWidget fl-qssMouseWidgetToggle">
+                              <div class="flc-qssMorphicWidgetToggle-settingTitle fl-qssToggleWidget-settingTitle"></div>
+
+                              <div class="flc-toggleButton fl-switchUI">
+                                  <div class="flc-switchUI-control fl-switchUI-control fl-focusable">
+                                      <span class="flc-switchUI-off fl-switchUILabel"></span>
+                                      <span class="fl-switchUI-controlKnob"></span>
+                                      <span class="flc-switchUI-on fl-switchUILabel"></span>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <!-- Morphic Widget Stepper: Tooltip Display Delay -->
+                          <div class="flc-qssMorphicWidget-tooltipDisplayDelay fl-qssStepper fl-scrollable fl-qssStepperWidget fl-qssMouseSpeedStepperWidget">
+                              <div class="flc-qssStepperWidget-settingTitle fl-qssStepperWidget-settingTitle"></div>
+                              <div class="fl-qssStepperWidget-controls">
+                                  <div class="flc-qssTooltipDisplayDelayStepperWidget-controls-buttons fl-qssMouseSpeedStepperWidget-controls-buttons">
+                                      <div role="button" class="flc-qssStepperWidget-decBtn fl-qssStepper-decBtn fl-qssStepperWidget-btn btn fl-btn fl-focusable" tabindex="0">
+                                          <div class="fl-icon fl-decrement-icon"></div>
+                                          <span class="flc-btnLabel fl-btnLabel"></span>
+                                      </div>
+                                      <div role="button" class="flc-qssStepperWidget-incBtn fl-qssStepper-incBtn fl-qssStepperWidget-btn btn fl-btn fl-focusable" tabindex="0">
+                                          <div class="fl-icon fl-increment-icon"></div>
+                                          <span class="flc-btnLabel fl-btnLabel"></span>
+                                      </div>
+                                  </div>
+
+                                  <div class="flc-qssTooltipDisplayDelayStepperWidget-indicators fl-qssStepperWidget-indicators">
+                                      <!-- Steps reside here -->
+                                  </div>
+                              </div>
+                          </div>
+
+                          <!-- Morphic Widget Stepper: Scale Factor -->
+                          <div class="flc-qssMorphicWidget-scaleFactor fl-qssStepper fl-scrollable fl-qssStepperWidget fl-qssMouseSpeedStepperWidget">
+                              <div class="flc-qssStepperWidget-settingTitle fl-qssStepperWidget-settingTitle"></div>
+                              <div class="fl-qssStepperWidget-controls">
+                                  <div class="flc-qssScaleFactorStepperWidget-controls-buttons fl-qssMouseSpeedStepperWidget-controls-buttons">
+                                      <div role="button" class="flc-qssStepperWidget-decBtn fl-qssStepper-decBtn fl-qssStepperWidget-btn btn fl-btn fl-focusable" tabindex="0">
+                                          <div class="fl-icon fl-decrement-icon"></div>
+                                          <span class="flc-btnLabel fl-btnLabel"></span>
+                                      </div>
+                                      <div role="button" class="flc-qssStepperWidget-incBtn fl-qssStepper-incBtn fl-qssStepperWidget-btn btn fl-btn fl-focusable" tabindex="0">
+                                          <div class="fl-icon fl-increment-icon"></div>
+                                          <span class="flc-btnLabel fl-btnLabel"></span>
+                                      </div>
+                                  </div>
+
+                                  <div class="flc-qssScaleFactorStepperWidget-indicators fl-qssStepperWidget-indicators">
+                                      <!-- Steps reside here -->
+                                  </div>
+                              </div>
+                          </div>
+
+                          <!-- More Morphic Settings -->
+                          <div>
+                            <div class="flc-qssMorphicWidget-footerTip"></div>
+                            <button class="flc-qssMorphicWidget-openEditorButton fl-qssMorphicWidget-openEditorButton">
+                              <span class="flc-btnLabel"></span>
+                            </button>
+                            <p></p>
+                          </div>
+                        </div>
+                    </div>
                 </div>
+
                 <!-- the Side Cart button -->
                 <button class="flc-sidecar-button fl-sidecar-button fl-focusable">
                     <span class="flc-btnLabel fl-btnLabel"></span>

@@ -24,6 +24,21 @@
     "gpii_psp_aboutDialog_morphicHome": "Go to Morphic home",
     "gpii_psp_aboutDialog_submitSuggestions": "Submit suggestions",
 
+    "gpii_psp_makeYourOwnButtonEditor_nameLabel": "Name",
+    "gpii_psp_makeYourOwnButtonEditor_namePlaceholder": "Enter name for button",
+    "gpii_psp_makeYourOwnButtonEditor_typeLabel": "Button Type",
+    "gpii_psp_makeYourOwnButtonEditor_typeOptionWeb": "Button that opens a website",
+    "gpii_psp_makeYourOwnButtonEditor_typeOptionApp": "Button that opens an application",
+    "gpii_psp_makeYourOwnButtonEditor_dataLabelWeb": "URL Address",
+    "gpii_psp_makeYourOwnButtonEditor_dataLabelApp": "Path to application executable",
+    "gpii_psp_makeYourOwnButtonEditor_dataPlaceholderWeb": "Enter address of the webpage",
+    "gpii_psp_makeYourOwnButtonEditor_dataPlaceholderApp": "Enter path to application executable",
+    "gpii_psp_makeYourOwnButtonEditor_popupLabel": "Popup Text",
+    "gpii_psp_makeYourOwnButtonEditor_popupPlaceholder": "Enter Popup Text",
+    "gpii_psp_makeYourOwnButtonEditor_descriptionLabel": "Description",
+    "gpii_psp_makeYourOwnButtonEditor_descriptionPlaceholder": "Enter description",
+    "gpii_psp_makeYourOwnButtonEditor_saveButtonLabel": "Save button",
+
     "gpii_psp_smartworkLogin_usernameLabel": "Username",
     "gpii_psp_smartworkLogin_usernamePlaceholder": "Enter your smartwork user",
     "gpii_psp_smartworkLogin_passwordLabel": "Password",
@@ -64,6 +79,20 @@
     "gpii_qssWidget_mouse_decrementButton": "Slower",
     "gpii_qssWidget_mouse_upperBoundError": "This is fastest speed",
     "gpii_qssWidget_mouse_lowerBoundError": "This is slowest speed",
+
+    "gpii_qssWidget_morphicWidgetTooltipDisplayDelay_settingTitle": "Tooltip show delay (Range is between 0.5 and 3 seconds)",
+    "gpii_qssWidget_morphicWidgetTooltipDisplayDelay_incrementButton": "Slower",
+    "gpii_qssWidget_morphicWidgetTooltipDisplayDelay_decrementButton": "Faster",
+    "gpii_qssWidget_morphicWidgetTooltipDisplayDelay_upperBoundError": "You reached the lowest tooltip display delay",
+    "gpii_qssWidget_morphicWidgetTooltipDisplayDelay_lowerBoundError": "You reached the fastest tooltip display delay",
+
+    "gpii_qssWidget_morphicWidgetScaleFactor_settingTitle": "QuickStrip Scale Factor",
+    "gpii_qssWidget_morphicWidgetScaleFactor_incrementButton": "Larger",
+    "gpii_qssWidget_morphicWidgetScaleFactor_decrementButton": "Smaller",
+    "gpii_qssWidget_morphicWidgetScaleFactor_upperBoundError": "This is the highest value",
+    "gpii_qssWidget_morphicWidgetScaleFactor_lowerBoundError": "This is the lowest value",
+
+    "gpii_qssWidget_morphic_openEditorButtonLabel": "Open Settings editor",
 
     "gpii_qssWidget_openUSB_noUsbInserted": "There are no USB drives plugged into the computer. Insert your USB and try again.",
     "gpii_qssWidget_openUSB_ejectUsbDrives": "There are no USB drives active in the computer. It is safe to remove any drive in the computer",

@@ -62,7 +62,8 @@
             mySavedSettings: ".flc-qssMySavedSettingsWidget",
             sidecar: ".flc-sidecar-panel",
             sidecarButton: ".flc-sidecar-button",
-            mouse: ".flc-qssMouseWidget"
+            mouse: ".flc-qssMouseWidget",
+            morphic: ".flc-qssMorphicWidget"
         },
 
         /**
@@ -78,6 +79,7 @@
             "volume": "gpii.qssWidget.volume",
             "office": "gpii.qssWidget.office",
             "mouse": "gpii.qssWidget.mouse",
+            "morphic": "gpii.qssWidget.morphic",
             "translateTools": "gpii.qssWidget.translateTools",
             "mySavedSettings": "gpii.qssWidget.mySavedSettings"
         },

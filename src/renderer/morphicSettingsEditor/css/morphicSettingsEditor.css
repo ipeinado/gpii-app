@@ -1,0 +1,119 @@
+.fl-qss {
+    background-color: #e0e0e0;
+    height: auto;
+    border-bottom: 16px solid #333;
+    padding-top: 16px;
+    justify-content: flex-start;
+    position: relative;
+}
+
+.fl-quickSetStrip-more {
+    display: block;
+}
+
+.fl-quickSetStrip-more .fl-quickSetStrip-more-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flc-quickSetStrip-main {
+    width: auto;
+   flex-direction: row;
+   flex-wrap: nowrap;
+   position: relative;
+   overflow: hidden;
+   padding-right:32px;
+}
+
+.fl-qss-logo {
+    flex-basis: auto;
+}
+
+.fl-qss-button-movable {
+    background-color: rgb(0, 41, 87)  !important;
+}
+
+.fl-qss-separator {
+    background: #999 !important;
+}
+
+.fl-qss-closeButton {
+    background-color: transparent !important;
+}
+
+.fl-qss-emptyBtn {
+    background-color: white !important;
+    border: 1px dashed gray;
+}
+
+.fl-qss-button-small {
+    height: 22px !important;
+    background-color: #405E81 !important;
+}
+
+.fl-reorderer-movable-selected {
+    background-color: green;
+}
+
+.fl-reorderer-dropMarker {
+    width: 5px;
+    background-color: green;
+    border-radius: 5px;
+    margin: 5px 0 5px 6px;
+}
+
+.fl-reorderer-movable-dragging {
+    opacity: 0.5;
+}
+
+.fl-mse-more-button-grid {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap-reverse;
+    position: relative;
+}
+
+.flc-buttonCatalog-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items:  center;
+}
+
+.flc-buttonCatalog-buttonList {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.flc-buttonCatalog-buttonContainer {
+    width: 25%;
+    min-width: 240px;
+    box-sizing: border-box;
+    display: flex;
+    position: relative;
+}
+
+.flc-buttonCatalog-buttonContainer-button {
+    padding: 1rem;
+}
+
+.flc-buttonCatalog-buttonContainer-content {
+    padding: 1rem;
+}
+
+.flc-buttonCatalog-btnTag {
+    display: inline-block;
+    font-size: .75em;
+    background-color: darkslategrey;
+    color: #fff;
+    padding: 0 .5rem;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.flc-buttonCatalog-btnDescription {
+    padding: .5rem 0;
+    font-size: 0.85em;
+}

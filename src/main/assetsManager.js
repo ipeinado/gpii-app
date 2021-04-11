@@ -47,5 +47,6 @@ fluid.defaults("gpii.app.assetsManager", {
  * @return {String} the absolute path to the asset.
  */
 gpii.app.assetsManager.resolveAssetPath = function (assetsDir, filename) {
-    return fluid.module.resolvePath(assetsDir + filename);
+    var path = (filename.indexOf(fluid.module.resolvePath(assetsDir)) === -1) ? assetsDir + filename : filename;
+    return fluid.module.resolvePath(path);
 };

@@ -276,3 +276,27 @@ body {
 .fl-qssMouseWidget {
     width: 145px;
 }
+
+.fl-qssMorphicUserSettings {
+    overflow-y: auto;
+    display: grid;
+    height: 130px;
+    padding-right: 1px;
+}
+
+.fl-qssMorphicWidget-openEditorButton {
+    width: auto;
+    min-height: 25px;
+    padding: 5px;
+    color: white;
+    background: #002957;
+    border-color: #002957;
+    border-radius: 3px;
+    font-size: 10px;
+    line-height: 10px;
+    user-select: none;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

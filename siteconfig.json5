@@ -96,7 +96,6 @@
         // - "grid-visible", or "x" // For visible gray grid space (same size as the invisible one)
 
         buttonList: [
-            "morphic",
             {
                 "buttonId": "MakeYourOwn",
                 "buttonName": "Sou Caritas",
@@ -108,7 +107,7 @@
                 "buttonId": "MakeYourOwn",
                 "buttonName": "Guia do Utilizador",
                 "buttonType": "WEB",
-                "buttonData": "swagger.smartwork.sparkworks.net/docs/index.html",
+                "buttonData": "https://docs.smartworkproject.eu/",
                 "popupText": "<p>Abrir Guia do Utilizador.</p>"
             },
             "||",
@@ -120,8 +119,8 @@
             "read-aloud",
             "snipping-tool",
             "||",
-            "service-more",
             "morphic",
+            "service-more",
             "service-save",
             "service-undo",
             "service-saved-settings",
@@ -150,7 +149,7 @@
                   "popupText": "<p>Open Reddit in a web browser.</p>",
                   "description": "The full description of the button..."
               },
-              "url-customize-qss",
+              "translate-tools",
               "url-google-drive",
               "url-one-drive",
               "url-dropbox"

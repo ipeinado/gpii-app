@@ -371,6 +371,7 @@
 
         selectors: {
             openMYOBButton: ".flc-morphicSettingsEditor-myobButton",
+            saveButton: ".flc-morphicSettingsEditor-saveButton",
             buttonList: ".flc-quickSetStrip-main",
             morePanelList: ".flc-quickSetStrip-more-button-grid",
             buttonCatalog: ".flc-buttonCatalog-buttonList",
@@ -384,6 +385,9 @@
         events: {
             onOpenMYOBDialog: null,
             onMYOBCreated: null,
+
+            onSaveButtonClicked: null,
+
             afterMove: null,
             onMove: null
         },
@@ -394,6 +398,11 @@
                 method: "click",
                 args: "{that}.events.onOpenMYOBDialog.fire"
             },
+            "onCreate.addSaveButtonClickHandler": {
+                this: "{that}.dom.saveButton",
+                method: "click",
+                args: "{that}.events.onSaveButtonClicked.fire"
+            },
             // TODO: Useful to debug work on opening myobDialog and passing a buttonDef,
             // remove when that's implemented.
             // "onOpenMYOBDialog.debug": {
@@ -403,6 +412,11 @@
             "onOpenMYOBDialog.notifyMainProcess": {
                 funcName: "{channelNotifier}.events.onOpenMYOBDialog.fire",
                 args: ["{arguments}.0"]
+            },
+
+            "onSaveButtonClicked.notifyMainProcess": {
+                funcName: "{channelNotifier}.events.onSaveButtonClicked.fire",
+                args: ["{that}.model.buttonList", "{that}.model.morePanelList"]
             },
 
             "onCreate.setModules": {
@@ -474,7 +488,8 @@
                 type: "gpii.psp.channelNotifier",
                 options: {
                     events: {
-                        onOpenMYOBDialog: null
+                        onOpenMYOBDialog: null,
+                        onSaveButtonClicked: null
                     }
                 }
             },

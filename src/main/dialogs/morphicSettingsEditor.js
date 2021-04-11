@@ -58,6 +58,7 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
 
     events: {
         onOpenMYOBDialog: null,
+        onSaveButtonClicked: null,
         onMYOBCreated: null
     },
 
@@ -124,12 +125,12 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
             type: "gpii.app.channelListener",
             options: {
                 events: {
-                    onOpenMYOBDialog: null
+                    onOpenMYOBDialog: null,
+                    onSaveButtonClicked: null
                 },
                 listeners: {
-                    "onOpenMYOBDialog.propagate": {
-                        func: "{morphicSettingsEditor}.events.onOpenMYOBDialog.fire"
-                    }
+                    "onOpenMYOBDialog.propagate": "{morphicSettingsEditor}.events.onOpenMYOBDialog",
+                    "onSaveButtonClicked.saveAndApply": "{morphicSettingsEditor}.events.onSaveButtonClicked"
                 }
             }
         },

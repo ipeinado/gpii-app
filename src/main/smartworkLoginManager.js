@@ -22,9 +22,12 @@
 "use strict";
 
 var fluid = require("infusion"),
-    getUuid = require('uuid-by-string'),
+    getUuid = require("uuid-by-string"),
+    iconv = require("iconv-lite"),
     https = require("https"),
     keytar = require("keytar");
+
+iconv.skipDecodeWarning = true;
 
 var gpii = fluid.registerNamespace("gpii");
 
@@ -184,9 +187,20 @@ gpii.keyring.findCredentials = function (service) {
         // likely to happen, but just in case, we always return the first one, which
         // corresponds to the last added credentials.
         //
-        // TODO: Think about a workflow through a user can remove the credentials
-        // from the keyring.
-        promise.resolve(credentials[0]);
+        // Also, we have to deal with the way that different libraries handle the
+        // password from the keyring, read this:
+        //   https://github.com/r-lib/keyring/issues/85
+        // For this reason, we need to handle the situation of Morphic
+        // saving the password in a way that the python-keyring can retrieve.
+        // TODO: Propose an alternative for this workaround. And if can't be
+        // avoided, then explore the possibility to not use iconv.
+        var c = {
+            account: credentials[0].account,
+            // Workaround for the keytar enconding mumbo jumbo
+            password: iconv.decode(credentials[0].password, 'utf16le')
+        };
+
+        promise.resolve(c);
     }, function (error) {
         promise.reject(error);
     });
@@ -197,7 +211,10 @@ gpii.keyring.findCredentials = function (service) {
 gpii.keyring.setPassword = function (service, account, password) {
     var promise = fluid.promise();
 
-    keytar.setPassword(service, account, password).then(function () {
+    // Workaround for the keytar enconding mumbo jumbo
+    var bPass = Buffer.from(password, "utf16le");
+
+    keytar.setPassword(service, account, bPass.toString()).then(function () {
         promise.resolve();
     }, function (error) {
         promise.reject(error);

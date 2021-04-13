@@ -23,11 +23,8 @@
 
 var fluid = require("infusion"),
     getUuid = require("uuid-by-string"),
-    iconv = require("iconv-lite"),
     https = require("https"),
     keytar = require("keytar");
-
-iconv.skipDecodeWarning = true;
 
 var gpii = fluid.registerNamespace("gpii");
 
@@ -192,17 +189,17 @@ gpii.keyring.findCredentials = function (service) {
         //   https://github.com/r-lib/keyring/issues/85
         // For this reason, we need to handle the situation of Morphic
         // saving the password in a way that the python-keyring can retrieve.
-        // TODO: Propose an alternative for this workaround. And if can't be
-        // avoided, then explore the possibility to not use iconv.
+        // TODO: Propose an alternative to this workaround.
         var togo;
 
         if (!credentials.length) {
             togo = false;
         } else {
+            // Workaround for the keytar enconding mumbo jumbo
+            var utf8password = Buffer.from(credentials[0].password, "utf8").toString("utf16le");
             togo = {
                 account: credentials[0].account,
-                // Workaround for the keytar enconding mumbo jumbo
-                password: iconv.decode(credentials[0].password, 'utf16le')
+                password: utf8password
             };
         }
 

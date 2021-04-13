@@ -15,7 +15,6 @@
         "electron-localshortcut": "3.1.0",
         "gpii-express": "1.0.15",
         "gpii-handlebars": "2.1.0",
-        "iconv-lite": "0.6.2",
         "infusion": "3.0.0-dev.20190328T144119Z.ec44dbfab",
         "keytar": "javihernandez/node-keytar#3728b9558a849ab577d6f840b6da2c62b633ab67",
         "nan": "2.14.0",

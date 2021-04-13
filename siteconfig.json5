@@ -8,7 +8,7 @@
 
     // Whether to hide the Capture Tool buttons.
     // These "buttons" are actually currently right click menu items on the task tray.
-    hideCaptureToolButton: false,
+    hideCaptureToolButton: true,
 
     // Configuration options for the QSS window
     qss: {

@@ -194,13 +194,19 @@ gpii.keyring.findCredentials = function (service) {
         // saving the password in a way that the python-keyring can retrieve.
         // TODO: Propose an alternative for this workaround. And if can't be
         // avoided, then explore the possibility to not use iconv.
-        var c = {
-            account: credentials[0].account,
-            // Workaround for the keytar enconding mumbo jumbo
-            password: iconv.decode(credentials[0].password, 'utf16le')
-        };
+        var togo;
 
-        promise.resolve(c);
+        if (!credentials.length) {
+            togo = false;
+        } else {
+            togo = {
+                account: credentials[0].account,
+                // Workaround for the keytar enconding mumbo jumbo
+                password: iconv.decode(credentials[0].password, 'utf16le')
+            };
+        }
+
+        promise.resolve(togo);
     }, function (error) {
         promise.reject(error);
     });

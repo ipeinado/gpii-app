@@ -38,7 +38,7 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
         attrs: {
             width: 600,
             height: 400,
-            alwaysOnTop: true,
+            alwaysOnTop: false,
             frame: true,
             resizable: true,
             transparent: false, // needs to be false to enable resizing and maximizing

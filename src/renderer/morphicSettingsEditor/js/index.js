@@ -53,4 +53,8 @@
     jQuery(function () {
         gpii.psp.translatedMorphicSettingsEditor(".fl-dialog");
     });
+
+    jQuery(document).ready(function() {
+        jQuery(".fl-dialog").unbind("focus");
+    });
 })(fluid);

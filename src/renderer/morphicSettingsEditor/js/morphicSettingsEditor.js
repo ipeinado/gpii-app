@@ -47,7 +47,7 @@
             },
             removeButtonKeydownHandler: {
                 funcName: "gpii.psp.morphicSettingsEditor.handleKeydown",
-                args: ["{arguments}.0", "{morphicSettingsEditor}", "{buttonCatalog}"]
+                args: ["{arguments}.0", "{that}", "{morphicSettingsEditor}", "{buttonCatalog}"]
             }
         },
 
@@ -83,7 +83,7 @@
         invokers: {
             produceTree: {
                 funcName: "gpii.psp.morphicSettingsEditor.qss.produceTree",
-                args: ["{that}", "{morphicSettingsEditor}"]
+                args: ["{that}", "{morphicSettingsEditor}", "{buttonCatalog}"]
             }
         },
         rendererFnOptions: {
@@ -116,7 +116,7 @@
         invokers: {
             produceTree: {
                 funcName: "gpii.psp.morphicSettingsEditor.qss.produceTree",
-                args: ["{that}", "{morphicSettingsEditor}"]
+                args: ["{that}", "{morphicSettingsEditor}", "{buttonCatalog}"]
             }
         },
         rendererFnOptions: {
@@ -165,6 +165,8 @@
         selectors: {
             openMYOBButton: ".flc-morphicSettingsEditor-myobButton",
             saveButton: ".flc-morphicSettingsEditor-saveButton",
+
+            instructions: ".flc-qss-instructions",
 
             buttonList: ".fl-quickSetStrip-main-buttonList",
             morePanelList: ".fl-quickSetStrip-more",
@@ -221,11 +223,6 @@
                 args: ["{that}.model.buttonList", "{that}.model.morePanelList"]
             },
 
-            "onCreate.setModules": {
-                funcName: "gpii.psp.morphicSettingsEditor.setModules",
-                args: ["{that}"]
-            },
-
             "afterMove.reorderButtons": {
                 funcName: "gpii.psp.morphicSettingsEditor.updateModels",
                 args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2", "{buttonCatalog}"]
@@ -260,7 +257,7 @@
                         instructionText: "${instruction}"
                     }
                 }
-            },
+            }, 
 
             qss: {
                 type: "gpii.psp.morphicSettingsEditor.qss",
@@ -348,7 +345,7 @@
         invokers: {
             produceTree: {
                 funcName: "gpii.psp.morphicSettingsEditor.qss.produceTree",
-                args: ["{that}", "{morphicSettingsEditor}"]
+                args: ["{that}", "{morphicSettingsEditor}", "{buttonCatalog}"]
             }
         },
         rendererFnOptions: {
@@ -360,28 +357,6 @@
             }
         }
     });
-
-    gpii.psp.morphicSettingsEditor.handleButtonKeydown = function(e, button, mse) {
-
-        var buttonId = button.id;
-        
-        if ((e.key === "Backspace") || (e.key === "Delete")) {
-            e.target.remove();
-
-            if (button.tag === "In QuickStrip") {
-                console.log("IN QSS", button.buttonIndex);
-                var buttonList = mse.model.buttonList;
-                buttonList.splice(button.buttonIndex, 1);
-                mse.applier.change("buttonList", buttonList);
-            };
-
-            if (button.tag === "In More Panel") {
-                var morePanelList = fluid.flatten(mse.model.morePanelList);
-                morePanelList.splice(button.buttonIndex, 1);
-                mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
-            };
-        };
-    };
 
     /**
      * 
@@ -483,57 +458,21 @@
         }
     });
 
-
-    gpii.psp.morphicSettingsEditor.handleKeydown = function(e, mse, buttonCatalog) {
-
-        // var buttonId = button.id;
-        var caller = e.target,
-            activeItem = mse.activeItem;
-
-        if (activeItem.hasAttribute("data-buttonid")) {
-            var btnId = activeItem.getAttribute("data-buttonid");
-            console.log(activeItem.parentElement.classList);
-                /* inQSS = activeItem.parentElement.classList.indexOf("flc-quickSetStrip-main-buttonList") !== -1,
-                inMorePanel = activeItem.parentElement.classList.indexOf("flc-quickSetStrip-more") !== -1;;
-            console.log("In QSS", inQSS);
-            console.log("In More Panel", inMorePanel); */
-        };
-        
-        /* if ((e.key === "Backspace") || (e.key === "Delete")) {
-            e.target.remove();
-
-            if (button.tag === "In QuickStrip") {
-                console.log("IN QSS", button.buttonIndex);
-                var buttonList = mse.model.buttonList;
-                buttonList.splice(button.buttonIndex, 1);
-                mse.applier.change("buttonList", buttonList);
-            };
-
-            if (button.tag === "In More Panel") {
-                var morePanelList = fluid.flatten(mse.model.morePanelList);
-                morePanelList.splice(button.buttonIndex, 1);
-                mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
-            }; 
-        };*/
-    };
-
-        
-
     /**
      * This function creates a protoTree for each button
      * @param {*} that - element that calls for the renderer tree
      * @param {*} mse - the overall morphic settings editor
      * @returns 
      */
-    gpii.psp.morphicSettingsEditor.qss.produceTree = function(that, mse) {
+    gpii.psp.morphicSettingsEditor.qss.produceTree = function(that, mse, buttonCatalog) {
         var buttonList = fluid.transform(that.model.buttons, function(button, index) {
             return {
                 ID: "button:",
                 decorators: [
                     { type: "addClass", classes: button.buttonType },
                     { type: "attrs", attributes: {"data-buttonId": button.id} },
-                    { type: "jQuery", func: "keydown", args: function(e) { gpii.psp.morphicSettingsEditor.handleKeydown(e, mse, mse.model.buttonCatalog) }},
-                    { type: "jQuery", func: "contextmenu", args: function(e) { gpii.psp.morphicSettingsEditor.displayContextMenu(mse, mse.contextMenu); }}
+                    { type: "jQuery", func: "keydown", args: function(e) { gpii.psp.morphicSettingsEditor.handleKeydown(e, that, mse, buttonCatalog) }},
+                    { type: "jQuery", func: "contextmenu", args: function(e) { gpii.psp.morphicSettingsEditor.displayContextMenu(that, mse, mse.contextMenu); }}
                 ],
                 children: [{
                     ID: "buttonLabel",
@@ -544,18 +483,43 @@
         return buttonList;
     };
 
-   
+    /**
+     * Keydown handler for buttons in the QSS or the 'More' panel
+     * @param {*} e - click event
+     * @param {*} that - caller (i.e., the QSS of the 'More' panel)
+     * @param {*} mse - the overall Settings Editor
+     * @param {*} buttonCatalog - the button catalog renderer (for refreshing)
+     */
+    gpii.psp.morphicSettingsEditor.handleKeydown = function(e, that, mse, buttonCatalog) {
+
+        if ((e.key === "Backspace") || (e.key === "Delete")) {
+            gpii.psp.morphicSettingsEditor.qss.removeButton(e, that, mse, buttonCatalog);
+        }
+    };
+
+    /**
+     * Adds a button to the QuickStrip
+     * @param {} e - event
+     * @param {*} mse - overall Morphic Settings Editor
+     * @param {*} buttonCatalog - button catalog
+     */
     gpii.psp.morphicSettingsEditor.addButtonToQSS = function(e, mse, buttonCatalog) {
         var buttonList = mse.model.buttonList;
-        buttonList.unshift(e.target.getAttribute("buttonid"));
+        buttonList.push(e.target.getAttribute("buttonid"));
         mse.applier.change("buttonList", buttonList);
         mse.qss.refreshView();
         buttonCatalog.refreshView();
     };
 
+    /**
+     * Adds a button to the 'More' panel
+     * @param {*} e - click event
+     * @param {*} mse 
+     * @param {*} buttonCatalog 
+     */
     gpii.psp.morphicSettingsEditor.addButtonToMorePanel = function(e, mse, buttonCatalog) {
         var morePanelList = fluid.flatten(mse.model.morePanelList);
-        morePanelList.unshift(e.target.getAttribute("buttonid"));
+        morePanelList.push(e.target.getAttribute("buttonid"));
         mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
         mse.morePanel.refreshView();
         buttonCatalog.refreshView();
@@ -610,8 +574,10 @@
         that.applier.change("buttons", items);
     };
 
-    gpii.psp.morphicSettingsEditor.displayContextMenu = function(that, contextMenu) {
-        var pos = that.activeItem.getBoundingClientRect();
+    gpii.psp.morphicSettingsEditor.displayContextMenu = function(that, mse, contextMenu) {
+        console.log("THAAAAAT", that.typeName);
+        contextMenu.applier.change("caller", that.typeName);
+        var pos = mse.activeItem.getBoundingClientRect();
         $(document.body).bind("click", function(e) { gpii.psp.morphicSettingsEditor.qss.hideContextMenu(contextMenu.container); });
 /*         var buttonModel = that.model;
         contextMenu.applier.change("caller", buttonModel); */
@@ -619,7 +585,6 @@
         contextMenu.container.css("opacity", 1);
         contextMenu.container.css("top", pos.y - 76);
         contextMenu.container.css("left", pos.x - 180);
-        console.log("CONTAINEEEER", contextMenu.container);
         contextMenu.container.children()[0].focus();
     };
 
@@ -706,26 +671,51 @@
             console.log("LOOOG", arg);
         };
 
-    gpii.psp.morphicSettingsEditor.qss.removeButton = function(e, that, mse, buttonCatalog) {
+    gpii.psp.morphicSettingsEditor.qss.removeButton = function(e, caller, mse, buttonCatalog) {
 
         e.preventDefault();
 
+        console.log("BUTTON CATALOG", buttonCatalog);
+
         var activeItem = mse.activeItem,
-            parentClass = activeItem.parentElement.classList,
             buttonId = activeItem.getAttribute("data-buttonid");
 
-        console.log(activeItem.innerText);
+        if ((caller.typeName === "gpii.psp.morphicSettingsEditor.qss") ||
+            ((caller.typeName === "gpii.psp.morphicSettingsEditor.contextMenu") && (caller.model.caller === "gpii.psp.morphicSettingsEditor.qss"))) {
+            var buttonList = mse.model.buttonList;
+            var button = fluid.find_if(buttonList, function(el) {
+                if (typeof(el) === "object") { return el.buttonId === buttonId; }
+                if (typeof(el) === "string") { return el === buttonId; }
+            });
+            buttonList.splice(buttonList.indexOf(button), 1);
+            mse.applier.change("buttonList", buttonList);
+            console.log("BUTTON LIST", mse.model.buttonList);
+        };
+
+        if ((caller.typeName === "gpii.psp.morphicSettingsEditor.morePanel") ||
+           ((caller.typeName === "gpii.psp.morphicSettingsEditor.contextMenu") && (caller.model.caller === "gpii.psp.morphicSettingsEditor.morePanel"))) {
+            var morePanelList = fluid.flatten(mse.model.morePanelList);
+            var button = fluid.find_if(morePanelList, function(el) {
+                if (typeof(el) === "object") { return el.buttonId === buttonId; }
+                if (typeof(el) === "string") { return el === buttonId; }
+            });
+            morePanelList.splice(morePanelList.indexOf(button), 1);
+            mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList))
+        }; 
+
+        activeItem.remove();
 
         mse.instructions.applier.change("instruction", `You have deleted button '${activeItem.innerText}'`);
         mse.instructions.refreshView();
-
-        // $(".flc-qss-instructions").text(`You have deleted the button '${activeItem.innerText}'`).show();
         
         // MODEL
         activeItem.remove();
-        gpii.psp.morphicSettingsEditor.qss.hideContextMenu(that.container);
 
-        buttonCatalog.applier.change("items", buttonCatalog.model.items);
+        if (caller.typeName === "gpii.psp.morphicSettingsEditor.contextMenu") {
+            gpii.psp.morphicSettingsEditor.qss.hideContextMenu(caller.container);
+        }
+        
+        // buttonCatalog.applier.change("items", buttonCatalog.model.items);
         buttonCatalog.refreshView();
     };
 

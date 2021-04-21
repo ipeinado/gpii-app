@@ -16,8 +16,6 @@
 
 "use strict";
 
-const { func } = require("electron-edge-js");
-
 (function (fluid) {
     var gpii = fluid.registerNamespace("gpii");
 
@@ -166,11 +164,13 @@ const { func } = require("electron-edge-js");
 
         selectors: {
             openMYOBButton: ".flc-morphicSettingsEditor-myobButton",
-            instructions: ".flc-qss-instructions",
+            saveButton: ".flc-morphicSettingsEditor-saveButton",
+
             buttonList: ".fl-quickSetStrip-main-buttonList",
             morePanelList: ".fl-quickSetStrip-more",
             qssContextMenu: ".mor-buttonContextMenu",
-            // buttonCatalog: ".flc-buttonCatalog-buttonList",
+
+            buttonCatalog: ".flc-buttonCatalog-buttonList",
             movables: ".fl-qss-button-movable",
             dropTargets: ["{that}.dom.morePanelList", "{that}.dom.buttonCatalog"],
             modules: ".fl-qss-button-movable",
@@ -180,6 +180,10 @@ const { func } = require("electron-edge-js");
 
         events: {
             onOpenMYOBDialog: null,
+            onMYOBCreated: null,
+
+            onSaveButtonClicked: null,
+
             onBeginMove: null,
             afterMove: null
         },
@@ -196,6 +200,11 @@ const { func } = require("electron-edge-js");
                 method: "click",
                 args: "{that}.events.onOpenMYOBDialog.fire"
             },
+            "onCreate.addSaveButtonClickHandler": {
+                this: "{that}.dom.saveButton",
+                method: "click",
+                args: "{that}.events.onSaveButtonClicked.fire"
+            },
             // TODO: Useful to debug work on opening myobDialog and passing a buttonDef,
             // remove when that's implemented.
             // "onOpenMYOBDialog.debug": {
@@ -207,6 +216,16 @@ const { func } = require("electron-edge-js");
                 args: ["{arguments}.0"]
             },
 
+            "onSaveButtonClicked.notifyMainProcess": {
+                funcName: "{channelNotifier}.events.onSaveButtonClicked.fire",
+                args: ["{that}.model.buttonList", "{that}.model.morePanelList"]
+            },
+
+            "onCreate.setModules": {
+                funcName: "gpii.psp.morphicSettingsEditor.setModules",
+                args: ["{that}"]
+            },
+
             "afterMove.reorderButtons": {
                 funcName: "gpii.psp.morphicSettingsEditor.updateModels",
                 args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2", "{buttonCatalog}"]
@@ -214,6 +233,10 @@ const { func } = require("electron-edge-js");
         },
 
         invokers: {
+            addNewMYOB: {
+                funcName: "gpii.psp.morphicSettingsEditor.addNewMYOB",
+                args: ["{that}", "{arguments}.0"]
+            },
             mseClickHandler: {
                 funcName: "gpii.psp.morphicSettingsEditor.qss.hideContextMenu",
                 args: ["{that}.dom.qssContextMenu"]
@@ -280,7 +303,22 @@ const { func } = require("electron-edge-js");
                 type: "gpii.psp.channelNotifier",
                 options: {
                     events: {
-                        onOpenMYOBDialog: null
+                        onOpenMYOBDialog: null,
+                        onSaveButtonClicked: null
+                    }
+                }
+            },
+            channelListener: {
+                type: "gpii.psp.channelListener",
+                options: {
+                    events: {
+                        onMYOBCreated: null
+                    },
+                    listeners: {
+                        "onMYOBCreated.debug": {
+                            func: "{morphicSettingsEditor}.addNewMYOB",
+                            args: "{arguments}.0"
+                        }
                     }
                 }
             }
@@ -288,8 +326,68 @@ const { func } = require("electron-edge-js");
 
     });
 
-     /**
-     * Renderer component to present buttons catalog.
+    gpii.psp.morphicSettingsEditor.addNewMYOB = function (that, button) {
+        console.log("### at addNewMYOB - button: ", button);
+        // TODO: Implement adding the created button
+    };
+
+    fluid.defaults("gpii.psp.morphicSettingsEditor.qss", {
+        gradeNames: ["fluid.rendererComponent"],
+        selectors: {
+            button: ".fl-qss-button",
+            buttonLabel: ".fl-qss-btnLabel"
+        },
+        repeatingSelectors: ["button"],
+        listeners: {
+            "prepareModelForRender.getInfoFromCatalog": {
+                funcName: "gpii.psp.morphicSettingsEditor.prepareButtonCatalogModel",
+                args: ["{that}", "{morphicSettingsEditor}.model"]
+            }
+        },
+        renderOnInit: true,
+        invokers: {
+            produceTree: {
+                funcName: "gpii.psp.morphicSettingsEditor.qss.produceTree",
+                args: ["{that}", "{morphicSettingsEditor}"]
+            }
+        },
+        rendererFnOptions: {
+            noexpand: true
+        },
+        resources: {
+            template: {
+                resourceText: "<div class=\"fl-qss-button fl-qss-button-movable\"><span class=\"fl-qss-btnLabel\"></span></div>"
+            }
+        }
+    });
+
+    gpii.psp.morphicSettingsEditor.handleButtonKeydown = function(e, button, mse) {
+
+        var buttonId = button.id;
+        
+        if ((e.key === "Backspace") || (e.key === "Delete")) {
+            e.target.remove();
+
+            if (button.tag === "In QuickStrip") {
+                console.log("IN QSS", button.buttonIndex);
+                var buttonList = mse.model.buttonList;
+                buttonList.splice(button.buttonIndex, 1);
+                mse.applier.change("buttonList", buttonList);
+            };
+
+            if (button.tag === "In More Panel") {
+                var morePanelList = fluid.flatten(mse.model.morePanelList);
+                morePanelList.splice(button.buttonIndex, 1);
+                mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
+            };
+        };
+    };
+
+    /**
+     * 
+     * @param {*} that 
+     * @param {*} mse 
+     * @returns 
      */
       fluid.defaults("gpii.psp.morphicSettingsEditor.buttonCatalog", {
         gradeNames: ["fluid.rendererComponent"],

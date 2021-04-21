@@ -320,7 +320,14 @@ fluid.defaults("gpii.app", {
             options: {
                 buttonList: "{configurationHandler}.options.siteConfig.qss.buttonList",
                 morePanelList: "{configurationHandler}.options.siteConfig.qss.morePanelList",
-                supportedButtonsList: "@expand:gpii.app.getSupportedButtonsList()"
+                supportedButtonsList: "@expand:gpii.app.getSupportedButtonsList()",
+                listeners: {
+                    "onSaveButtonClicked.saveApplyAndCloseSettingsEditor": {
+                        func: "{app}.saveApplyAndCloseSettingsEditor",
+                        //     buttonList       morePanelList
+                        args: ["{arguments}.0", "{arguments}.1"]
+                    }
+                }
             }
         },
         smartworkLoginDialog: {
@@ -604,6 +611,10 @@ fluid.defaults("gpii.app", {
             funcName: "gpii.app.getEnvironmentalLoginKey",
             args: ["{lifecycleManager}.model.lastEnvironmentalLoginGpiiKey", "{arguments}.0", "{arguments}.1"]
         },
+        saveApplyAndCloseSettingsEditor: {
+            funcName: "gpii.app.saveApplyAndCloseSettingsEditor",
+            args: ["{that}", "{flowManager}", "{arguments}.0", "{arguments}.1"]
+        },
         exit: {
             funcName: "gpii.app.exit",
             args: "{that}"
@@ -824,6 +835,28 @@ gpii.app.windowMessage = function (that, hwnd, msg, wParam, lParam, result) {
         that.exit();
         result.value = 0;
     }
+};
+
+gpii.app.saveApplyAndCloseSettingsEditor = function (that, flowManager, buttonList, morePanelList) {
+    var payload = {
+        "contexts": {
+            "gpii-default": {
+                "preferences": {
+                    "http://registry.gpii.net/applications/net.gpii.morphic": {
+                      "buttonList": buttonList,
+                      "morePanelList": morePanelList
+                    }
+                }
+            }
+        }
+    };
+
+    // Save buttonList and morePanelList prefs
+    flowManager.savePreferences(that.model.keyedInUserToken, payload);
+    // Destroy the settings editor
+    that.morphicSettingsEditor.destroy();
+    // reApplyPreferences
+    that.reApplyPreferences();
 };
 
 // A wrapper that wraps gpii.app as a subcomponent. This is the grade need by configs/app.json

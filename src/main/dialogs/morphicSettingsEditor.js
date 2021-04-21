@@ -58,6 +58,7 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
 
     events: {
         onOpenMYOBDialog: null,
+        onSaveButtonClicked: null,
         onMYOBCreated: null
     },
 
@@ -73,6 +74,10 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
         "onMYOBCreated.debug": {
             funcName: "console.log",
             args: ["### morphicSettingsEditor - MYOB Created: ", "{arguments}.0"]
+        },
+
+        "onMYOBCreated.notifyRenderer": {
+            func: "{channelNotifier}.events.onMYOBCreated.fire"
         },
 
         "onMYOBCreated.destroyMYOBDialog": {
@@ -108,16 +113,24 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
             //     }
             // }
         },
+        channelNotifier: {
+            type: "gpii.app.channelNotifier",
+            options: {
+                events: {
+                    onMYOBCreated: null
+                }
+            }
+        },
         channelListener: {
             type: "gpii.app.channelListener",
             options: {
                 events: {
-                    onOpenMYOBDialog: null
+                    onOpenMYOBDialog: null,
+                    onSaveButtonClicked: null
                 },
                 listeners: {
-                    "onOpenMYOBDialog.propagate": {
-                        func: "{morphicSettingsEditor}.events.onOpenMYOBDialog.fire"
-                    }
+                    "onOpenMYOBDialog.propagate": "{morphicSettingsEditor}.events.onOpenMYOBDialog",
+                    "onSaveButtonClicked.saveAndApply": "{morphicSettingsEditor}.events.onSaveButtonClicked"
                 }
             }
         },

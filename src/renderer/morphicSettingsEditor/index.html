@@ -34,15 +34,27 @@
             <h1>Morphic Settings Editor</h1>
 
             <div class="flc-quickSetStrip fl-qss">
+                <div class="flc-qss-instructions"></div>
                 <div class="flc-quickSetStrip-more fl-quickSetStrip-more">
-                    <button class="flc-quickSetStrip-more-close fl-focusable fl-qss-closeButton fl-more-closeButton" tabindex="999">×</button>
-                    <div class="flc-quickSetStrip-more-button-grid fl-mse-more-button-grid">
-                    </div>
+                    <button class="flc-quickSetStrip-more-close fl-focusable fl-qss-closeButton fl-more-closeButton" tabindex="10000">×</button>
                 </div>
 
                 <div class="flc-quickSetStrip-main fl-quickSetStrip-main">
                     <img class="flc-qss-logo fl-qss-logo" src="../../icons/Morphic-QuickStrip-logo.svg">
+                    <div class="fl-quickSetStrip-main-buttonList"></div>
+                    <div class="fl-quickSetStrip-main-serviceButtons">
+                        <div class="fl-qss-button fl-qss-button-small">Save</div>
+                        <div class="fl-qss-button fl-qss-button-small">My Saved Settings</div>
+                        <div class="fl-qss-button fl-qss-button-small">Undo</div>
+                        <div class="fl-qss-button fl-qss-button-small">Reset to Standard</div>
+                        <button class="flc-quickSetStrip-more-close fl-focusable fl-qss-closeButton fl-more-closeButton" tabindex="999">×</button>
+                    </div>
                 </div>
+
+                <ul class="mor-buttonContextMenu" role="menu" style="transition: opacity 280ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform 186ms cubic-bezier(0.4, 0, 0.2, 1) 93ms;">
+                    <li class="mor-buttonContextMenu-item mor-buttonContextMenu-item-remove" role="menuitem" tabindex="0"></li>
+                </ul>
+                
             </div>
 
             <div class="flc-buttonCatalog">
@@ -50,8 +62,7 @@
                     <h2>Button Catalog</h2>
                     <button type="button" class="flc-morphicSettingsEditor-myobButton btn btn-lg btn-primary">Make Your Own Button</button>
                 </div>
-                <div class="flc-buttonCatalog-buttonList">
-                </div>
+                <div class="flc-buttonCatalog-buttonList"></div>
             </div>
 
             <button type="button" class="flc-morphicSettingsEditor-saveButton btn btn-lg btn-primary">Save & Apply</button>
@@ -59,3 +70,4 @@
     </body>
 
 </html>
+ 

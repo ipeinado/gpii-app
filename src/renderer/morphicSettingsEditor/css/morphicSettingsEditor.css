@@ -7,22 +7,42 @@
     position: relative;
 }
 
-.fl-quickSetStrip-more {
-    display: block;
+.flc-qss-instructions {
+    position: absolute;    
+    top: 10px;
+    left: 10px;
+    padding: 1em;
 }
 
-.fl-quickSetStrip-more .fl-quickSetStrip-more-row {
+.fl-quickSetStrip-more {
     display: flex;
     flex-direction: row;
+    justify-content: flex-end;
+    flex-wrap: wrap-reverse;
+    padding-right: 32px;
+    position: relative;
 }
 
 .flc-quickSetStrip-main {
     width: auto;
-   flex-direction: row;
-   flex-wrap: nowrap;
-   position: relative;
-   overflow: hidden;
-   padding-right:32px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    position: relative;
+}
+
+.fl-quickSetStrip-main-buttonList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.fl-quickSetStrip-main-serviceButtons {
+    padding-right: 32px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 148px;
 }
 
 .fl-qss-logo {
@@ -31,6 +51,8 @@
 
 .fl-qss-button-movable {
     background-color: rgb(0, 41, 87)  !important;
+    cursor: grab;
+    outline:deeppink;
 }
 
 .fl-qss-separator {
@@ -47,12 +69,13 @@
 }
 
 .fl-qss-button-small {
-    height: 22px !important;
+    height: 24px !important;
     background-color: #405E81 !important;
+    cursor: auto;
 }
 
 .fl-reorderer-movable-selected {
-    background-color: green;
+    background-color: green !important;
 }
 
 .fl-reorderer-dropMarker {
@@ -88,25 +111,28 @@
     flex-wrap: wrap;
 }
 
-.flc-buttonCatalog-buttonContainer {
+.flc-buttonCatalog-buttonContainer-button {
     width: 25%;
     min-width: 240px;
     box-sizing: border-box;
-    display: flex;
-    position: relative;
+    margin-bottom: 2em;
+    overflow: hidden;
 }
 
-.flc-buttonCatalog-buttonContainer-button {
-    padding: 1rem;
+.flc-buttonCatalog-buttonContainer-button .fl-qss-button {
+    float: left;
+    text-align: center;
 }
 
 .flc-buttonCatalog-buttonContainer-content {
-    padding: 1rem;
+    overflow: hidden;
+    padding: 0 1em;
+    font-size: 1rem;
 }
 
 .flc-buttonCatalog-btnTag {
     display: inline-block;
-    font-size: .75em;
+    font-size: 0.9em;
     background-color: darkslategrey;
     color: #fff;
     padding: 0 .5rem;
@@ -114,6 +140,58 @@
     font-weight: bold;
 }
 .flc-buttonCatalog-btnDescription {
-    padding: .5rem 0;
-    font-size: 0.85em;
+    padding: .5rem 0 2rem 0;
+    font-size: 1.1em;
+}
+
+.flc-buttonCatalog-btnAddToQSS,
+.flc-buttonCatalog-btnAddToMorePanel {
+    display: inline-block;
+    background-color: green;
+    color: #fff;
+    font-size: 1em;
+    font-weight: bold;
+    padding: .5rem;
+    border-radius: 5px;
+    margin-right: .5rem;
+}
+
+.flc-buttonCatalog-btnAddToQSS:hover,
+.flc-buttonCatalog-btnAddToMorePanel:hover {
+    background-color: darkgreen;
+}
+
+.mor-buttonContextMenu {
+    position: absolute;
+    border: 1px solid #ccc;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 100;
+}
+
+
+
+.mor-buttonContextMenu-item {
+    display: block;
+    background-color: #fff;
+    margin: 0;
+    padding: 0.6rem 1rem;
+    font-size: 14px;
+    color: rgba(0, 0, 0, .85);
+    cursor: pointer;
+    min-width: 200px;
+}
+
+.more-buttonContextMenu-item:not(:last-child) {
+    border-bottom: 1px solid #ccc;
+}
+
+.mor-buttonContextMenu-item:hover,
+.mor-buttonContextMenu-item:focus {
+    color: #000;
+    background-color: #f0f0f0;
+    outline: deeppink;
 }

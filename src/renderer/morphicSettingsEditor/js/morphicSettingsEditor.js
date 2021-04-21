@@ -21,295 +21,6 @@ const { func } = require("electron-edge-js");
 (function (fluid) {
     var gpii = fluid.registerNamespace("gpii");
 
-    /**
-     * Grade creates to be used for rendering the QSS strip and `More panel` buttons.
-     */
-    fluid.defaults("gpii.psp.morphicSettingsEditor.repeaterInList", {
-        gradeNames: ["gpii.psp.repeater"],
-
-        dynamicContainerMarkup: {
-            container: "<div class=\"%containerClass fl-qss-button-movable fl-focusable\">" +
-                       "</div>",
-            containerClassPrefix: "fl-qss-button"
-        },
-
-        markup: "<span class=\"flc-qss-btnLabel fl-qss-btnLabel\"></span>",
-
-        handlerType: "gpii.psp.morphicSettingsEditor.qss.buttonPresenter"
-    });
-
-    /**
-     * HandlerType grade for regular buttons in both the QSS and the 'More' panel
-     */
-/*     fluid.defaults("gpii.psp.morphicSettingsEditor.qss.buttonPresenter", {
-        gradeNames: ["fluid.rendererComponent"],
-
-        modelRelay: {
-            target: "button",
-            singleTransform: {
-                type: "fluid.transforms.free",
-                func: "gpii.psp.morphicSettingsEditor.getButtonInfo",
-                args: ["{morphicSettingsEditor}.model.buttonCatalog", "{that}.model.item"]
-            }
-        },
-
-        selectors: {
-            title: ".flc-qss-btnLabel"
-        },
-
-        decorators: {
-            identify: "{that}.item.id"
-        },
-
-        events: {
-            onContextMenuHandler: null,
-            onKeydown: null
-        },
-
-        listeners: {
-            "onCreate.setClasses": {
-                funcName: "gpii.psp.morphicSettingsEditor.qss.setClasses",
-                args: ["{that}"]
-            },
-            "onCreate.addContextMenuHandler": {
-                this: "{that}.container",
-                method: "contextmenu",
-                args: ["{that}.events.onContextMenuHandler.fire"]
-            },
-            "onContextMenuHandler.displayContextMenu": {
-                funcName: "gpii.psp.morphicSettingsEditor.qss.displayContextMenu",
-                args: ["{that}", "{morphicSettingsEditor}.contextMenu"]
-            },
-            "onCreate.addKeydownHandler": {
-                this: "{that}.container",
-                method: "keydown",
-                args: ["{that}.events.onKeydown.fire"]
-            },
-            "onKeydown.log": {
-                funcName: "gpii.psp.morphicSettingsEditor.buttonKeydownHandler",
-                args: ["{arguments}.0", "{that}", "{morphicSettingsEditor}"]
-            }
-        },
-
-        renderOnInit: true,
-
-        protoTree: {
-            title: "${button.title}"
-        }
-    }); */
-    
-    gpii.psp.morphicSettingsEditor.buttonKeydownHandler = function(event, button, mse) {
-        
-        if ((event.key === "Backspace") || (event.key === "Delete")) {
-            gpii.psp.morphicSettingsEditor.qss.removeButton(button.model.index, mse);
-        }
-    };
-
-    gpii.psp.morphicSettingsEditor.displayContextMenu = function(that, contextMenu) {
-        var pos = that.activeItem.getBoundingClientRect();
-/*         var buttonModel = that.model;
-        contextMenu.applier.change("caller", buttonModel); */
-        contextMenu.container.css("visibility", "visible");
-        contextMenu.container.css("opacity", 1);
-        contextMenu.container.css("top", pos.y - 76);
-        contextMenu.container.css("left", pos.x - 180);
-        console.log("CONTAINEEEER", contextMenu.container);
-        contextMenu.container.children()[0].focus();
-    };
-
-    fluid.defaults("gpii.psp.morphicSettingsEditor.qss.separatorButtonPresenter", {
-        gradeNames: ["fluid.viewComponent"],
-        listeners: {
-            "onCreate.addClasses": "{that}.addClasses"
-        },
-        invokers: {
-            addClasses: {
-                this: "{that}.container",
-                method: "addClass",
-                args: ["fl-qss-separator"]
-            }
-        }
-    });
-
-    /**
-     * Handler type for displaying a button in the button catalog
-     */
-
-    fluid.defaults("gpii.psp.morphicSettingsEditor.buttonCatalog.buttonPresenter", {
-        gradeNames: "fluid.rendererComponent",
-        selectors: {
-            button: ".flc-qss-button",
-            buttonLabel: ".flc-buttonCatalog-btnLabel",
-            buttonTag: ".flc-buttonCatalog-btnTag",
-            buttonDescription: ".flc-buttonCatalog-btnDescription"
-        },
-        model: {
-            tag: ""
-        },
-        modelRelay: {
-            target: "button",
-            singleTransform: {
-                type: "fluid.transforms.free",
-                func: "gpii.psp.morphicSettingsEditor.getButtonInfo",
-                args: ["{morphicSettingsEditor}.model.buttonCatalog", "{that}.model.item"]
-            }
-        },
-        renderOnInit: true,
-
-        listeners: {
-            "onCreate.setClasses": {
-                funcName: "gpii.psp.morphicSettingsEditor.qss.setClasses",
-                args: ["{that}"]
-            },
-            "onCreate.addTags": {
-                funcName: "gpii.psp.morphicSettingsEditor.buttonCatalog.addTags",
-                args: ["{morphicSettingsEditor}.model.buttonList", "{morphicSettingsEditor}.model.morePanelList", "{that}"]
-            }
-
-        },
-        protoTree: {
-            buttonLabel: "${button.title}",
-            buttonTag: "${tag}",
-            buttonDescription: "${button.description}"
-        },
-
-        invokers: {
-            logThat: {
-                funcName: "gpii.psp.morphicSettingsEditor.log",
-                args: ["{that}"]
-            }
-        }
-    });
-
-    /**
-     *
-     * @param button
-     * Utility function to add classes to the botton depending on the id of the button.
-     * Information about the type of button should probably be provided in the button
-     * (i.e. type: "separator" or type: "fl-button-small") instead of being calculated
-     */
-
-/*     gpii.psp.morphicSettingsEditor.qss.setClasses = function(button) {
-
-        var qssButton = button.container.hasClass("fl-qss-button") ? button.container : button.container.find(".fl-qss-button");
-
-        if (typeof(button.model.item) === "string") {
-            switch (button.model.item) {
-                case "||":
-                case "separator-visible":
-                case "separator":
-                    qssButton.addClass("fl-qss-separator");
-                    break;
-                case "grid":
-                case "grid-visible":
-                    qssButton.addClass("fl-qss-emptyBtn");
-                    break;
-                case "service-undo":
-                case "service-save":
-                case "service-saved-settings":
-                case "service-reset-all":
-                    qssButton.addClass("fl-qss-button-small");
-                    break;
-                case "service-close":
-                    qssButton.addClass("fl-more-closeButton");
-                    qssButton.addClass("fl-qss-closeButton");
-                    break;
-                default:
-                    break;
-            }
-        }
-    }; */
-
-    /**
-     *
-     * @param {*} qssButtons
-     * @param {*} morePanelButtons
-     * @param {*} button
-     * Add tags to the buttons in the button catalog, depending whether thay are part of any button holder.
-     */
-
-    gpii.psp.morphicSettingsEditor.buttonCatalog.addTags = function(qssButtons, morePanelButtons, button) {
-
-        let id = button.model.item,
-            tag;
-
-        if (qssButtons.indexOf(id) !== -1) {
-            tag = "In QSS";
-            button.container.find(".fl-qss-button").removeClass("fl-qss-button-movable");
-        };
-
-        if (fluid.flatten(morePanelButtons).indexOf(id) !== -1) {
-            tag = "In More Panel";
-            button.container.find(".fl-qss-button").removeClass("fl-qss-button-movable");
-        };
-
-        button.applier.change("tag", tag);
-    };
-
-    /**
-     * This function updates the models after a button has moved.
-     *
-     * It uses the aria-label
-     */
-    gpii.psp.morphicSettingsEditor.updateModels = function (that, item, position, movables) {
-    
-        let models = [fluid.flatten(that.model.morePanelList), that.model.buttonList];
-
-        const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.]{0,1}[\d]+/g;
-        const [index1, length1, column1, totalCols, index2, length2, column2, totalCols2] = [...item.getAttribute("aria-label").match(NUMERIC_REGEXP).map(Number)];
-
-        if (column1 === column2) {
-            [models[column1 - 1][index1 - 1], models[column1 - 1][index2 - 1]] = [models[column1 - 1][index2 - 1], models[column1 - 1][index1 - 1]]
-        } else {
-            models[column2 - 1][index2 - 1] = models[column1 - 1][index1 - 1]
-
-            if (column1 !== 3) {
-                models[column1 - 1].splice(index1 - 1, 1);
-            }
-
-        };
-
-        const morePanelModel = [models[0].splice(0, 8), models[0].splice(0, 8), models[0]]
-        const qssModel = models[1];
-
-        that.applier.change("morePanelList", morePanelModel);
-        that.applier.change("buttonList", qssModel);
-
-        console.log("THAAAAT", that);
-
-        // gpii.psp.morphicSettingsEditor.qss.setQSSWidth(that.qss.container, qssModel);
-
-        that.buttonCatalog.refreshView();
-    };
-
-    /**
-     * This function is the opposite to the previous one, and returns an
-     * three arrays of arrays from an unique array
-     */
-    gpii.psp.morphicSettingsEditor.buildRows = function(items) {
-        let allItems = Array(24 - items.length).fill(undefined).concat(items);
-        return [
-            allItems.slice(0, 8).filter(fluid.isValue),
-            allItems.slice(8, 16).filter(fluid.isValue),
-            allItems.slice(16, 24).filter(fluid.isValue)
-        ];
-    };
-
-    gpii.psp.morphicSettingsEditor.log = function(arg) {
-        console.log("LOOOG", arg);
-    };
-
-    gpii.psp.morphicSettingsEditor.setModules = function(that) {
-        console.log("SETTING MODULES", that);
-        var numItemsQSS = that.model.buttonList.length
-                          - that.model.buttonList.filter(item => item === "||").length
-                          - 3;
-        if (numItemsQSS > 8) {
-           // document.querySelector(".flc-quickSetStrip-main").classList.add("module-locked");
-           that.options.columns = ".flc-quickSetStrip-more"
-        }
-    };
-
     fluid.defaults("gpii.psp.morphicSettingsEditor.contextMenu", {
         gradeNames: "fluid.rendererComponent",
         model: {
@@ -317,14 +28,6 @@ const { func } = require("electron-edge-js");
         },
         selectors: {
             removeLink: ".mor-buttonContextMenu-item-remove"
-        },
-        members: {
-            removeLink: "{that}.dom.removeLink"
-        },
-        events: {
-            onRemoveClick: null,
-            onBlur: null,
-            onKeydown: null
         },
         renderOnInit: true,
         listeners: {
@@ -338,15 +41,15 @@ const { func } = require("electron-edge-js");
         invokers: {
             removeButtonClickHandler: {
                 funcName: "gpii.psp.morphicSettingsEditor.qss.removeButton",
-                args: ["{arguments}.0", "{that}", "{morphicSettingsEditor}"]
+                args: ["{arguments}.0", "{that}", "{morphicSettingsEditor}", "{buttonCatalog}"]
             },
             removeButtonBlurHandler: {
                 funcName: "gpii.psp.morphicSettingsEditor.log",
                 args: ["{that}"]
             },
             removeButtonKeydownHandler: {
-                funcName: "gpii.psp.morphicSettingsEditor.qss.handleKeydown",
-                args: ["{arguments}.0", "{that}"]
+                funcName: "gpii.psp.morphicSettingsEditor.handleKeydown",
+                args: ["{arguments}.0", "{morphicSettingsEditor}", "{buttonCatalog}"]
             }
         },
 
@@ -362,58 +65,74 @@ const { func } = require("electron-edge-js");
         }
     });
 
-    gpii.psp.morphicSettingsEditor.onMove = function(item) {
-        console.log("ON MOVE ITEM:", item);
-    };
-
-    gpii.psp.morphicSettingsEditor.qss.handleKeydown = function(e, contextMenu) {
-        console.log("JANDLE KEY DOWN", e);
-        if (e.keyCode === 27) {
-            contextMenu.container[0].style.visibility = "hidden";
-            contextMenu.container[0].style.opacity = 0;
+    /**
+     * Renderer component to display the QSS
+     */
+    fluid.defaults("gpii.psp.morphicSettingsEditor.qss", {
+        gradeNames: ["fluid.rendererComponent"],
+        selectors: {
+            button: ".fl-qss-button",
+            buttonLabel: ".fl-qss-btnLabel"
+        },
+        repeatingSelectors: ["button"],
+        listeners: {
+            "prepareModelForRender.getInfoFromCatalog": {
+                funcName: "gpii.psp.morphicSettingsEditor.prepareButtonCatalogModel",
+                args: ["{that}", "{morphicSettingsEditor}.model"]
+            }
+        },
+        renderOnInit: true,
+        invokers: {
+            produceTree: {
+                funcName: "gpii.psp.morphicSettingsEditor.qss.produceTree",
+                args: ["{that}", "{morphicSettingsEditor}"]
+            }
+        },
+        rendererFnOptions: {
+            noexpand: true
+        },
+        resources: {
+            template: {
+                resourceText: "<div class=\"fl-qss-button fl-qss-button-movable\"><span class=\"fl-qss-btnLabel\"></span></div>"
+            }
         }
-    };
-
-    gpii.psp.morphicSettingsEditor.feedback = function(message) {
-        var instructionContainer = document.getElementsByClassName("flc-qss-instructions")[0];
-        instructionContainer.removeClass("hidden");
-    };
-
-    gpii.psp.morphicSettingsEditor.qss.removeButton = function(e, that, mse) {
-        
-        console.log("MSEEEE", mse);
-
-        e.preventDefault();
-
-        var activeItem = mse.activeItem,
-            parentClass = activeItem.parentElement.classList,
-            buttonId = activeItem.getAttribute("data-buttonid");
-        
-        // MODEL
-        activeItem.remove();
-        gpii.psp.morphicSettingsEditor.qss.hideContextMenu(that.container);
-
-        mse.buttonCatalog.refresh();
-    };
-
-    gpii.psp.morphicSettingsEditor.qss.hideContextMenu = function(that) {
-        that.css("visibility", "hidden");
-        that.css("opacity", 0);
-    };
-
-/*     gpii.psp.morphicSettingsEditor.qss.removeButton = function(itemIndex, settingsEditor) {
-        var buttonList = settingsEditor.model.buttonList;
-        buttonList.splice(itemIndex, 1);
-        settingsEditor.applier.change("buttonList", buttonList);
-        settingsEditor.activeItem.remove();
-        settingsEditor.contextMenu.container.css("visibility", "hidden");
-        settingsEditor.contextMenu.container.css("opacity", 0);
-        
-        settingsEditor.buttonCatalog.refreshView();
-    }; */
+    });
 
     /**
-     * Represents the controller for the settings editor.
+     * Renderer component that displays the `More` panel
+     */
+    fluid.defaults("gpii.psp.morphicSettingsEditor.morePanel", {
+        gradeNames: ["fluid.rendererComponent"],
+        selectors: {
+            button: ".fl-qss-button",
+            buttonLabel: ".fl-qss-btnLabel"
+        },
+        repeatingSelectors: ["button"],
+        listeners: {
+            "prepareModelForRender.getInfoFromCatalog": {
+                funcName: "gpii.psp.morphicSettingsEditor.prepareButtonCatalogModel",
+                args: ["{that}", "{morphicSettingsEditor}.model"]
+            }
+        },
+        renderOnInit: true,
+        invokers: {
+            produceTree: {
+                funcName: "gpii.psp.morphicSettingsEditor.qss.produceTree",
+                args: ["{that}", "{morphicSettingsEditor}"]
+            }
+        },
+        rendererFnOptions: {
+            noexpand: true
+        },
+        resources: {
+            template: {
+                resourceText: "<div class=\"fl-qss-button fl-qss-button-movable\"><span class=\"fl-qss-btnLabel\"></span></div>"
+            }
+        }
+    });
+
+    /**
+     * Represents the controller for the whole settings editor.
      */
     fluid.defaults("gpii.psp.morphicSettingsEditor", {
         gradeNames: ["fluid.viewComponent", "fluid.reorderer"],
@@ -447,10 +166,11 @@ const { func } = require("electron-edge-js");
 
         selectors: {
             openMYOBButton: ".flc-morphicSettingsEditor-myobButton",
+            instructions: ".flc-qss-instructions",
             buttonList: ".fl-quickSetStrip-main-buttonList",
             morePanelList: ".fl-quickSetStrip-more",
             qssContextMenu: ".mor-buttonContextMenu",
-            buttonCatalog: ".flc-buttonCatalog-buttonList",
+            // buttonCatalog: ".flc-buttonCatalog-buttonList",
             movables: ".fl-qss-button-movable",
             dropTargets: ["{that}.dom.morePanelList", "{that}.dom.buttonCatalog"],
             modules: ".fl-qss-button-movable",
@@ -487,14 +207,9 @@ const { func } = require("electron-edge-js");
                 args: ["{arguments}.0"]
             },
 
-            "onCreate.setModules": {
-                funcName: "gpii.psp.morphicSettingsEditor.setModules",
-                args: ["{that}"]
-            },
-
             "afterMove.reorderButtons": {
                 funcName: "gpii.psp.morphicSettingsEditor.updateModels",
-                args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
+                args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2", "{buttonCatalog}"]
             }
         },
 
@@ -506,21 +221,23 @@ const { func } = require("electron-edge-js");
         },
 
         components: {
-/*             qss: {
-                type: "gpii.psp.morphicSettingsEditor.repeaterInList",
-                container: "{that}.dom.buttonList",
+
+            instructions: {
+                type: "fluid.rendererComponent",
+                container: "{that}.dom.instructions",
                 options: {
                     model: {
-                        items: "{morphicSettingsEditor}.model.buttonList"
+                        instruction: "You can drag and drop buttons to change their position. To remove a button, select it and: (i) click the 'Delete' button or right-click for displaying the menu."
                     },
-                    listeners: {
-                        "onCreate.setWidth": {
-                            funcName: "gpii.psp.morphicSettingsEditor.qss.setQSSWidth",
-                            args: ["{that}", "{morphicSettingsEditor}.model.buttonList"]
-                        }
+                    selectors: {
+                        instructionText: ".flc-qss-instructions-text"
+                    },
+                    renderOnInit: true,
+                    protoTree: {
+                        instructionText: "${instruction}"
                     }
                 }
-            }, */
+            },
 
             qss: {
                 type: "gpii.psp.morphicSettingsEditor.qss",
@@ -528,18 +245,12 @@ const { func } = require("electron-edge-js");
                 options: {
                     model: {
                         items: "{morphicSettingsEditor}.model.buttonList"
-                    }/* ,
-                    listeners: {
-                        "onCreate.setWidth": {
-                            funcName: "gpii.psp.morphicSettingsEditor.qss.setQSSWidth",
-                            args: ["{that}.container", "{morphicSettingsEditor}.model.buttonList"]
-                        }
-                    } */
+                    }
                 }
             },
 
             morePanel: {
-                type: "gpii.psp.morphicSettingsEditor.qss",
+                type: "gpii.psp.morphicSettingsEditor.morePanel",
                 container: "{that}.dom.morePanelList",
                 options: {
                     model: {
@@ -561,22 +272,6 @@ const { func } = require("electron-edge-js");
                         actions: {
                             remove: "Remove button from QSS"
                         }
-                    },
-                    listeners: {
-                        "onRemoveClick.removeButton": {
-                            funcName: "gpii.psp.morphicSettingsEditor.qss.removeButton",
-                            args: ["{arguments}.0", "{that}.model.caller.index", "{morphicSettingsEditor}"]
-                        }
-                    }
-                }
-            },
-
-            buttonCatalog: {
-                type: "gpii.psp.morphicSettingsEditor.buttonCatalog",
-                container: "{that}.dom.buttonCatalog",
-                options: {
-                    model: {
-                        items: "{morphicSettingsEditor}.model.supportedButtonsList"
                     }
                 }
             },
@@ -593,168 +288,10 @@ const { func } = require("electron-edge-js");
 
     });
 
-    fluid.defaults("gpii.psp.morphicSettingsEditor.qss", {
-        gradeNames: ["fluid.rendererComponent"],
-        selectors: {
-            button: ".fl-qss-button",
-            buttonLabel: ".fl-qss-btnLabel"
-        },
-        repeatingSelectors: ["button"],
-        listeners: {
-            "prepareModelForRender.getInfoFromCatalog": {
-                funcName: "gpii.psp.morphicSettingsEditor.prepareButtonCatalogModel",
-                args: ["{that}", "{morphicSettingsEditor}.model"]
-            }
-        },
-        renderOnInit: true,
-        invokers: {
-            produceTree: {
-                funcName: "gpii.psp.morphicSettingsEditor.qss.produceTree",
-                args: ["{that}", "{morphicSettingsEditor}"]
-            }
-        },
-        rendererFnOptions: {
-            noexpand: true
-        },
-        resources: {
-            template: {
-                resourceText: "<div class=\"fl-qss-button fl-qss-button-movable\"><span class=\"fl-qss-btnLabel\"></span></div>"
-            }
-        }
-    });
-
-    fluid.defaults("gpii.psp.morphicSettingsEditor.qss", {
-        gradeNames: ["fluid.rendererComponent"],
-        selectors: {
-            button: ".fl-qss-button",
-            buttonLabel: ".fl-qss-btnLabel"
-        },
-        repeatingSelectors: ["button"],
-        listeners: {
-            "prepareModelForRender.getInfoFromCatalog": {
-                funcName: "gpii.psp.morphicSettingsEditor.prepareButtonCatalogModel",
-                args: ["{that}", "{morphicSettingsEditor}.model"]
-            }
-        },
-        renderOnInit: true,
-        invokers: {
-            produceTree: {
-                funcName: "gpii.psp.morphicSettingsEditor.qss.produceTree",
-                args: ["{that}", "{morphicSettingsEditor}"]
-            }
-        },
-        rendererFnOptions: {
-            noexpand: true
-        },
-        resources: {
-            template: {
-                resourceText: "<div class=\"fl-qss-button fl-qss-button-movable\"><span class=\"fl-qss-btnLabel\"></span></div>"
-            }
-        }
-    });
-
-    gpii.psp.morphicSettingsEditor.handleButtonKeydown = function(e, button, mse) {
-
-        var buttonId = button.id;
-        
-        if ((e.key === "Backspace") || (e.key === "Delete")) {
-            e.target.remove();
-
-            if (button.tag === "In QuickStrip") {
-                console.log("IN QSS", button.buttonIndex);
-                var buttonList = mse.model.buttonList;
-                buttonList.splice(button.buttonIndex, 1);
-                mse.applier.change("buttonList", buttonList);
-            };
-
-            if (button.tag === "In More Panel") {
-                var morePanelList = fluid.flatten(mse.model.morePanelList);
-                morePanelList.splice(button.buttonIndex, 1);
-                mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
-            };
-        };
-    };
-
-    /**
-     * 
-     * @param {*} that 
-     * @param {*} mse 
-     * @returns 
+     /**
+     * Renderer component to present buttons catalog.
      */
-    gpii.psp.morphicSettingsEditor.qss.produceTree = function(that, mse) {
-        var buttonList = fluid.transform(that.model.buttons, function(button, index) {
-            return {
-                ID: "button:",
-                decorators: [
-                    { type: "addClass", classes: button.buttonType },
-                    { type: "attrs", attributes: {"data-buttonId": button.id} },
-                    { type: "jQuery", func: "keydown", args: function(e) { gpii.psp.morphicSettingsEditor.handleButtonKeydown(e, button, mse) }},
-                    { type: "jQuery", func: "contextmenu", args: function(e) { gpii.psp.morphicSettingsEditor.displayContextMenu(mse, mse.contextMenu); }}
-                ],
-                children: [{
-                    ID: "buttonLabel",
-                    value: button.title
-                }]
-            }
-        });
-        return buttonList;
-    };
-
-/*     fluid.defaults("gpii.psp.morphicSettingsEditor.morePanel", {
-        gradeNames: "fluid.rendererComponent",
-        selectors: {
-            button: ".fl-qss-button",
-            buttonLabel:  ".fl-qss-btnLabel"
-        },
-        repeatingSelectors: ["button"],
-        listeners: {
-            "prepareModelForRender.getInfoFromCatalog": {
-                funcName: "gpii.psp.morphicSettingsEditor.prepareButtonCatalogModel",
-                args: ["{that}", "{morphicSettingsEditor}.model"]
-            }
-        },
-        renderOnInit: true,
-        protoTree: {
-            expander: {
-                type: "fluid.renderer.repeat",
-                repeatID: "button",
-                controlledBy: "buttons",
-                pathAs: "buttonItem",
-                tree: {
-                    buttonLabel: "${{buttonItem}.title}"
-                }
-            }
-        },
-        resources: {
-            template: {
-                resourceText: "<div class=\"fl-qss-button fl-qss-button-movable\"><span class=\"fl-qss-btnLabel\"></span></div>"
-            }
-        }
-    }); */
-
-/*     gpii.defaults("gpii.psp.morphicSettingsEditor.button", {
-        gradeNames: "fluid.rendererComponent",
-
-        selectors: {
-            label: ".flc-test-btnLabel"
-        },
-
-        resources: {
-            template: {
-                resourceText: "<p class=\"flc-test-btnLabel\"></p>"
-            }
-        },
-
-        protoTree: {
-            label: "${button}.title"
-        }
-    }); */
-
-
-    /**
-     * Renderer component to present the list of buttons.
-     */
-    fluid.defaults("gpii.psp.morphicSettingsEditor.buttonCatalog", {
+      fluid.defaults("gpii.psp.morphicSettingsEditor.buttonCatalog", {
         gradeNames: ["fluid.rendererComponent"],
         selectors: {
             "button:": ".flc-buttonCatalog-buttonContainer-button",
@@ -789,11 +326,11 @@ const { func } = require("electron-edge-js");
         invokers: {
             addButtonToQSS: {
                 funcName: "gpii.psp.morphicSettingsEditor.addButtonToQSS",
-                args: ["{arguments}.0", "{morphicSettingsEditor}"]
+                args: ["{arguments}.0", "{morphicSettingsEditor}", "{buttonCatalog}"]
             },
             addButtonToMorePanel: {
                 funcName: "gpii.psp.morphicSettingsEditor.addButtonToMorePanel",
-                args: ["{arguments}.0", "{morphicSettingsEditor}"]
+                args: ["{arguments}.0", "{morphicSettingsEditor}", "{buttonCatalog}"]
             }
         },
 
@@ -848,27 +385,86 @@ const { func } = require("electron-edge-js");
         }
     });
 
-    gpii.psp.morphicSettingsEditor.addButtonToQSS = function(e, mse) {
-        console.log("MSEEEE", mse);
+
+    gpii.psp.morphicSettingsEditor.handleKeydown = function(e, mse, buttonCatalog) {
+
+        // var buttonId = button.id;
+        var caller = e.target,
+            activeItem = mse.activeItem;
+
+        if (activeItem.hasAttribute("data-buttonid")) {
+            var btnId = activeItem.getAttribute("data-buttonid");
+            console.log(activeItem.parentElement.classList);
+                /* inQSS = activeItem.parentElement.classList.indexOf("flc-quickSetStrip-main-buttonList") !== -1,
+                inMorePanel = activeItem.parentElement.classList.indexOf("flc-quickSetStrip-more") !== -1;;
+            console.log("In QSS", inQSS);
+            console.log("In More Panel", inMorePanel); */
+        };
+        
+        /* if ((e.key === "Backspace") || (e.key === "Delete")) {
+            e.target.remove();
+
+            if (button.tag === "In QuickStrip") {
+                console.log("IN QSS", button.buttonIndex);
+                var buttonList = mse.model.buttonList;
+                buttonList.splice(button.buttonIndex, 1);
+                mse.applier.change("buttonList", buttonList);
+            };
+
+            if (button.tag === "In More Panel") {
+                var morePanelList = fluid.flatten(mse.model.morePanelList);
+                morePanelList.splice(button.buttonIndex, 1);
+                mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
+            }; 
+        };*/
+    };
+
+        
+
+    /**
+     * This function creates a protoTree for each button
+     * @param {*} that - element that calls for the renderer tree
+     * @param {*} mse - the overall morphic settings editor
+     * @returns 
+     */
+    gpii.psp.morphicSettingsEditor.qss.produceTree = function(that, mse) {
+        var buttonList = fluid.transform(that.model.buttons, function(button, index) {
+            return {
+                ID: "button:",
+                decorators: [
+                    { type: "addClass", classes: button.buttonType },
+                    { type: "attrs", attributes: {"data-buttonId": button.id} },
+                    { type: "jQuery", func: "keydown", args: function(e) { gpii.psp.morphicSettingsEditor.handleKeydown(e, mse, mse.model.buttonCatalog) }},
+                    { type: "jQuery", func: "contextmenu", args: function(e) { gpii.psp.morphicSettingsEditor.displayContextMenu(mse, mse.contextMenu); }}
+                ],
+                children: [{
+                    ID: "buttonLabel",
+                    value: button.title
+                }]
+            }
+        });
+        return buttonList;
+    };
+
+   
+    gpii.psp.morphicSettingsEditor.addButtonToQSS = function(e, mse, buttonCatalog) {
         var buttonList = mse.model.buttonList;
         buttonList.unshift(e.target.getAttribute("buttonid"));
         mse.applier.change("buttonList", buttonList);
-        mse.qss.produceTree();
-        mse.buttonCatalog.refreshView();
+        mse.qss.refreshView();
+        buttonCatalog.refreshView();
     };
 
-    gpii.psp.morphicSettingsEditor.addButtonToMorePanel = function(e, mse) {
-        console.log("MSEEEE", mse);
+    gpii.psp.morphicSettingsEditor.addButtonToMorePanel = function(e, mse, buttonCatalog) {
         var morePanelList = fluid.flatten(mse.model.morePanelList);
         morePanelList.unshift(e.target.getAttribute("buttonid"));
         mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
-        mse.morePanel.produceTree();
-        mse.buttonCatalog.refreshView();
+        mse.morePanel.refreshView();
+        buttonCatalog.refreshView();
     };
 
     gpii.psp.morphicSettingsEditor.prepareButtonCatalogModel = function(that, allModels) {
 
-        console.log("THAAAAT", that);
         var items = that.model.items.map((item, index) => {
             var buttonObject = gpii.psp.morphicSettingsEditor.getButtonInfo(allModels.buttonCatalog, item) || {};
             buttonObject.isAddable = true;
@@ -916,6 +512,20 @@ const { func } = require("electron-edge-js");
         that.applier.change("buttons", items);
     };
 
+    gpii.psp.morphicSettingsEditor.displayContextMenu = function(that, contextMenu) {
+        var pos = that.activeItem.getBoundingClientRect();
+        $(document.body).bind("click", function(e) { gpii.psp.morphicSettingsEditor.qss.hideContextMenu(contextMenu.container); });
+/*         var buttonModel = that.model;
+        contextMenu.applier.change("caller", buttonModel); */
+        contextMenu.container.css("visibility", "visible");
+        contextMenu.container.css("opacity", 1);
+        contextMenu.container.css("top", pos.y - 76);
+        contextMenu.container.css("left", pos.x - 180);
+        console.log("CONTAINEEEER", contextMenu.container);
+        contextMenu.container.children()[0].focus();
+    };
+
+
     gpii.psp.morphicSettingsEditor.getButtonInfo = function(buttonCatalog, buttonId) {
 
         let buttonObject = {};
@@ -945,6 +555,86 @@ const { func } = require("electron-edge-js");
 
         return buttonObject;
 
+    };
+
+        /**
+     * This function updates the models after a button has moved.
+     *
+     * It uses the aria-label
+     */
+         gpii.psp.morphicSettingsEditor.updateModels = function (that, item, position, movables, buttonCatalog) {
+    
+            let models = [fluid.flatten(that.model.morePanelList), that.model.buttonList];
+    
+            const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.]{0,1}[\d]+/g;
+            const [index1, length1, column1, totalCols, index2, length2, column2, totalCols2] = [...item.getAttribute("aria-label").match(NUMERIC_REGEXP).map(Number)];
+    
+            if (column1 === column2) {
+                [models[column1 - 1][index1 - 1], models[column1 - 1][index2 - 1]] = [models[column1 - 1][index2 - 1], models[column1 - 1][index1 - 1]]
+            } else {
+                models[column2 - 1][index2 - 1] = models[column1 - 1][index1 - 1]
+    
+                if (column1 !== 3) {
+                    models[column1 - 1].splice(index1 - 1, 1);
+                }
+    
+            };
+    
+            const morePanelModel = [models[0].splice(0, 8), models[0].splice(0, 8), models[0]]
+            const qssModel = models[1];
+    
+            that.applier.change("morePanelList", morePanelModel);
+            that.applier.change("buttonList", qssModel);
+    
+            // gpii.psp.morphicSettingsEditor.qss.setQSSWidth(that.qss.container, qssModel);
+    
+            buttonCatalog.refreshView();
+        };
+    
+        /**
+         * This function is the opposite to the previous one, and returns an
+         * three arrays of arrays from an unique array
+         */
+        gpii.psp.morphicSettingsEditor.buildRows = function(items) {
+            let allItems = Array(24 - items.length).fill(undefined).concat(items);
+            return [
+                allItems.slice(0, 8).filter(fluid.isValue),
+                allItems.slice(8, 16).filter(fluid.isValue),
+                allItems.slice(16, 24).filter(fluid.isValue)
+            ];
+        };
+    
+        gpii.psp.morphicSettingsEditor.log = function(arg) {
+            console.log("LOOOG", arg);
+        };
+
+    gpii.psp.morphicSettingsEditor.qss.removeButton = function(e, that, mse, buttonCatalog) {
+
+        e.preventDefault();
+
+        var activeItem = mse.activeItem,
+            parentClass = activeItem.parentElement.classList,
+            buttonId = activeItem.getAttribute("data-buttonid");
+
+        console.log(activeItem.innerText);
+
+        mse.instructions.applier.change("instruction", `You have deleted button '${activeItem.innerText}'`);
+        mse.instructions.refreshView();
+
+        // $(".flc-qss-instructions").text(`You have deleted the button '${activeItem.innerText}'`).show();
+        
+        // MODEL
+        activeItem.remove();
+        gpii.psp.morphicSettingsEditor.qss.hideContextMenu(that.container);
+
+        buttonCatalog.applier.change("items", buttonCatalog.model.items);
+        buttonCatalog.refreshView();
+    };
+
+    gpii.psp.morphicSettingsEditor.qss.hideContextMenu = function(that) {
+        $(document.body).unbind("click");
+        that.css("visibility", "hidden");
+        that.css("opacity", 0);
     };
 
 })(fluid);

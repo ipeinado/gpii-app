@@ -1,3 +1,8 @@
+.fl-dialog h1 {
+    font-size: 32px;
+    padding: 2rem;
+}
+
 .fl-qss {
     background-color: #e0e0e0;
     height: auto;

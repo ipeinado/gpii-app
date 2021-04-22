@@ -7,22 +7,21 @@
     background-color: #e0e0e0;
     height: auto;
     border-bottom: 16px solid #333;
-    padding-top: 16px;
+    padding-top: 32px;
     justify-content: flex-start;
     position: relative;
 }
 
 .flc-qss-instructions {
-    position: absolute;    
-    top: 10px;
-    left: 10px;
     padding: 1em;
-    max-width: 400px;
+    background-color: rgba(0, 120, 215, .05);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .flc-qss-instructions p {
-    font-family: 'Indie Flower', cursive;
-    font-size: 18px;
     margin: 0;
     padding: 0;
 }

@@ -87,8 +87,9 @@
                 args: ["{that}", "{morphicSettingsEditor}", "{buttonCatalog}"]
             }
         },
-        rendererFnOptions: {
-            noexpand: true
+        rendererOptions: {
+            noexpand: true,
+            autoBind: true
         },
         resources: {
             template: {
@@ -134,7 +135,7 @@
      * Represents the controller for the whole settings editor.
      */
     fluid.defaults("gpii.psp.morphicSettingsEditor", {
-        gradeNames: ["fluid.viewComponent", "fluid.reorderer"],
+        gradeNames: ["fluid.rendererComponent", "fluid.reorderer"],
  
         layoutHandler: "fluid.moduleLayoutHandler",
 
@@ -161,7 +162,13 @@
             //
             // It can be extended to provide more information.
             buttonCatalog: "{that}.options.buttonCatalog"
-        }, 
+        },
+
+        modelListeners: {
+            buttonList: {
+                func: "{that}.refreshView"
+            }
+        },
 
         selectors: {
             openMYOBButton: ".flc-morphicSettingsEditor-myobButton",
@@ -277,6 +284,11 @@
                 options: {
                     model: {
                         items: "{morphicSettingsEditor}.model.buttonList"
+                    },
+                    modelListeners: {
+                        items: {
+                            func: "{that}.refreshView"
+                        }
                     }
                 }
             },
@@ -286,11 +298,11 @@
                 container: "{that}.dom.morePanelList",
                 options: {
                     model: {
+                        items: "{morphicSettingsEditor}.model.morePanelList"
+                    },
+                    modelListeners: {
                         items: {
-                            expander: {
-                                func: "fluid.flatten",
-                                args: "{morphicSettingsEditor}.model.morePanelList"
-                            }
+                            func: "{that}.refreshView"
                         }
                     }
                 }
@@ -335,6 +347,10 @@
 
     });
 
+    gpii.psp.morphicSettingsEditor.refreshView = function(that, mse) {
+        console.log(that);
+    };
+
     gpii.psp.morphicSettingsEditor.addNewMYOB = function (that, button) {
         console.log("### at addNewMYOB - button: ", button);
         // TODO: Implement adding the created button
@@ -346,6 +362,7 @@
 
     fluid.defaults("gpii.psp.morphicSettingsEditor.qss", {
         gradeNames: ["fluid.rendererComponent"],
+
         selectors: {
             button: ".fl-qss-button",
             buttonLabel: ".fl-qss-btnLabel"
@@ -357,15 +374,18 @@
                 args: ["{that}", "{morphicSettingsEditor}.model"]
             }
         },
+        rendererOptions: {
+            autoBind: true
+        },
+        rendererFnOptions: {
+            noexpand: true
+        },
         renderOnInit: true,
         invokers: {
             produceTree: {
                 funcName: "gpii.psp.morphicSettingsEditor.qss.produceTree",
                 args: ["{that}", "{morphicSettingsEditor}", "{buttonCatalog}"]
             }
-        },
-        rendererFnOptions: {
-            noexpand: true
         },
         resources: {
             template: {
@@ -419,7 +439,7 @@
             },
             addButtonToMorePanel: {
                 funcName: "gpii.psp.morphicSettingsEditor.addButtonToMorePanel",
-                args: ["{arguments}.0", "{morphicSettingsEditor}", "{buttonCatalog}"]
+                args: ["{arguments}.0", "{morphicSettingsEditor}", "{that}"]
             }
         },
 
@@ -520,17 +540,19 @@
      * @param {*} buttonCatalog - button catalog
      */
     gpii.psp.morphicSettingsEditor.addButtonToQSS = function(e, mse, buttonCatalog) {
-        var buttonList = mse.model.buttonList;
-        buttonList.unshift(e.target.getAttribute("buttonid"));
-        mse.applier.change("buttonList", buttonList);
-        mse.qss.refreshView();
-        console.log(mse);
-        // console.log("BUTTON LIST:", buttonList);
-        //console.log("BUTTON CATALOG:", buttonCatalog);
-        // buttonList.push(e.target.getAttribute("buttonid"));
-        //mse.applier.change("buttonList", buttonList);
-        // mse.qss.refreshView();
+
+/*         var button = $("<div class=\"cucu\"></div>");
+        button.text(e.target.getAttribute("buttonId"));
+
+        $(".flc-myChoices").append(button); */
+        var bl = [...mse.model.buttonList];
+        bl.unshift(e.target.getAttribute("buttonid"));
+        mse.applier.change("buttonList", bl);        
         buttonCatalog.refreshView();
+
+/*         buttonList.unshift(e.target.getAttribute("buttonid"));
+        mse.applier.change("buttonList", buttonList);
+        buttonCatalog.refreshView(); */
     };
 
     /**
@@ -541,16 +563,15 @@
      */
     gpii.psp.morphicSettingsEditor.addButtonToMorePanel = function(e, mse, buttonCatalog) {
         var morePanelList = fluid.flatten(mse.model.morePanelList);
-        // console.log(morePanelList);
         morePanelList.unshift(e.target.getAttribute("buttonid"))
         mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
-        // mse.morePanel.refreshView();
         buttonCatalog.refreshView();
     };
 
     gpii.psp.morphicSettingsEditor.prepareButtonCatalogModel = function(that, allModels) {
-
-        var items = that.model.items.map((item, index) => {
+        console.log("AAAAAAAAAAARGH");
+        var flattenedItems = fluid.flatten(that.model.items);
+        var items = flattenedItems.map((item, index) => {
             var buttonObject = gpii.psp.morphicSettingsEditor.getButtonInfo(allModels.buttonCatalog, item) || {};
             buttonObject.isAddable = true;
             buttonObject.isAddableText = "";

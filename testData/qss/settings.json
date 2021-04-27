@@ -116,7 +116,23 @@
         "buttonTypes": ["largeButton", "settingButton"],
         "tabindex": 135,
         "messageKey": "officeSimplification",
-        "learnMoreLink": "https://morphic.world/basics/learn-more-about-quickstrip#office-simplification",
+        "learnMoreLink": "https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html",
+        "value": "StandardSet"
+    }, {
+        "id": "excel-simplification",
+        "path": "http://registry\\.gpii\\.net/applications/com\\.microsoft\\.office.excel-ribbon",
+        "schema": {
+            "type": "excel",
+            "keys": [
+                "Basics+StandardSet",
+                "Essentials+StandardSet"
+            ],
+            "default": "StandardSet"
+        },
+        "buttonTypes": ["largeButton", "settingButton"],
+        "tabindex": 136,
+        "messageKey": "excelSimplification",
+        "learnMoreLink": "https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html",
         "value": "StandardSet"
     }, {
         "id": "high-contrast",

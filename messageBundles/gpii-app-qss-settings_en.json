@@ -108,6 +108,17 @@
         "sidecar": "<p>You can also create your own custom Microsoft Word Ribbons on your own computer.</p><p>To create a customized ribbon right click on the right edge of the ribbon bar and select “Customize Ribbons”. Further instructions are available on the <a href='https://support.office.com/en-us/article/customize-the-ribbon-in-office-00f24ca7-6021-48d3-9514-a31a460ecb31'>Microsoft Office support site</a>.</p><p>NOTE: User customized ribbons are not currently captured and saved by Morphic.</p>",
         "description": "This button allows you to add simple ribbons to Microsoft Word."
     },
+    "gpii_app_qss_settings_excelSimplification": {
+        "tooltip": "<p>Microsoft Excel simplification.</p><p>Provides simpler menus for Microsoft Excel</p>",
+        "title": "MS Excel Simplify",
+        "tip": "<p>Microsoft Excel simplification</p><p>Morphic can add simpler ribbons (the menu bars with icons at the top of Word) to make it easier for people who don't use all the options.</p><ul><li>Choose one or both to add them to Word</li></ul>",
+        "enum": [
+            "Basic (Morphic)",
+            "Essentials (Morphic)"
+        ],
+        "sidecar": "<p>You can also create your own custom Microsoft Excel Ribbons on your own computer.</p><p>To create a customized ribbon right click on the right edge of the ribbon bar and select “Customize Ribbons”. Further instructions are available on the <a href='https://support.office.com/en-us/article/customize-the-ribbon-in-office-00f24ca7-6021-48d3-9514-a31a460ecb31'>Microsoft Office support site</a>.</p><p>NOTE: User customized ribbons are not currently captured and saved by Morphic.</p>",
+        "description": "This button allows you to add simple ribbons to Microsoft Excel."
+    },
     "gpii_app_qss_settings_common-volume": {
         "tooltip": "<p>Adjusts Windows Volume and provides Mute on/off.</p>",
         "title": "Volume & Mute",

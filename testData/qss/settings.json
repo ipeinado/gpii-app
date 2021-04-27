@@ -130,7 +130,7 @@
             "default": "StandardSet"
         },
         "buttonTypes": ["largeButton", "settingButton"],
-        "tabindex": 135,
+        "tabindex": 136,
         "messageKey": "excelSimplification",
         "learnMoreLink": "https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html",
         "value": "StandardSet"

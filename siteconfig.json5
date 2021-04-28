@@ -25,12 +25,12 @@
         // The scaling factor for the QSS
         scaleFactor: 1.2,
         urls: {
-            account: "http://morphic.world/account",
+            account: "https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html",
             cloudFolder: "https://sites.google.com/raisingthefloor.org/quickfolders/demo-quickfolder-page",
             myGoogleDrive: "https://drive.google.com/",
             myOneDrive: "https://onedrive.live.com/about/signin/",
             myDropbox: "https://www.dropbox.com/login",
-            customizeQss: "https://morphic.world/"
+            customizeQss: "https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html"
         },
 
         alwaysUseChrome: false,
@@ -174,8 +174,8 @@
     // Configuration options for the About dialog
     aboutDialog: {
         urls: {
-            morphicHome: "https://morphic.world",
-            submitSuggestions: "mailto:suggestions@morphic.world"
+            morphicHome: "https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html",
+            submitSuggestions: "http://support.smartworkproject.eu/"
         }
     },
 

@@ -86,7 +86,7 @@ fluid.defaults("gpii.app.qssWrapper", {
     siteConfig: {
         scaleFactor: 1,
         urls: {
-            account: "http://morphic.world/account"
+            account: "https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html"
         },
         messages: {
             keyedOut: "To save your settings you need to setup a Morphic Account."

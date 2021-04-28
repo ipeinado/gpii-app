@@ -28,8 +28,8 @@ fluid.defaults("gpii.app.aboutDialog", {
 
     siteConfig: {
         urls: {
-            morphicHome: "https://morphic.world",
-            submitSuggestions: "mailto:suggestions@morphic.world"
+            morphicHome: "https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html",
+            submitSuggestions: "http://support.smartworkproject.eu/"
         }
     },
 

@@ -30,7 +30,7 @@
         "title": "Chrome Read Aloud",
         "tip": "<p>Turns on and adjusts Read Aloud mode in Chrome</p>",
         "extendedTip": "<p>To use Read Aloud</p><ol><li>Open web page in Chrome <img height=12 src='../../icons/chrome.svg'></li><li>Select / highlight text</li><li>Click Play button that pops up</li></ol>",
-        "sidecar": "<p>On this menu you can turn on the Read Aloud function installed in the <b>Chrome Browser</b>. When Read Aloud is turned on:</p><ol><li>Select / Highlight text in Chrome</li><li>Click Play button that pops up</li></ol><p>NOTE: when you first turn on read aloud you may have to refresh open pages first.</p><p><b>Microsoft Edge</b> browser also has a Read Aloud mode.  It is always on. To use it:</p><ol><li>Open the Edge browser</li><li>Right-click a webpage and choose “Read Aloud” from the menu</li></ol><p>A Read Aloud toolbar will appear in Edge where you can control the reading.</p><p>Microsoft Word and OneNote also have read aloud features. You can <a href='https://morphic.world/basics/learn-more-about-quickstrip#readaloud'>learn more about read aloud</a> on the Morphic knowledge base.</p>",
+        "sidecar": "<p>On this menu you can turn on the Read Aloud function installed in the <b>Chrome Browser</b>. When Read Aloud is turned on:</p><ol><li>Select / Highlight text in Chrome</li><li>Click Play button that pops up</li></ol><p>NOTE: when you first turn on read aloud you may have to refresh open pages first.</p><p><b>Microsoft Edge</b> browser also has a Read Aloud mode.  It is always on. To use it:</p><ol><li>Open the Edge browser</li><li>Right-click a webpage and choose “Read Aloud” from the menu</li></ol><p>A Read Aloud toolbar will appear in Edge where you can control the reading.</p><p>Microsoft Word and OneNote also have read aloud features. You can <a href='https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html'>learn more about read aloud</a> on the Morphic knowledge base.</p>",
         "description": "Use this button to enable/disable the Read Aloud functionality from UIO+ for Google Chrome. Note that UIO+ for Google Chrome comes pre-installed with Morphic."
     },
     "gpii_app_qss_settings_common-highContrastTheme": {
@@ -62,7 +62,7 @@
         "tooltip": "<p>Changes text size.</p><p>Works with many applications including Edge, Chrome, Firefox, Microsoft Office, and more.</p>",
         "title": "Zoom Top Window",
         "tip": "<p>Zoom Top Window</p><p>Note: Not all windows zoom.</p>",
-        "footerTip": "<a href=\"https://morphic.world/basics/learn-more-about-quickstrip#textzoom\">Want a faster way to zoom a window?</a>",
+        "footerTip": "<a href=\"https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html\">Want a faster way to zoom a window?</a>",
         "sidecar": "<p>The “Top Window Zoom” buttons are provided to make zooming the text in many application Windows easy.</p><p>But there are even faster ways to do this that do not require you to open the QuickStrip at all. Again, they do not work in all applications but they work in many.</p><ul><li>You can hold CTRL down and use the scrollwheel on your mouse to zoom in/out</li><li>Hold the CTRL key down and use the + and - keys on keyboard to zoom in/out</li></ul>",
         "description": "This button can be used to change the zoom level of the top application (i.e.: Microsoft Edge, Google Chrome, etc)."
     },

@@ -40,7 +40,7 @@
         "shelljs": "0.8.2"
     },
     "optionalDependencies": {
-        "gpii-windows": "javihernandez/windows#69397ae895743a01583f0486d5019c7dbd7891ef"
+        "gpii-windows": "javihernandez/windows#e0d507c4ddff4f91dc97d8faf52c58f7b1a6b1e3"
     },
     "scripts": {
         "start": "set GPII_TEST_COUCH_USE_EXTERNAL=TRUE && electron .",

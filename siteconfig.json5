@@ -8,7 +8,7 @@
 
     // Whether to hide the Capture Tool buttons.
     // These "buttons" are actually currently right click menu items on the task tray.
-    hideCaptureToolButton: false,
+    hideCaptureToolButton: true,
 
     // Configuration options for the QSS window
     qss: {
@@ -25,12 +25,12 @@
         // The scaling factor for the QSS
         scaleFactor: 1.2,
         urls: {
-            account: "http://morphic.world/account",
+            account: "https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html",
             cloudFolder: "https://sites.google.com/raisingthefloor.org/quickfolders/demo-quickfolder-page",
             myGoogleDrive: "https://drive.google.com/",
             myOneDrive: "https://onedrive.live.com/about/signin/",
             myDropbox: "https://www.dropbox.com/login",
-            customizeQss: "https://morphic.world/"
+            customizeQss: "https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html"
         },
 
         alwaysUseChrome: false,
@@ -96,7 +96,6 @@
         // - "grid-visible", or "x" // For visible gray grid space (same size as the invisible one)
 
         buttonList: [
-            "morphic",
             {
                 "buttonId": "MakeYourOwn",
                 "buttonName": "Sou Caritas",
@@ -104,26 +103,27 @@
                 "buttonData": "http://sou.caritascoimbra.pt/",
                 "popupText": "<p>Portal de acesso a trabalhadores da Caritas Diocesana de Coimbra.</p>"
             },
-            "||",
-            "screen-zoom",
-            "text-zoom",
-            "high-contrast",
-            "color-vision",
-            "mouse",
-            "volume",
-            "||",
-            "read-aloud",
-            "snipping-tool",
-            "office-simplification",
-            "launch-documorph",
             {
                 "buttonId": "MakeYourOwn",
                 "buttonName": "Guia do Utilizador",
                 "buttonType": "WEB",
-                "buttonData": "swagger.smartwork.sparkworks.net/docs/index.html",
+                "buttonData": "https://docs.smartworkproject.eu/",
                 "popupText": "<p>Abrir Guia do Utilizador.</p>"
             },
             "||",
+            "activityHistory",
+            "office-simplification",
+            "excel-simplification",
+            "screen-zoom",
+            "high-contrast",
+            "color-vision",
+            "volume",
+            "||",
+            "read-aloud",
+            "snipping-tool",
+            "||",
+            "morphic",
+            "service-more",
             "service-save",
             "service-undo",
             "service-saved-settings",
@@ -133,32 +133,29 @@
 
         morePanelList: [
             [ // first row of buttons
-            ],
-            [ // second row of buttons
-                {
-                    "buttonId": "MakeYourOwn",
-                    "buttonName": "Launch Notepad",
-                    "buttonType": "APP",
-                    "buttonData": "C:\\Windows\\system32\\notepad.exe",
-                    "fullScreen": true,
-                    "popupText": "<p>Launch the Notepad application.</p>",
-                    "description": "The full description of the button..."
-                }, {
-                    "buttonId": "MakeYourOwn",
-                    "buttonName": "Open Reddit",
-                    "buttonType": "WEB",
-                    "buttonData": "www.reddit.com",
-                    "fullScreen": true,
-                    "popupText": "<p>Open Reddit in a web browser.</p>",
-                    "description": "The full description of the button..."
-                },
-                "url-customize-qss",
-                "url-google-drive",
-                "url-one-drive",
-                "url-dropbox",
-                "translate-tools"
-            ],
-            [ // third row of buttons
+              "mouse",
+              "text-zoom",
+              {
+                  "buttonId": "MakeYourOwn",
+                  "buttonName": "Launch Notepad",
+                  "buttonType": "APP",
+                  "buttonData": "C:\\Windows\\system32\\notepad.exe",
+                  "fullScreen": true,
+                  "popupText": "<p>Launch the Notepad application.</p>",
+                  "description": "The full description of the button..."
+              }, {
+                  "buttonId": "MakeYourOwn",
+                  "buttonName": "Open Reddit",
+                  "buttonType": "WEB",
+                  "buttonData": "www.reddit.com",
+                  "fullScreen": true,
+                  "popupText": "<p>Open Reddit in a web browser.</p>",
+                  "description": "The full description of the button..."
+              },
+              "translate-tools",
+              "url-google-drive",
+              "url-one-drive",
+              "url-dropbox"
             ]
         ]
     },
@@ -178,8 +175,8 @@
     // Configuration options for the About dialog
     aboutDialog: {
         urls: {
-            morphicHome: "https://morphic.world",
-            submitSuggestions: "mailto:suggestions@morphic.world"
+            morphicHome: "https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html",
+            submitSuggestions: "http://support.smartworkproject.eu/"
         }
     },
 
@@ -244,7 +241,7 @@
     },
 
     // URL to the reset to standard profile. If no provided, the system will use a fallback one
-    resetToStandardProfileUrl: "https://raw.githubusercontent.com/GPII/universal/master/testData/defaultSettings/defaultSettings.win32.json5",
+    resetToStandardProfileUrl: "https://raw.githubusercontent.com/javihernandez/universal/smartwork/testData/defaultSettings/defaultSettings.win32.json5",
 
     // See possible values at %gpii-windows/gpii/node_modules/userListeners/src/windowsLogin.js
     autoLogin: {

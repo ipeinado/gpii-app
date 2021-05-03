@@ -86,7 +86,7 @@ fluid.defaults("gpii.app.qssWrapper", {
     siteConfig: {
         scaleFactor: 1,
         urls: {
-            account: "http://morphic.world/account"
+            account: "https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html"
         },
         messages: {
             keyedOut: "To save your settings you need to setup a Morphic Account."
@@ -644,7 +644,7 @@ gpii.app.qssWrapper.loadSettings = function (assetsManager, installedLanguages, 
         morePanelSettings = [], // by default the more panel is empty
         multiplier = 1000; // the precision multiplier should match the one used in the qssBaseStepperWidget
 
-    var morePanelCols = 10, // fixed by specs
+    var morePanelCols = 8, // fixed by specs
         morePanelFillGridElement = "x"; // which grid element to use to auto-fill ("x" for a visible separator; "-"" for invisible)
 
     var mergeSettings = {};

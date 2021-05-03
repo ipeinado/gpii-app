@@ -20,11 +20,13 @@
         <script type="text/javascript" src="js/qssMenuWidget.js"></script>
         <script type="text/javascript" src="js/qssScreenCaptureWidget.js"></script>
         <script type="text/javascript" src="js/qssOfficeWidget.js"></script>
+        <script type="text/javascript" src="js/qssExcelWidget.js"></script>
         <script type="text/javascript" src="js/qssVolumeWidget.js"></script>
         <script type="text/javascript" src="js/qssOpenUsbWidget.js"></script>
         <script type="text/javascript" src="js/qssMySavedSettingsWidget.js"></script>
         <script type="text/javascript" src="js/qssTranslateToolsWidget.js"></script>
         <script type="text/javascript" src="js/qssMouseWidget.js"></script>
+        <script type="text/javascript" src="js/qssActivityHistoryWidget.js"></script>
         <script type="text/javascript" src="js/qssMorphicWidget.js"></script>
         <script type="text/javascript" src="js/qssBaseStepperWidget.js"></script>
         <script type="text/javascript" src="js/qssStepperWidget.js"></script>
@@ -164,6 +166,14 @@
                         </div>
                     </div>
 
+                    <!-- the MS Excel Simplify Widget -->
+                    <div class="flc-qssExcelWidget fl-dialog-content fl-scrollable fl-qssMenuWidget fl-qssOfficeWidget">
+                        <div class="flc-qssWidget-tip fl-qssWidget-tip"></div>
+                        <div class="flc-qssExcelWidget-controlsWrapper fl-qssMenuWidget-controlsWrapper">
+                            <div role="radiogroup" class="flc-qssExcelWidget-controls fl-qssMenuWidget-controls"></div>
+                        </div>
+                    </div>
+
                     <!-- the open USB Widget -->
                     <div class="flc-qssOpenUSBWidget fl-dialog-content fl-scrollable fl-qssMenuWidget fl-qssOpenUSBWidget">
                         <div class="flc-qssWidget-tip fl-qssWidget-tip fl-qssOpenUSBWidget-tip"></div>
@@ -254,6 +264,38 @@
 
                                 <div class="flc-qssMouseSpeedStepperWidget-indicators fl-qssStepperWidget-indicators">
                                     <!-- Steps reside here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- the Activity History Widget -->
+                    <div class="flc-qssActivityHistoryWidget fl-dialog-content fl-scrollable fl-qssMouseWidget">
+                        <!-- Widget's tip and title -->
+                        <div class="flc-qssWidget-tip fl-qssWidget-tip"></div>
+
+                        <!-- Activity History Widget Toggle: Collection Enabled -->
+                        <div class="flc-qssActivityHistoryWidget-collectionEnabled fl-dialog-content fl-scrollable fl-qssToggleWidget fl-qssMouseWidgetToggle">
+                            <div class="flc-qssActivityHistoryWidgetToggle-settingTitle fl-qssToggleWidget-settingTitle"></div>
+
+                            <div class="flc-toggleButton fl-switchUI">
+                                <div class="flc-switchUI-control fl-switchUI-control fl-focusable">
+                                    <span class="flc-switchUI-off fl-switchUILabel"></span>
+                                    <span class="fl-switchUI-controlKnob"></span>
+                                    <span class="flc-switchUI-on fl-switchUILabel"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity History Widget Toggle: Cloud Sync Enabled -->
+                        <div class="flc-qssActivityHistoryWidget-cloudSyncEnabled fl-dialog-content fl-scrollable fl-qssToggleWidget fl-qssMouseWidgetToggle">
+                            <div class="flc-qssActivityHistoryWidgetToggle-settingTitle fl-qssToggleWidget-settingTitle"></div>
+
+                            <div class="flc-toggleButton fl-switchUI">
+                                <div class="flc-switchUI-control fl-switchUI-control fl-focusable">
+                                    <span class="flc-switchUI-off fl-switchUILabel"></span>
+                                    <span class="fl-switchUI-controlKnob"></span>
+                                    <span class="flc-switchUI-on fl-switchUILabel"></span>
                                 </div>
                             </div>
                         </div>
@@ -360,6 +402,7 @@
                           </div>
 
                           <!-- More Morphic Settings -->
+                          <!--
                           <div>
                             <div class="flc-qssMorphicWidget-footerTip"></div>
                             <button class="flc-qssMorphicWidget-openEditorButton fl-qssMorphicWidget-openEditorButton">
@@ -367,6 +410,7 @@
                             </button>
                             <p></p>
                           </div>
+                          -->
                         </div>
                     </div>
                 </div>

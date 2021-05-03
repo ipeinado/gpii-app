@@ -30,7 +30,7 @@
         "title": "Chrome Read Aloud",
         "tip": "<p>Turns on and adjusts Read Aloud mode in Chrome</p>",
         "extendedTip": "<p>To use Read Aloud</p><ol><li>Open web page in Chrome <img height=12 src='../../icons/chrome.svg'></li><li>Select / highlight text</li><li>Click Play button that pops up</li></ol>",
-        "sidecar": "<p>On this menu you can turn on the Read Aloud function installed in the <b>Chrome Browser</b>. When Read Aloud is turned on:</p><ol><li>Select / Highlight text in Chrome</li><li>Click Play button that pops up</li></ol><p>NOTE: when you first turn on read aloud you may have to refresh open pages first.</p><p><b>Microsoft Edge</b> browser also has a Read Aloud mode.  It is always on. To use it:</p><ol><li>Open the Edge browser</li><li>Right-click a webpage and choose “Read Aloud” from the menu</li></ol><p>A Read Aloud toolbar will appear in Edge where you can control the reading.</p><p>Microsoft Word and OneNote also have read aloud features. You can <a href='https://morphic.world/basics/learn-more-about-quickstrip#readaloud'>learn more about read aloud</a> on the Morphic knowledge base.</p>",
+        "sidecar": "<p>On this menu you can turn on the Read Aloud function installed in the <b>Chrome Browser</b>. When Read Aloud is turned on:</p><ol><li>Select / Highlight text in Chrome</li><li>Click Play button that pops up</li></ol><p>NOTE: when you first turn on read aloud you may have to refresh open pages first.</p><p><b>Microsoft Edge</b> browser also has a Read Aloud mode.  It is always on. To use it:</p><ol><li>Open the Edge browser</li><li>Right-click a webpage and choose “Read Aloud” from the menu</li></ol><p>A Read Aloud toolbar will appear in Edge where you can control the reading.</p><p>Microsoft Word and OneNote also have read aloud features. You can <a href='https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html'>learn more about read aloud</a> on the Morphic knowledge base.</p>",
         "description": "Use this button to enable/disable the Read Aloud functionality from UIO+ for Google Chrome. Note that UIO+ for Google Chrome comes pre-installed with Morphic."
     },
     "gpii_app_qss_settings_common-highContrastTheme": {
@@ -62,7 +62,7 @@
         "tooltip": "<p>Changes text size.</p><p>Works with many applications including Edge, Chrome, Firefox, Microsoft Office, and more.</p>",
         "title": "Zoom Top Window",
         "tip": "<p>Zoom Top Window</p><p>Note: Not all windows zoom.</p>",
-        "footerTip": "<a href=\"https://morphic.world/basics/learn-more-about-quickstrip#textzoom\">Want a faster way to zoom a window?</a>",
+        "footerTip": "<a href=\"https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html\">Want a faster way to zoom a window?</a>",
         "sidecar": "<p>The “Top Window Zoom” buttons are provided to make zooming the text in many application Windows easy.</p><p>But there are even faster ways to do this that do not require you to open the QuickStrip at all. Again, they do not work in all applications but they work in many.</p><ul><li>You can hold CTRL down and use the scrollwheel on your mouse to zoom in/out</li><li>Hold the CTRL key down and use the + and - keys on keyboard to zoom in/out</li></ul>",
         "description": "This button can be used to change the zoom level of the top application (i.e.: Microsoft Edge, Google Chrome, etc)."
     },
@@ -107,6 +107,17 @@
         ],
         "sidecar": "<p>You can also create your own custom Microsoft Word Ribbons on your own computer.</p><p>To create a customized ribbon right click on the right edge of the ribbon bar and select “Customize Ribbons”. Further instructions are available on the <a href='https://support.office.com/en-us/article/customize-the-ribbon-in-office-00f24ca7-6021-48d3-9514-a31a460ecb31'>Microsoft Office support site</a>.</p><p>NOTE: User customized ribbons are not currently captured and saved by Morphic.</p>",
         "description": "This button allows you to add simple ribbons to Microsoft Word."
+    },
+    "gpii_app_qss_settings_excelSimplification": {
+        "tooltip": "<p>Microsoft Excel simplification.</p><p>Provides simpler menus for Microsoft Excel</p>",
+        "title": "MS Excel Simplify",
+        "tip": "<p>Microsoft Excel simplification</p><p>Morphic can add simpler ribbons (the menu bars with icons at the top of Word) to make it easier for people who don't use all the options.</p><ul><li>Choose one or both to add them to Word</li></ul>",
+        "enum": [
+            "Basic (Morphic)",
+            "Essentials (Morphic)"
+        ],
+        "sidecar": "<p>You can also create your own custom Microsoft Excel Ribbons on your own computer.</p><p>To create a customized ribbon right click on the right edge of the ribbon bar and select “Customize Ribbons”. Further instructions are available on the <a href='https://support.office.com/en-us/article/customize-the-ribbon-in-office-00f24ca7-6021-48d3-9514-a31a460ecb31'>Microsoft Office support site</a>.</p><p>NOTE: User customized ribbons are not currently captured and saved by Morphic.</p>",
+        "description": "This button allows you to add simple ribbons to Microsoft Excel."
     },
     "gpii_app_qss_settings_common-volume": {
         "tooltip": "<p>Adjusts Windows Volume and provides Mute on/off.</p>",
@@ -184,6 +195,20 @@
         ],
         "sidecarWithSettings": "<p>In addition to the Windows color vision options presented in the panel to the left, there are also several grayscale options provided in Windows setting.</p><p>Here is the link to take you directly to the full set of Color Vision Options in Windows Settings:</p><ul><li><a href='ms-settings:easeofaccess-colorfilter'>Color Vision Settings</a></li></ul>",
         "description": "This button provides an easy way to enable/disable the Microsoft Windows available color filters. These are useful to make things easier to view or distinguish."
+    },
+    "gpii_app_qss_settings_activityHistory": {
+        "tooltip": "<p>Change the Windows Activity History settings</p>",
+        "title": "Windows Activity History",
+        "tip": "<p>Windows Activity History</p><p>Enable or disable the collection of your usage on the computer.<br>This can be useful to resume your work on the computer.</p><br><p>Note that the Cloud Synchronization only works if you have a Microsoft account configured in the device.</p>",
+        "footerTip": "<p><b>More about Activity History</b><p>",
+        "sidecar": "<p>When the <b>Activity Collection</b> is enabled, Windows will keep track of the usage and save it; opened documents, visited links, clipboard, etc. This way, resuming your work on the computer is easier.</p><p>You can also enable the <b>Cloud Synchronization</b> in order to send your activity on the device to your Microsoft account. This can be helpful to resume your work on another computer.</p><p>You can also change these and other settings from the <a href='ms-settings:privacy-activityhistory'>Activity History Settings</a>.</p>",
+        "description": "This buttons allow you to change your Activity History settings."
+    },
+    "gpii_app_qss_settings_activityHistory-collectionEnabled": {
+        "title": "Activity Collection"
+    },
+    "gpii_app_qss_settings_activityHistory-cloudSyncEnabled": {
+        "title": "Cloud Synchronization"
     },
     "gpii_app_qss_settings_morphic-userSettings": {
         "tooltip": "<p>Change the Morphic QuickStrip user settings</p>",

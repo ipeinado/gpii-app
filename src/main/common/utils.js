@@ -493,8 +493,13 @@ gpii.app.prepareMorePanelList = function (morePanelList, rows, cols, fill) {
             result.push(buttonId);
         }
     }
-
-    return result;
+    // We reverse the order because we want to have the more panel rows to be
+    // filled in with buttons starting at the bottom right, i.e.:
+    // If we receive [ ["button1", "button2", "button3"] ] we expect them
+    // to be positioned in the bottom row in the following way:
+    // [ empty, empty, empty, empty, empty, "button3", "button2", "button1"]
+    // Also, this way we avoid adding the other 2 rows with empty buttons.
+    return result.reverse();
 };
 
 /**

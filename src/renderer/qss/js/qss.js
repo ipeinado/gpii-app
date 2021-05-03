@@ -58,10 +58,12 @@
             "more":              "gpii.qss.moreButtonPresenter",
             "openUSB":           "gpii.qss.widgetButtonPresenter",
             "office":            "gpii.qss.widgetButtonPresenter",
+            "excel":             "gpii.qss.widgetButtonPresenter",
             "cloud-folder-open": "gpii.qss.openCloudFolderPresenter",
             "launch-documorph":  "gpii.qss.launchDocuMorphPresenter",
             "volume":            "gpii.qss.volumeButtonPresenter",
             "mouse":             "gpii.qss.widgetButtonPresenter",
+            "activityHistory":   "gpii.qss.widgetButtonPresenter",
             "morphic":           "gpii.qss.widgetButtonPresenter",
             "snipping-tool":     "gpii.qss.snippingToolPresenter",
             "disabled":          "gpii.qss.disabledButtonPresenter",
@@ -154,23 +156,7 @@
         components: {
             qssMorePanel: {
                 type: "fluid.viewComponent",
-                container: "{list}.dom.morePanel",
-                options: {
-                    gradeNames: "gpii.psp.selectorsTextRenderer",
-                    enableRichText: true,
-                    selectors: {
-                        infoBlock: ".flc-info-block",
-                        buttonBlock1: ".flc-button-block-1",
-                        buttonBlock2: ".flc-button-block-2"
-                    },
-                    model: {
-                        messages: {
-                            infoBlock: "{list}.model.messages.infoBlock",
-                            buttonBlock1: "{list}.model.messages.buttonBlock1",
-                            buttonBlock2: "{list}.model.messages.buttonBlock2"
-                        }
-                    }
-                }
+                container: "{list}.dom.morePanel"
             },
             qssStripRepeater: {
                 type: "gpii.psp.repeaterInList",

@@ -22,7 +22,7 @@
 "use strict";
 
 var fluid = require("infusion"),
-    getUuid = require('uuid-by-string'),
+    getUuid = require("uuid-by-string"),
     https = require("https"),
     keytar = require("keytar");
 
@@ -184,9 +184,26 @@ gpii.keyring.findCredentials = function (service) {
         // likely to happen, but just in case, we always return the first one, which
         // corresponds to the last added credentials.
         //
-        // TODO: Think about a workflow through a user can remove the credentials
-        // from the keyring.
-        promise.resolve(credentials[0]);
+        // Also, we have to deal with the way that different libraries handle the
+        // password from the keyring, read this:
+        //   https://github.com/r-lib/keyring/issues/85
+        // For this reason, we need to handle the situation of Morphic
+        // saving the password in a way that the python-keyring can retrieve.
+        // TODO: Propose an alternative to this workaround.
+        var togo;
+
+        if (!credentials.length) {
+            togo = false;
+        } else {
+            // Workaround for the keytar enconding mumbo jumbo
+            var utf8password = Buffer.from(credentials[0].password, "utf8").toString("utf16le");
+            togo = {
+                account: credentials[0].account,
+                password: utf8password
+            };
+        }
+
+        promise.resolve(togo);
     }, function (error) {
         promise.reject(error);
     });
@@ -197,7 +214,10 @@ gpii.keyring.findCredentials = function (service) {
 gpii.keyring.setPassword = function (service, account, password) {
     var promise = fluid.promise();
 
-    keytar.setPassword(service, account, password).then(function () {
+    // Workaround for the keytar enconding mumbo jumbo
+    var bPass = Buffer.from(password, "utf16le");
+
+    keytar.setPassword(service, account, bPass.toString()).then(function () {
         promise.resolve();
     }, function (error) {
         promise.reject(error);

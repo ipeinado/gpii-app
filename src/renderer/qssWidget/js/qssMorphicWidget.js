@@ -31,10 +31,10 @@
             tooltipDisplayDelay: ".flc-qssMorphicWidget-tooltipDisplayDelay",
             tooltipDisplayDelayIndicators: ".flc-qssTooltipDisplayDelayStepperWidget-indicators",
             scaleFactor: ".flc-qssMorphicWidget-scaleFactor",
-            scaleFactorIndicators: ".flc-qssScaleFactorStepperWidget-indicators"
+            scaleFactorIndicators: ".flc-qssScaleFactorStepperWidget-indicators",
             // External interface
-            //footerTip: ".flc-qssMorphicWidget-footerTip",
-            //openEditorButton: ".flc-qssMorphicWidget-openEditorButton"
+            footerTip: ".flc-qssMorphicWidget-footerTip",
+            openEditorButton: ".flc-qssMorphicWidget-openEditorButton"
         },
 
         events: {
@@ -182,24 +182,24 @@
                     }
                 }
             },
-            //openEditorButton: {
-            //    type: "gpii.psp.widgets.button",
-            //    container: "{that}.dom.openEditorButton",
-            //    options: {
-            //        model: {
-            //            label: "{morphic}.model.messages.openEditorButtonLabel"
-            //        },
-            //        listeners: {
-            //            onClick: {
-            //                funcName: "gpii.qssWidget.morphic.openEditorActivated",
-            //                args: [
-            //                    "{morphic}",
-            //                    "{channelNotifier}.events.onQssOpenEditorRequested"
-            //                ]
-            //            }
-            //        }
-            //    }
-            //},
+            openEditorButton: {
+                type: "gpii.psp.widgets.button",
+                container: "{that}.dom.openEditorButton",
+                options: {
+                    model: {
+                        label: "{morphic}.model.messages.openEditorButtonLabel"
+                    },
+                    listeners: {
+                        onClick: {
+                            funcName: "gpii.qssWidget.morphic.openEditorActivated",
+                            args: [
+                                "{morphic}",
+                                "{channelNotifier}.events.onQssOpenEditorRequested"
+                            ]
+                        }
+                    }
+                }
+            },
             channelNotifier: {
                 type: "gpii.psp.channelNotifier",
                 options: {

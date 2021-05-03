@@ -111,8 +111,9 @@
                 "popupText": "<p>Abrir Guia do Utilizador.</p>"
             },
             "||",
-            "office",
-            "excel",
+            "activityHistory",
+            "office-simplification",
+            "excel-simplification",
             "screen-zoom",
             "high-contrast",
             "color-vision",

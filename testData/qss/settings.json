@@ -254,6 +254,44 @@
         "messageKey": "common-mouse",
         "learnMoreLink": "https://morphic.world/help/qsshelp#mouse"
     }, {
+        "id": "activityHistory",
+        "path": "activityHistory",
+        "schema": {
+            "type": "activityHistory"
+        },
+        "settings": {
+            "collectionEnabled": {
+                "id": "collectionEnabled",
+                "path": "http://registry\\.gpii\\.net/applications/com\\.microsoft\\.windows\\.activityHistory.CollectionEnabled",
+                "schema": {
+                    "type": "boolean",
+                    "default": false,
+                    "mapOn": true,
+                    "mapOff": false,
+                    "closeOnSelect": false
+                },
+                "value": false,
+                "messageKey": "activityHistory-collectionEnabled"
+            },
+            "cloudSyncEnabled": {
+                "id": "cloudSyncEnabled",
+                "path": "http://registry\\.gpii\\.net/applications/com\\.microsoft\\.windows\\.activityHistory.CloudSyncEnabled",
+                "schema": {
+                    "type": "boolean",
+                    "default": false,
+                    "mapOn": true,
+                    "mapOff": false,
+                    "closeOnSelect": false
+                },
+                "value": false,
+                "messageKey": "activityHistory-cloudSyncEnabled"
+            }
+        },
+        "buttonTypes": ["largeButton", "settingButton"],
+        "tabindex": 146,
+        "messageKey": "activityHistory",
+        "learnMoreLink": "https://docs.smartworkproject.eu/docs/morphic-docs/en/morphic-user-guide.html"
+    }, {
         "id": "read-aloud",
         "path": "http://registry\\.gpii\\.net/common/selfVoicing/enabled",
         "schema": {

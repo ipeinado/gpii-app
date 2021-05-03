@@ -196,6 +196,20 @@
         "sidecarWithSettings": "<p>In addition to the Windows color vision options presented in the panel to the left, there are also several grayscale options provided in Windows setting.</p><p>Here is the link to take you directly to the full set of Color Vision Options in Windows Settings:</p><ul><li><a href='ms-settings:easeofaccess-colorfilter'>Color Vision Settings</a></li></ul>",
         "description": "This button provides an easy way to enable/disable the Microsoft Windows available color filters. These are useful to make things easier to view or distinguish."
     },
+    "gpii_app_qss_settings_activityHistory": {
+        "tooltip": "<p>Change the Windows Activity History settings</p>",
+        "title": "Windows Activity History",
+        "tip": "<p>Windows Activity History</p><p>Enable or disable the collection of your usage on the computer.<br>This can be useful to resume your work on the computer.</p><br><p>Note that the Cloud Synchronization only works if you have a Microsoft account configured in the device.</p>",
+        "footerTip": "<p><b>More about Activity History</b><p>",
+        "sidecar": "<p>When the <b>Activity Collection</b> is enabled, Windows will keep track of the usage and save it; opened documents, visited links, clipboard, etc. This way, resuming your work on the computer is easier.</p><p>You can also enable the <b>Cloud Synchronization</b> in order to send your activity on the device to your Microsoft account. This can be helpful to resume your work on another computer.</p><p>You can also change these and other settings from the <a href='ms-settings:privacy-activityhistory'>Activity History Settings</a>.</p>",
+        "description": "This buttons allow you to change your Activity History settings."
+    },
+    "gpii_app_qss_settings_activityHistory-collectionEnabled": {
+        "title": "Activity Collection"
+    },
+    "gpii_app_qss_settings_activityHistory-cloudSyncEnabled": {
+        "title": "Cloud Synchronization"
+    },
     "gpii_app_qss_settings_morphic-userSettings": {
         "tooltip": "<p>Change the Morphic QuickStrip user settings</p>",
         "title": "Morphic User Settings",

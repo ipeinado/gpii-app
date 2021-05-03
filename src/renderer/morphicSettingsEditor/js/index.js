@@ -36,11 +36,25 @@
                         buttonCatalog: windowInitialParams.buttonCatalog
                     }
                 }
+            },
+            
+            buttonCatalog: {
+                type: "gpii.psp.morphicSettingsEditor.buttonCatalog",
+                container: ".flc-buttonCatalog-buttonList",
+                options: {
+                    model: {
+                        items: windowInitialParams.supportedButtonsList
+                    }
+                }
             }
         }
     });
 
     jQuery(function () {
         gpii.psp.translatedMorphicSettingsEditor(".fl-dialog");
+    });
+
+    jQuery(document).ready(function() {
+        jQuery(".fl-dialog").unbind("focus");
     });
 })(fluid);

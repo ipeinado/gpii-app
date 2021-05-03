@@ -36,8 +36,8 @@ fluid.defaults("gpii.app.morphicSettingsEditor", {
     config: {
         fileSuffixPath: "morphicSettingsEditor/index.html",
         attrs: {
-            width: 600,
-            height: 400,
+            width: 1024,
+            height: 800,
             alwaysOnTop: false,
             frame: true,
             resizable: true,

@@ -1,17 +1,29 @@
+.fl-dialog h1 {
+    font-size: 32px;
+    padding: 2rem;
+}
+
 .fl-qss {
     background-color: #e0e0e0;
     height: auto;
     border-bottom: 16px solid #333;
-    padding-top: 16px;
+    padding-top: 32px;
     justify-content: flex-start;
     position: relative;
 }
 
 .flc-qss-instructions {
-    position: absolute;    
-    top: 10px;
-    left: 10px;
     padding: 1em;
+    background-color: rgba(0, 120, 215, .05);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flc-qss-instructions p {
+    margin: 0;
+    padding: 0;
 }
 
 .fl-quickSetStrip-more {
@@ -96,11 +108,22 @@
     position: relative;
 }
 
+.flc-buttonCatalog {
+    padding: 14px;
+    margin: 0 auto;
+}
+
 .flc-buttonCatalog-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items:  center;
+    margin-bottom: 28px;
+
+}
+
+.flc-buttonCatalog-header h2 {
+    font-size: 24px;
 }
 
 .flc-buttonCatalog-buttonList {
@@ -115,7 +138,7 @@
     width: 25%;
     min-width: 240px;
     box-sizing: border-box;
-    margin-bottom: 2em;
+    margin-bottom: 3em;
     overflow: hidden;
 }
 
@@ -154,6 +177,7 @@
     padding: .5rem;
     border-radius: 5px;
     margin-right: .5rem;
+    margin-bottom: .5rem;
 }
 
 .flc-buttonCatalog-btnAddToQSS:hover,
@@ -171,8 +195,6 @@
     visibility: hidden;
     z-index: 100;
 }
-
-
 
 .mor-buttonContextMenu-item {
     display: block;

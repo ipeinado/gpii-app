@@ -37,7 +37,7 @@
     "gpii_psp_makeYourOwnButtonEditor_popupPlaceholder": "Enter Popup Text",
     "gpii_psp_makeYourOwnButtonEditor_descriptionLabel": "Description",
     "gpii_psp_makeYourOwnButtonEditor_descriptionPlaceholder": "Enter description",
-    "gpii_psp_makeYourOwnButtonEditor_saveButtonLabel": "Save button",
+    "gpii_psp_makeYourOwnButtonEditor_saveButtonLabel": "Add button to catalog",
 
     "gpii_psp_smartworkLogin_usernameLabel": "Username",
     "gpii_psp_smartworkLogin_usernamePlaceholder": "Enter your smartwork user",

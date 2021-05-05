@@ -17,7 +17,29 @@
 "use strict";
 
 (function (fluid) {
+    var isDeepStrictEqual = require("util").isDeepStrictEqual;
     var gpii = fluid.registerNamespace("gpii");
+
+    const ELEMENTS = [
+      "|",
+      "||",
+      "separator",
+      "separator-visible",
+      "-",
+      "x",
+      "grid",
+      "grid-visible"
+    ];
+
+    const STATIC_BUTTONS = [
+      "morphic",
+      "service-more",
+      "service-undo",
+      "service-save",
+      "service-saved-settings",
+      "service-reset-all",
+      "service-close"
+    ];
 
     fluid.defaults("gpii.psp.morphicSettingsEditor.contextMenu", {
         gradeNames: "fluid.rendererComponent",
@@ -251,7 +273,7 @@
         invokers: {
             addNewMYOB: {
                 funcName: "gpii.psp.morphicSettingsEditor.addNewMYOB",
-                args: ["{that}", "{arguments}.0"]
+                args: ["{that}", "{arguments}.0", "{buttonCatalog}"]
             },
             mseClickHandler: {
                 funcName: "gpii.psp.morphicSettingsEditor.qss.hideContextMenu",
@@ -351,9 +373,11 @@
         console.log(that);
     };
 
-    gpii.psp.morphicSettingsEditor.addNewMYOB = function (that, button) {
-        console.log("### at addNewMYOB - button: ", button);
-        // TODO: Implement adding the created button
+    gpii.psp.morphicSettingsEditor.addNewMYOB = function (that, button, buttonCatalog) {
+        var catalog = buttonCatalog.model.items;
+        catalog.unshift(button);
+        buttonCatalog.applier.change("items", catalog);
+        buttonCatalog.refreshView();
     };
 
     gpii.psp.morphicSettingsEditor.log = function(message) {
@@ -465,15 +489,27 @@
                             buttonAddButtonToQSS: {
                                 value: "Add to Morphic Bar",
                                 decorators: [
-                                    { type: "attrs",  attributes: { buttonId: "{item}.id" }}, 
-                                    { type: "jQuery", func: "click", args: "{that}.addButtonToQSS" }
+                                    {
+                                        type: "attrs",
+                                        attributes: {
+                                            buttonId: "{item}.id"
+                                        }
+                                    },
+                                    {
+                                        type: "jQuery", func: "click", args: [{myobData: "${{item}.myobData}"}, "{that}.addButtonToQSS"]
+                                    }
                                 ]
                             },
                             buttonAddButtonToMorePanel: {
                                 value: "Add to More Panel",
                                 decorators: [
-                                    { type: "attrs", attributes: { buttonId: "{item}.id" }},
-                                    { type: "jQuery", func: "click", args: "{that}.addButtonToMorePanel" }
+                                    {
+                                        type: "attrs",
+                                        attributes: {
+                                            buttonId: "{item}.id"
+                                        }
+                                    },
+                                    { type: "jQuery", func: "click", args: [{myobData: "${{item}.myobData}"}, "{that}.addButtonToMorePanel"] }
                                 ]
                             }
                         },
@@ -546,8 +582,11 @@
 
         $(".flc-myChoices").append(button); */
         var bl = [...mse.model.buttonList];
-        bl.unshift(e.target.getAttribute("buttonid"));
-        mse.applier.change("buttonList", bl);        
+        var buttonId = e.target.getAttribute("buttonid");
+        var buttonToAdd = buttonId === "MakeYourOwn" ? e.data.myobData : buttonId;
+
+        bl.unshift(buttonToAdd);
+        mse.applier.change("buttonList", bl);
         buttonCatalog.refreshView();
 
 /*         buttonList.unshift(e.target.getAttribute("buttonid"));
@@ -558,18 +597,34 @@
     /**
      * Adds a button to the 'More' panel
      * @param {*} e - click event
-     * @param {*} mse 
-     * @param {*} buttonCatalog 
+     * @param {*} mse
+     * @param {*} buttonCatalog
      */
     gpii.psp.morphicSettingsEditor.addButtonToMorePanel = function(e, mse, buttonCatalog) {
         var morePanelList = fluid.flatten(mse.model.morePanelList);
-        morePanelList.unshift(e.target.getAttribute("buttonid"))
+        var buttonId = e.target.getAttribute("buttonid");
+        var buttonToAdd = buttonId === "MakeYourOwn" ? e.data.myobData : buttonId;
+
+        morePanelList.push(buttonToAdd);
         mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
         buttonCatalog.refreshView();
     };
 
+    gpii.psp.morphicSettingsEditor.isButtonInList = function (button, list) {
+        var togo = false;
+
+        if (typeof(button) === "object") {
+            togo = fluid.find_if(list, function (el) {
+                return isDeepStrictEqual(el, button);
+            });
+        } else {
+            togo = list.indexOf(button) !== -1;
+        }
+
+        return togo;
+    };
+
     gpii.psp.morphicSettingsEditor.prepareButtonCatalogModel = function(that, allModels) {
-        console.log("AAAAAAAAAAARGH");
         var flattenedItems = fluid.flatten(that.model.items);
         var items = flattenedItems.map((item, index) => {
             var buttonObject = gpii.psp.morphicSettingsEditor.getButtonInfo(allModels.buttonCatalog, item) || {};
@@ -602,16 +657,19 @@
                     break;
             };
 
-            if (allModels.buttonList.indexOf(item) !== -1) {
-                buttonObject.tag = "In QuickStrip";
-                buttonObject.isAddable = false;
-            };
 
-            if (fluid.flatten(allModels.morePanelList).indexOf(item) !== -1) {
-                buttonObject.tag = "In More Panel";
-                buttonObject.isAddable = false;
-            };
-            
+            if (!ELEMENTS.includes(item)) {
+                if (gpii.psp.morphicSettingsEditor.isButtonInList(item, allModels.buttonList)) {
+                    buttonObject.tag = "In QuickStrip";
+                    buttonObject.isAddable = false;
+                };
+
+                if (gpii.psp.morphicSettingsEditor.isButtonInList(item, fluid.flatten(allModels.morePanelList))) {
+                    buttonObject.tag = "In More Panel";
+                    buttonObject.isAddable = false;
+                };
+            }
+
             return buttonObject;
         });
 
@@ -654,8 +712,8 @@
                 buttonObject = {
                     id: buttonId.buttonId,
                     title: buttonId.buttonName,
-                    type: buttonId.buttonType,
-                    description: buttonId.buttonText
+                    description: buttonId.description,
+                    myobData: buttonId
                 };
                 break;
             default:

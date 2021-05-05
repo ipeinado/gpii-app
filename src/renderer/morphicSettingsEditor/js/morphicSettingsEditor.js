@@ -686,15 +686,17 @@
     };
 
     gpii.psp.morphicSettingsEditor.displayContextMenu = function(that, mse, contextMenu) {
-        console.log("THAAAAAT", that.typeName);
+        console.log("### At displayContextMenu", that.typeName);
         contextMenu.applier.change("caller", that.typeName);
-        var pos = mse.activeItem.getBoundingClientRect();
-        $(document.body).bind("click", function(e) { gpii.psp.morphicSettingsEditor.qss.hideContextMenu(contextMenu.container); });
-        contextMenu.container.css("visibility", "visible");
-        contextMenu.container.css("opacity", 1);
-        contextMenu.container.css("top", pos.y - 76);
-        contextMenu.container.css("left", pos.x - 180);
-        contextMenu.container.children()[0].focus();
+        if (mse.activeItem) {
+            var pos = mse.activeItem.getBoundingClientRect();
+            $(document.body).bind("click", function(e) { gpii.psp.morphicSettingsEditor.qss.hideContextMenu(contextMenu.container); });
+            contextMenu.container.css("visibility", "visible");
+            contextMenu.container.css("opacity", 1);
+            contextMenu.container.css("top", pos.y - 76);
+            contextMenu.container.css("left", pos.x - 180);
+            contextMenu.container.children()[0].focus();
+        }
     };
 
 

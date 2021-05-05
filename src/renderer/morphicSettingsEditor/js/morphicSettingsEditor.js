@@ -74,12 +74,12 @@
         },
 
         protoTree: {
-            removeLink: {   
+            removeLink: {
                 value: "${actions.remove}",
                 decorators: [
                     { type: "jQuery", func: "click", args: ["{that}.removeButtonClickHandler"] },
                     { type: "jQyery", func: "blur", args: ["{that}.removeButtonBlurHandler"] },
-                    { type: "jQuery", func: "keydown", args: ["{that}.removeButtonKeydownHandler"] }    
+                    { type: "jQuery", func: "keydown", args: ["{that}.removeButtonKeydownHandler"] }
                 ]
             }
         }
@@ -158,7 +158,7 @@
      */
     fluid.defaults("gpii.psp.morphicSettingsEditor", {
         gradeNames: ["fluid.rendererComponent", "fluid.reorderer"],
- 
+
         layoutHandler: "fluid.moduleLayoutHandler",
 
         model: {
@@ -262,7 +262,7 @@
                 funcName: "gpii.psp.morphicSettingsEditor.updateModels",
                 args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2", "{buttonCatalog}"]
             },
-            
+
             "afterMove.enableSaveButton": {
                 this: "{that}.dom.saveButton",
                 method: ["attr"],
@@ -298,7 +298,7 @@
                         instructionText: "${instruction}"
                     }
                 }
-            }, 
+            },
 
             qss: {
                 type: "gpii.psp.morphicSettingsEditor.qss",
@@ -419,10 +419,10 @@
     });
 
     /**
-     * 
-     * @param {*} that 
-     * @param {*} mse 
-     * @returns 
+     *
+     * @param {*} that
+     * @param {*} mse
+     * @returns
      */
       fluid.defaults("gpii.psp.morphicSettingsEditor.buttonCatalog", {
         gradeNames: ["fluid.rendererComponent"],
@@ -449,7 +449,7 @@
             }
         },
         renderOnInit: true,
-        listeners: {    
+        listeners: {
             "prepareModelForRender.getInfoFromCatalog": {
                 funcName: "gpii.psp.morphicSettingsEditor.prepareButtonCatalogModel",
                 args: ["{that}", "{morphicSettingsEditor}.model"]
@@ -534,7 +534,7 @@
      * This function creates a protoTree for each button
      * @param {*} that - element that calls for the renderer tree
      * @param {*} mse - the overall morphic settings editor
-     * @returns 
+     * @returns
      */
     gpii.psp.morphicSettingsEditor.qss.produceTree = function(that, mse, buttonCatalog) {
         var buttonList = fluid.transform(that.model.buttons, function(button, index) {
@@ -737,7 +737,7 @@
         });
         return button? buttonCollection.indexOf(button) : -1;
     }
-    
+
     /**
      * This function updates the models after a button has moved.
      */
@@ -772,10 +772,10 @@
 
         that.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
         that.applier.change("buttonList", buttonList);
-        
+
         buttonCatalog.refreshView();
     };
-    
+
     /**
       * This function is the opposite to the previous one, and returns an
       * three arrays of arrays from an unique array
@@ -812,20 +812,20 @@
             var buttonIndex = gpii.psp.morphicSettingsEditor.findButtonIndexById(buttonId, morePanelList);
             morePanelList.splice(buttonIndex, 1);
             mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList))
-        }; 
+        };
 
         activeItem.remove();
 
         mse.instructions.applier.change("instruction", `You have deleted button '${activeItem.innerText}'`);
         mse.instructions.refreshView();
-        
+
         // MODEL
         activeItem.remove();
 
         if (caller.typeName === "gpii.psp.morphicSettingsEditor.contextMenu") {
             gpii.psp.morphicSettingsEditor.qss.hideContextMenu(caller.container);
         }
-        
+
         // buttonCatalog.applier.change("items", buttonCatalog.model.items);
         buttonCatalog.refreshView();
     };

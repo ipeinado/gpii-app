@@ -640,9 +640,13 @@
                     buttonObject.buttonType = "fl-qss-separator";
                     break;
                 case "grid":
-                case "grid-visible":
                     buttonObject.buttonType = "fl-qss-emptyBtn";
                     break;
+                case "grid-visible":
+                    buttonObject.buttonType = "fl-qss-emptyBtn-colored";
+                    break;
+                case "morphic":
+                case "service-more":
                 case "service-undo":
                 case "service-save":
                 case "service-saved-settings":

@@ -792,10 +792,9 @@
     };
 
     gpii.psp.morphicSettingsEditor.qss.removeButton = function(e, caller, mse, buttonCatalog) {
-
         e.preventDefault();
 
-        console.log("BUTTON CATALOG", buttonCatalog);
+        //console.log("BUTTON CATALOG", buttonCatalog);
 
         var activeItem = mse.activeItem,
             buttonId = activeItem.getAttribute("data-buttonid");

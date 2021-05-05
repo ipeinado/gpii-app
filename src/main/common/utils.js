@@ -490,7 +490,7 @@ gpii.app.prepareMorePanelList = function (morePanelList, rows, cols, fill) {
         for (col = 0; col < cols; col++) {
             // gets the buttonId if any, or not fills with the filler grid element
             var buttonId = (morePanelList[row] && morePanelList[row][col]) ? morePanelList[row][col] : fill;
-            result.push(buttonId);
+            result.unshift(buttonId);
         }
     }
     // We reverse the order because we want to have the more panel rows to be

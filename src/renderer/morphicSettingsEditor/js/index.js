@@ -37,7 +37,7 @@
                     }
                 }
             },
-            
+
             buttonCatalog: {
                 type: "gpii.psp.morphicSettingsEditor.buttonCatalog",
                 container: ".flc-buttonCatalog-buttonList",

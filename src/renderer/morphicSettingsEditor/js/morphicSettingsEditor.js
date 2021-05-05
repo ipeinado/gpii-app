@@ -90,7 +90,7 @@
      */
     fluid.defaults("gpii.psp.morphicSettingsEditor.qss", {
         gradeNames: ["fluid.rendererComponent"],
-        
+
         selectors: {
             button: ".fl-qss-button",
             buttonLabel: ".fl-qss-btnLabel"

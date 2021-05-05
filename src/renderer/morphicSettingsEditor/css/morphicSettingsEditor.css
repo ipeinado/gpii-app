@@ -33,6 +33,7 @@
     flex-wrap: wrap-reverse;
     padding-right: 32px;
     position: relative;
+    width: 525px;
 }
 
 .flc-quickSetStrip-main {
@@ -54,7 +55,7 @@
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    width: 148px;
+    width: 267px;
 }
 
 .fl-qss-logo {
@@ -65,6 +66,10 @@
     background-color: rgb(0, 41, 87)  !important;
     cursor: grab;
     outline:deeppink;
+}
+
+.fl-qss-button-static {
+    background-color: rgb(0, 41, 87)  !important;
 }
 
 .fl-qss-separator {
@@ -78,6 +83,10 @@
 .fl-qss-emptyBtn {
     background-color: white !important;
     border: 1px dashed gray;
+}
+
+.fl-qss-emptyBtn-colored {
+    background-color: rgb(0, 41, 87)  !important;
 }
 
 .fl-qss-button-small {

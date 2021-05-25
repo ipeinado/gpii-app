@@ -544,7 +544,7 @@
                     { type: "addClass", classes: button.buttonType },
                     { type: "attrs", attributes: {"data-buttonId": button.id} },
                     { type: "jQuery", func: "keydown", args: function(e) { gpii.psp.morphicSettingsEditor.handleKeydown(e, that, mse, buttonCatalog) }},
-                    { type: "jQuery", func: "contextmenu", args: function(e) { gpii.psp.morphicSettingsEditor.displayContextMenu(that, mse, mse.contextMenu); }}
+                    { type: "jQuery", func: "contextmenu", args: function(e) { gpii.psp.morphicSettingsEditor.displayContextMenu(e, that, mse, mse.contextMenu); }}
                 ],
                 children: [{
                     ID: "buttonLabel",
@@ -685,19 +685,29 @@
         that.applier.change("buttons", items);
     };
 
-    gpii.psp.morphicSettingsEditor.displayContextMenu = function(that, mse, contextMenu) {
+    gpii.psp.morphicSettingsEditor.displayContextMenu = function(event, that, mse, contextMenu) {
         console.log("### At displayContextMenu", that.typeName);
+        // console.log(event)
         contextMenu.applier.change("caller", that.typeName);
         if (mse.activeItem) {
-            var pos = mse.activeItem.getBoundingClientRect();
             $(document.body).bind("click", function(e) { gpii.psp.morphicSettingsEditor.qss.hideContextMenu(contextMenu.container); });
             contextMenu.container.css("visibility", "visible");
             contextMenu.container.css("opacity", 1);
-            contextMenu.container.css("top", pos.y - 76);
-            contextMenu.container.css("left", pos.x - 180);
+            contextMenu.container.css("top", mse.activeItem.getBoundingClientRect().y + 40);
+            contextMenu.container.css("left", mse.activeItem.getBoundingClientRect().x - contextMenu.container.width() + 14);
             contextMenu.container.children()[0].focus();
+            contextMenu.container.bind('keydown', gpii.psp.morphicSettingsEditor.contextMenuKeyDown);
         }
     };
+
+    gpii.psp.morphicSettingsEditor.contextMenuKeyDown = function(e) {
+        var contextMenu = e.currentTarget;
+        if (e.key == "Escape") {
+            console.log("pressed escape");
+            contextMenu.style.visibility = "hidden";
+            contextMenu.style.opacity = 0;
+        }
+    }
 
 
     gpii.psp.morphicSettingsEditor.getButtonInfo = function(buttonCatalog, buttonId) {

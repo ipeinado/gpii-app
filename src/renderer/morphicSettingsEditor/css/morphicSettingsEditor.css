@@ -9,7 +9,7 @@
     border-bottom: 16px solid #333;
     padding-top: 32px;
     justify-content: flex-start;
-    position: relative;
+    /* position: relative; */
 }
 
 .flc-qss-instructions {

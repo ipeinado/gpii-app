@@ -36,17 +36,17 @@
                         buttonCatalog: windowInitialParams.buttonCatalog
                     }
                 }
-            },
+            } //,
 
-            buttonCatalog: {
-                type: "gpii.psp.morphicSettingsEditor.buttonCatalog",
-                container: ".flc-buttonCatalog-buttonList",
-                options: {
-                    model: {
-                        items: windowInitialParams.supportedButtonsList
-                    }
-                }
-            }
+            // buttonCatalog: {
+            //     type: "gpii.psp.morphicSettingsEditor.buttonCatalog",
+            //     container: ".flc-buttonCatalog-buttonList",
+            //     options: {
+            //         model: {
+            //             items: windowInitialParams.supportedButtonsList
+            //         }
+            //     }
+            // }
         }
     });
 

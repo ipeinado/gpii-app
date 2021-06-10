@@ -222,7 +222,7 @@ const { Console } = require("console");
 
             "afterMove.reorderButtons": {
                 funcName: "gpii.psp.morphicSettingsEditor.updateModels",
-                args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2", "{buttonCatalog}"]
+                args: ["{arguments}.0", "{arguments}.1", "{arguments}.2", "{that}"]
             },
 
             "afterMove.enableSaveButton": {
@@ -242,6 +242,7 @@ const { Console } = require("console");
                 args: ["{that}.dom.qssContextMenu"]
             }
         },
+
 
         components: {
 
@@ -627,8 +628,8 @@ const { Console } = require("console");
                 decorators: [
                     { type: "addClass", classes: button.classes.join(" ") },
                     { type: "attrs", attributes: {"data-buttonId": button.id} },
-                    { type: "jQuery", func: "keydown", args: function(e) { gpii.psp.morphicSettingsEditor.handleKeydown(e, that, mse, buttonCatalog) }},
-                    { type: "jQuery", func: "contextmenu", args: function(e) { gpii.psp.morphicSettingsEditor.displayContextMenu(e, that, mse, mse.contextMenu); }}
+                    { type: "jQuery", func: "keydown", args: function(e) { gpii.psp.morphicSettingsEditor.handleKeydown(e, that) }},
+                    { type: "jQuery", func: "contextmenu", args: function(e) { gpii.psp.morphicSettingsEditor.displayContextMenu(e); }}
                 ],
                 children: [{
                     ID: "buttonLabel",
@@ -675,7 +676,9 @@ const { Console } = require("console");
      * @param {*} mse - the overall Settings Editor
      * @param {*} buttonCatalog - the button catalog renderer (for refreshing)
      */
-    gpii.psp.morphicSettingsEditor.handleKeydown = function(e, that, mse, buttonCatalog) {
+    gpii.psp.morphicSettingsEditor.handleKeydown = function(e, that) {
+        console.log("EVENT", e);
+        console.log("THAT", that);
 
         if ((e.key === "Backspace") || (e.key === "Delete")) {
             gpii.psp.morphicSettingsEditor.qss.removeButton(e, that, mse, buttonCatalog);
@@ -707,35 +710,35 @@ const { Console } = require("console");
         buttonCatalog.refreshView(); */
     };
 
-    /**
-     * Adds a button to the 'More' panel
-     * @param {*} e - click event
-     * @param {*} mse
-     * @param {*} buttonCatalog
-     */
-    gpii.psp.morphicSettingsEditor.addButtonToMorePanel = function(e, mse, buttonCatalog) {
-        var morePanelList = fluid.flatten(mse.model.morePanelList);
-        var buttonId = e.target.getAttribute("buttonid");
-        var buttonToAdd = buttonId === "MakeYourOwn" ? e.data.myobData : buttonId;
+    // /**
+    //  * Adds a button to the 'More' panel
+    //  * @param {*} e - click event
+    //  * @param {*} mse
+    //  * @param {*} buttonCatalog
+    //  */
+    // gpii.psp.morphicSettingsEditor.addButtonToMorePanel = function(e, mse, buttonCatalog) {
+    //     var morePanelList = fluid.flatten(mse.model.morePanelList);
+    //     var buttonId = e.target.getAttribute("buttonid");
+    //     var buttonToAdd = buttonId === "MakeYourOwn" ? e.data.myobData : buttonId;
 
-        morePanelList.push(buttonToAdd);
-        mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
-        buttonCatalog.refreshView();
-    };
+    //     morePanelList.push(buttonToAdd);
+    //     mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
+    //     buttonCatalog.refreshView();
+    // };
 
-    gpii.psp.morphicSettingsEditor.isButtonInList = function (button, list) {
-        var togo = false;
+    // gpii.psp.morphicSettingsEditor.isButtonInList = function (button, list) {
+    //     var togo = false;
 
-        if (typeof(button) === "object") {
-            togo = fluid.find_if(list, function (el) {
-                return isDeepStrictEqual(el, button);
-            });
-        } else {
-            togo = list.indexOf(button) !== -1;
-        }
+    //     if (typeof(button) === "object") {
+    //         togo = fluid.find_if(list, function (el) {
+    //             return isDeepStrictEqual(el, button);
+    //         });
+    //     } else {
+    //         togo = list.indexOf(button) !== -1;
+    //     }
 
-        return togo;
-    };
+    //     return togo;
+    // };
 
     gpii.psp.morphicSettingsEditor.buttonCatalog.prepareButtonCatalogModel = function(model, applier, that) {
 
@@ -764,7 +767,6 @@ const { Console } = require("console");
                 nb.description = item.description;
                 
                 if (!((qss.includes(nb.id)) || (morePanel.includes(nb.id)))) {
-                    console.log(nb.id, " IS NOT HERE");
                     nb.classes.push("fl-qss-button-movable");
                 }
 
@@ -796,19 +798,35 @@ const { Console } = require("console");
         applier.change("buttons", buttons.filter(function(button) { return button; }));
     };
 
-    gpii.psp.morphicSettingsEditor.displayContextMenu = function(event, that, mse, contextMenu) {
-        console.log("### At displayContextMenu", that.typeName);
-        // console.log(event)
-        contextMenu.applier.change("caller", that.typeName);
-        if (mse.activeItem) {
-            $(document.body).bind("click", function(e) { gpii.psp.morphicSettingsEditor.qss.hideContextMenu(contextMenu.container); });
-            contextMenu.container.css("visibility", "visible");
-            contextMenu.container.css("opacity", 1);
-            contextMenu.container.css("top", mse.activeItem.getBoundingClientRect().y + 40);
-            contextMenu.container.css("left", mse.activeItem.getBoundingClientRect().x - contextMenu.container.width() + 14);
-            contextMenu.container.children()[0].focus();
-            contextMenu.container.bind('keydown', gpii.psp.morphicSettingsEditor.contextMenuKeyDown);
-        }
+    gpii.psp.morphicSettingsEditor.displayContextMenu = function(event) {
+        // console.log("### At displayContextMenu", that.typeName);
+        console.log("event", event);
+        var cm = $("#qssContextMenu"),
+            cmTop = event.currentTarget.getBoundingClientRect().y + 40,
+            cmLeft = event.currentTarget.getBoundingClientRect().x - 180;
+        
+        cm.css({
+            "opacity": 1,
+            "visibility": "visible",
+            "top": cmTop,
+            "left": cmLeft
+        });
+
+        console.log("CM", cm);
+
+        cm.bind('keydown', function(e) { console.log("huhuhu")} );
+        
+        // // console.log(event)
+        // contextMenu.applier.change("caller", that.typeName);
+        // if (mse.activeItem) {
+        //     $(document.body).bind("click", function(e) { gpii.psp.morphicSettingsEditor.qss.hideContextMenu(contextMenu.container); });
+        //     contextMenu.container.css("visibility", "visible");
+        //     contextMenu.container.css("opacity", 1);
+        //     contextMenu.container.css("top", mse.activeItem.getBoundingClientRect().y + 40);
+        //     contextMenu.container.css("left", mse.activeItem.getBoundingClientRect().x - contextMenu.container.width() + 14);
+        //     contextMenu.container.children()[0].focus();
+        //     contextMenu.container.bind('keydown', gpii.psp.morphicSettingsEditor.contextMenuKeyDown);
+        // }
     };
 
     gpii.psp.morphicSettingsEditor.contextMenuKeyDown = function(e) {
@@ -821,80 +839,124 @@ const { Console } = require("console");
     }
 
 
-    gpii.psp.morphicSettingsEditor.getButtonInfo = function(buttonCatalog, buttonId) {
+    // gpii.psp.morphicSettingsEditor.getButtonInfo = function(buttonCatalog, buttonId) {
 
-        let buttonObject = {};
+    //     let buttonObject = {};
 
-        switch (typeof(buttonId)) {
-            case "string":
-                var button = fluid.find_if(buttonCatalog, function (el) {
-                    return (el.id === buttonId)? true : false;
-                });
-                buttonObject = button ? {
-                    id: buttonId,
-                    title: button.title,
-                    description: button.description }: null;
-                break;
-            case "object":
-                buttonObject = {
-                    id: buttonId.buttonId,
-                    title: buttonId.buttonName,
-                    description: buttonId.description,
-                    myobData: buttonId
-                };
-                break;
-            default:
-                buttonObject = null;
-                break;
-        }
+    //     switch (typeof(buttonId)) {
+    //         case "string":
+    //             var button = fluid.find_if(buttonCatalog, function (el) {
+    //                 return (el.id === buttonId)? true : false;
+    //             });
+    //             buttonObject = button ? {
+    //                 id: buttonId,
+    //                 title: button.title,
+    //                 description: button.description }: null;
+    //             break;
+    //         case "object":
+    //             buttonObject = {
+    //                 id: buttonId.buttonId,
+    //                 title: buttonId.buttonName,
+    //                 description: buttonId.description,
+    //                 myobData: buttonId
+    //             };
+    //             break;
+    //         default:
+    //             buttonObject = null;
+    //             break;
+    //     }
 
-        return buttonObject;
+    //     return buttonObject;
 
-    };
+    // };
 
-    gpii.psp.morphicSettingsEditor.findButtonIndexById = function(buttonId, buttonCollection) {
-        var button = fluid.find_if(buttonCollection, function(el) {
-            if (typeof(el) === "object") { return el.buttonId === buttonId; }
-            if (typeof(el) === "string") { return el === buttonId; }
-            return false;
-        });
-        return button? buttonCollection.indexOf(button) : -1;
-    }
+    // gpii.psp.morphicSettingsEditor.findButtonIndexById = function(buttonId, buttonCollection) {
+    //     var button = fluid.find_if(buttonCollection, function(el) {
+    //         if (typeof(el) === "object") { return el.buttonId === buttonId; }
+    //         if (typeof(el) === "string") { return el === buttonId; }
+    //         return false;
+    //     });
+    //     return button? buttonCollection.indexOf(button) : -1;
+    // }
 
     /**
      * This function updates the models after a button has moved.
      */
-    gpii.psp.morphicSettingsEditor.updateModels = function (that, item, position, movables, buttonCatalog) {
+    gpii.psp.morphicSettingsEditor.updateModels = function (item, position, movables, that) {
+        
+        // QSS buttons
+        var buttonList = that.model.buttonList;
 
-        var geom = that.labeller.options.getGeometricInfo();
-        var { index, length, moduleIndex, moduleLength } = fluid.reorderer.indexRebaser(geom.elementIndexer(item));
+        var qssButtons = buttonList.slice(0, buttonList.length - 7),
+            qssStaticButtons = buttonList.slice(buttonList.length - 7, buttonList.length);
 
-        var itemId = item.getAttribute("data-buttonid"),
-            buttonList = that.model.buttonList,
-            morePanelList = fluid.flatten(that.model.morePanelList),
-            originIndexQSS = gpii.psp.morphicSettingsEditor.findButtonIndexById(itemId, buttonList),
-            originIndexMorePanel = gpii.psp.morphicSettingsEditor.findButtonIndexById(itemId, morePanelList);
+        // More Panel Buttons
+        var morePanelList = fluid.flatten(that.model.morePanelList);
 
-        if (originIndexQSS !== -1) {
-            var movableItem = buttonList.splice(originIndexQSS, 1)[0];
-            if (moduleIndex === 2) {
-                buttonList.splice(index - 1, 0, movableItem);
-            } else {
-                morePanelList.splice(index, 0, movableItem);
-            }
-        };
+        // Get the item
+        var itemId = item.getAttribute("data-buttonId");
 
-        if (originIndexMorePanel !== -1) {
-            var movableItem = morePanelList.splice(originIndexMorePanel, 1)[0];
-            if (moduleIndex === 1) {
-                morePanelList.splice(index - 1, 0, movableItem);
-            } else {
-                buttonList.splice(index, 0, movableItem);
-            };
-        };
+        var movableIds = fluid.transform(movables, function(movable, index) {
+            return movable.getAttribute("data-buttonId");
+        });
+        var newIndex = movableIds.indexOf(itemId);
+        
+        // Helper array that replicates the 'movables' provided 
+        var allButtons = [...that.morePanel.model.buttons, ...that.qss.model.buttons, ...that.buttonCatalog.model.buttons];
+        
+        var buttonInButtons = fluid.find_if(allButtons, function(button, index) {
+            return button.id === itemId;
+        });
+        var oldIndex = allButtons.indexOf(buttonInButtons);
 
-        that.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
-        that.applier.change("buttonList", buttonList);
+        var modelButtons = [...morePanelList, ...buttonList, ...that.buttonCatalog.model.buttons];
+        var b = modelButtons.splice(oldIndex, 1);
+        modelButtons.splice(newIndex, 1, b[0]);
+
+        var morePanelLength = $(".fl-quickSetStrip-more").children().length,
+            qssLength = $(".fl-quickSetStrip-main-buttonList").children().length;
+
+        var newMorePanelList = gpii.psp.morphicSettingsEditor.buildRows(modelButtons.slice(0, morePanelLength));
+        var newButtonList = modelButtons.slice(morePanelLength, morePanelLength + qssLength);
+        
+        that.applier.change("buttonList", newButtonList);
+        that.applier.change("morePanelList", newMorePanelList);
+
+        // console.log("THA THAT", that);
+        // console.log("MOVABLES", movables);
+        // var geom = that.labeller.options.getGeometricInfo();
+        // var { index, length, moduleIndex, moduleLength } = fluid.reorderer.indexRebaser(geom.elementIndexer(item));
+        // console.log("INDEX", index, "LENGTH", length);
+
+        // var geom = that.labeller.options.getGeometricInfo();
+        // var { index, length, moduleIndex, moduleLength } = fluid.reorderer.indexRebaser(geom.elementIndexer(item));
+
+        // var itemId = item.getAttribute("data-buttonid"),
+        //     buttonList = that.model.buttonList,
+        //     morePanelList = fluid.flatten(that.model.morePanelList),
+        //     originIndexQSS = gpii.psp.morphicSettingsEditor.findButtonIndexById(itemId, buttonList),
+        //     originIndexMorePanel = gpii.psp.morphicSettingsEditor.findButtonIndexById(itemId, morePanelList);
+
+        // if (originIndexQSS !== -1) {
+        //     var movableItem = buttonList.splice(originIndexQSS, 1)[0];
+        //     if (moduleIndex === 2) {
+        //         buttonList.splice(index - 1, 0, movableItem);
+        //     } else {
+        //         morePanelList.splice(index, 0, movableItem);
+        //     }
+        // };
+
+        // if (originIndexMorePanel !== -1) {
+        //     var movableItem = morePanelList.splice(originIndexMorePanel, 1)[0];
+        //     if (moduleIndex === 1) {
+        //         morePanelList.splice(index - 1, 0, movableItem);
+        //     } else {
+        //         buttonList.splice(index, 0, movableItem);
+        //     };
+        // };
+
+        // that.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
+        // that.applier.change("buttonList", buttonList);
 
         // buttonCatalog.refreshView();
     };

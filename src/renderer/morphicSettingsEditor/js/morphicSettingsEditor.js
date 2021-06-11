@@ -17,6 +17,7 @@
 "use strict";
 
 const { Console } = require("console");
+const { sep } = require("path");
 
 (function (fluid) {
     var isDeepStrictEqual = require("util").isDeepStrictEqual;
@@ -270,11 +271,6 @@ const { Console } = require("console");
                     model: {
                         items: "{morphicSettingsEditor}.model.buttonList",
                         buttonCatalog: "{morphicSettingsEditor}.model.buttonCatalog"
-                    },
-                    modelListeners: {
-                        items: {
-                            func: "{that}.refreshView"
-                        }
                     }
                 }
             },
@@ -286,11 +282,6 @@ const { Console } = require("console");
                     model: {
                         items: "{morphicSettingsEditor}.model.morePanelList",
                         buttonCatalog: "{morphicSettingsEditor}.model.buttonCatalog"
-                    },
-                    modelListeners: {
-                        items: {
-                            func: "{that}.refreshView"
-                        }
                     }
                 }
             },
@@ -303,6 +294,17 @@ const { Console } = require("console");
                         items: "{morphicSettingsEditor}.model.buttonCatalog",
                         buttonList: "{morphicSettingsEditor}.model.buttonList",
                         morePanelList: "{morphicSettingsEditor}.model.morePanelList"
+                    },
+                    modelListeners: {
+                        items: {
+                            func: "{that}.refreshView"
+                        },
+                        buttonList: {
+                            func: "{that}.refreshView"
+                        },
+                        morePanelList: {
+                            func: "{that}.refreshView"
+                        }
                     }
                 }
             },
@@ -551,8 +553,19 @@ const { Console } = require("console");
             });
 
             // console.log("BUTTONS", buttons);
-        
-            applier.change("buttons", buttons.filter(function(element) { return element; }));
+            var newButtons = buttons.filter(function(button) { return button; });
+            var totalButtons = buttons.length,
+                separators = buttons.filter(function(button) { return ((typeof(button) === "object") && ((button.id === "separator-visible") || (button.id === "separator")))}).length,
+                numberButtons = totalButtons - separators,
+                status = { qssButtonsFull: (numberButtons >= 8), qssSeparatorsFull: (separators >= 3)};
+            
+            if (that.container.hasClass("fl-quickSetStrip-more")) {
+                if (totalButtons >= 24) { applier.change("isFull", true); } else { applier.change("isFull", false); }
+            } else {
+                if (totalButtons >= 8) { applier.change("isFull", true); } else { applier.change("isFull", false); }
+            }
+                
+            applier.change("buttons", newButtons);
         // var flattenedItems = fluid.flatten(that.model.items);
         // var items = flattenedItems.map((item, index) => {
         //     var buttonObject = gpii.psp.morphicSettingsEditor.getButtonInfo(allModels.buttonCatalog, item) || {};
@@ -628,8 +641,8 @@ const { Console } = require("console");
                 decorators: [
                     { type: "addClass", classes: button.classes.join(" ") },
                     { type: "attrs", attributes: {"data-buttonId": button.id} },
-                    { type: "jQuery", func: "keydown", args: function(e) { gpii.psp.morphicSettingsEditor.handleKeydown(e, that) }},
-                    { type: "jQuery", func: "contextmenu", args: function(e) { gpii.psp.morphicSettingsEditor.displayContextMenu(e); }}
+                    { type: "jQuery", func: "keydown", args: function(e) { gpii.psp.morphicSettingsEditor.handleKeydown(e, that) }} //,
+                    // { type: "jQuery", func: "contextmenu", args: function(e) { gpii.psp.morphicSettingsEditor.displayContextMenu(e); }}
                 ],
                 children: [{
                     ID: "buttonLabel",
@@ -890,37 +903,58 @@ const { Console } = require("console");
         var qssButtons = buttonList.slice(0, buttonList.length - 7),
             qssStaticButtons = buttonList.slice(buttonList.length - 7, buttonList.length);
 
+        console.log("QSS BUTTONS", qssButtons);
+
         // More Panel Buttons
         var morePanelList = fluid.flatten(that.model.morePanelList);
 
-        // Get the item
+        // I AM USING SUPPORTEDBUTTONSLIST HERE, HAVE TO THINK WHAT WE WILL DO WHEN USER CLICKS MYOB
+        // THIS FUNCTION REPLICATES WHAT gpii.morphicSettingsEditor.buttonCatalog.prepareButtonCatalogModel does
+        var catalogButtons = fluid.transform(that.model.supportedButtonsList, function(button, index) {
+            if ((!STATIC_BUTTONS.includes(button)) && (!(qssButtons.includes(button))) && (!(morePanelList.includes(button)))) { return button };
+        }).filter(function(button) { return button; });
+
+        console.log("CATALOG BUTTONS", catalogButtons);
+
+        // Get the id of the item that has been moved
         var itemId = item.getAttribute("data-buttonId");
 
+        // Then use the movables provided by afterMove, and create an array with all the ids
         var movableIds = fluid.transform(movables, function(movable, index) {
             return movable.getAttribute("data-buttonId");
         });
+        // FIND THE CURRENT INDEX OF THE ITEM THAT HAS BEEN MOVED
         var newIndex = movableIds.indexOf(itemId);
         
-        // Helper array that replicates the 'movables' provided 
+        // Helper array that replicates the 'movables' provided, with buttons in their right format
         var allButtons = [...that.morePanel.model.buttons, ...that.qss.model.buttons, ...that.buttonCatalog.model.buttons];
         
+        // FIND THE OLD INDEX, USING 
         var buttonInButtons = fluid.find_if(allButtons, function(button, index) {
             return button.id === itemId;
         });
         var oldIndex = allButtons.indexOf(buttonInButtons);
 
-        var modelButtons = [...morePanelList, ...buttonList, ...that.buttonCatalog.model.buttons];
+        // Here we are using the 'real' buttons
+        var modelButtons = [...morePanelList, ...buttonList, ...catalogButtons];
         var b = modelButtons.splice(oldIndex, 1);
         modelButtons.splice(newIndex, 1, b[0]);
 
         var morePanelLength = $(".fl-quickSetStrip-more").children().length,
             qssLength = $(".fl-quickSetStrip-main-buttonList").children().length;
 
+        // THE NEW MODELS!
         var newMorePanelList = gpii.psp.morphicSettingsEditor.buildRows(modelButtons.slice(0, morePanelLength));
-        var newButtonList = modelButtons.slice(morePanelLength, morePanelLength + qssLength);
-        
-        that.applier.change("buttonList", newButtonList);
+        var newButtonList = (modelButtons.slice(morePanelLength, morePanelLength + qssLength)).concat(qssStaticButtons);
+
         that.applier.change("morePanelList", newMorePanelList);
+        that.applier.change("buttonList", newButtonList);
+
+        console.log("NEW MORE PANEL LIST", newMorePanelList);
+        console.log("NEW BUTTON LIST", newButtonList);
+        
+        // that.applier.change("buttonList", newButtonList);
+        // that.applier.change("morePanelList", newMorePanelList);
 
         // console.log("THA THAT", that);
         // console.log("MOVABLES", movables);

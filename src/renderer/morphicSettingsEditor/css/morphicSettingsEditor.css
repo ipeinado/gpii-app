@@ -12,6 +12,10 @@
     /* position: relative; */
 }
 
+.panelFull {
+    background-color: rgba(255, 0, 0, .3);
+}
+
 .flc-qss-instructions {
     padding: 1em;
     background-color: rgba(0, 120, 215, .05);

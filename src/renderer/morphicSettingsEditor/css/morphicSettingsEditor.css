@@ -25,6 +25,11 @@
     align-items: center;
 }
 
+.flc-qss-instructions.instruction-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
 .flc-qss-instructions p {
     margin: 0;
     padding: 0;

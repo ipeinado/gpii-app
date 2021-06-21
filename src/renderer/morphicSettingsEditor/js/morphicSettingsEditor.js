@@ -99,7 +99,10 @@ const { sep } = require("path");
         },
         repeatingSelectors: ["button"],
         listeners: {
-            "prepareModelForRender.getInfoFromCatalog": "gpii.psp.morphicSettingsEditor.qss.prepareQSSModel"
+            "prepareModelForRender.getInfoFromCatalog": {
+                funcName: "gpii.psp.morphicSettingsEditor.qss.prepareQSSModel",
+                args: ["{arguments}.0", "{arguments}.1", "{arguments}.2", "{morphicSettingsEditor}"]
+            }
         },
         renderOnInit: true,
         rendererOptions: {
@@ -252,7 +255,7 @@ const { sep } = require("path");
                 container: "{that}.dom.instructions",
                 options: {
                     model: {
-                        instruction: "You can drag and drop buttons to change their position. To remove a button, select it and: (i) click the 'Delete' button or right-click for displaying the menu."
+                        instruction: "You can drag and drop buttons to change their position."
                     },
                     selectors: {
                         instructionText: ".flc-qss-instructions-text"
@@ -294,17 +297,6 @@ const { sep } = require("path");
                         items: "{morphicSettingsEditor}.model.buttonCatalog",
                         buttonList: "{morphicSettingsEditor}.model.buttonList",
                         morePanelList: "{morphicSettingsEditor}.model.morePanelList"
-                    },
-                    modelListeners: {
-                        items: {
-                            func: "{that}.refreshView"
-                        },
-                        buttonList: {
-                            func: "{that}.refreshView"
-                        },
-                        morePanelList: {
-                            func: "{that}.refreshView"
-                        }
                     }
                 }
             },
@@ -509,8 +501,10 @@ const { sep } = require("path");
         return str;
       }
 
-    gpii.psp.morphicSettingsEditor.qss.prepareQSSModel = function(model, applier, that) {
+    gpii.psp.morphicSettingsEditor.qss.prepareQSSModel = function(model, applier, that, mse) {
 
+        console.log("MODEL", model);
+        
         if (that.container.hasClass("fl-quickSetStrip-more")) {
             var items = fluid.flatten(model.items);
         } else {
@@ -560,9 +554,17 @@ const { sep } = require("path");
                 status = { qssButtonsFull: (numberButtons >= 8), qssSeparatorsFull: (separators >= 3)};
             
             if (that.container.hasClass("fl-quickSetStrip-more")) {
-                if (totalButtons >= 24) { applier.change("isFull", true); } else { applier.change("isFull", false); }
+                if (totalButtons > 24) { 
+                    applier.change("isFull", true); 
+                } else { 
+                    applier.change("isFull", false); 
+                }
             } else {
-                if (totalButtons >= 8) { applier.change("isFull", true); } else { applier.change("isFull", false); }
+                if (totalButtons > 8) { 
+                    applier.change("isFull", true);
+                } else { 
+                    applier.change("isFull", false);    
+                }
             }
                 
             applier.change("buttons", newButtons);
@@ -952,52 +954,10 @@ const { sep } = require("path");
 
         console.log("NEW MORE PANEL LIST", newMorePanelList);
         console.log("NEW BUTTON LIST", newButtonList);
-        
-        // that.applier.change("buttonList", newButtonList);
-        // that.applier.change("morePanelList", newMorePanelList);
-
-        // console.log("THA THAT", that);
-        // console.log("MOVABLES", movables);
-        // var geom = that.labeller.options.getGeometricInfo();
-        // var { index, length, moduleIndex, moduleLength } = fluid.reorderer.indexRebaser(geom.elementIndexer(item));
-        // console.log("INDEX", index, "LENGTH", length);
-
-        // var geom = that.labeller.options.getGeometricInfo();
-        // var { index, length, moduleIndex, moduleLength } = fluid.reorderer.indexRebaser(geom.elementIndexer(item));
-
-        // var itemId = item.getAttribute("data-buttonid"),
-        //     buttonList = that.model.buttonList,
-        //     morePanelList = fluid.flatten(that.model.morePanelList),
-        //     originIndexQSS = gpii.psp.morphicSettingsEditor.findButtonIndexById(itemId, buttonList),
-        //     originIndexMorePanel = gpii.psp.morphicSettingsEditor.findButtonIndexById(itemId, morePanelList);
-
-        // if (originIndexQSS !== -1) {
-        //     var movableItem = buttonList.splice(originIndexQSS, 1)[0];
-        //     if (moduleIndex === 2) {
-        //         buttonList.splice(index - 1, 0, movableItem);
-        //     } else {
-        //         morePanelList.splice(index, 0, movableItem);
-        //     }
-        // };
-
-        // if (originIndexMorePanel !== -1) {
-        //     var movableItem = morePanelList.splice(originIndexMorePanel, 1)[0];
-        //     if (moduleIndex === 1) {
-        //         morePanelList.splice(index - 1, 0, movableItem);
-        //     } else {
-        //         buttonList.splice(index, 0, movableItem);
-        //     };
-        // };
-
-        // that.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
-        // that.applier.change("buttonList", buttonList);
-
-        // buttonCatalog.refreshView();
     };
 
     /**
-      * This function is the opposite to the previous one, and returns an
-      * three arrays of arrays from an unique array
+      * buildRows creates three rows of 8 buttons from an array of buttons
       */
     gpii.psp.morphicSettingsEditor.buildRows = function(items) {
         var allItems = Array(24 - items.length).fill(undefined).concat(items);
@@ -1010,8 +970,6 @@ const { sep } = require("path");
 
     gpii.psp.morphicSettingsEditor.qss.removeButton = function(e, caller, mse, buttonCatalog) {
         e.preventDefault();
-
-        //console.log("BUTTON CATALOG", buttonCatalog);
 
         var activeItem = mse.activeItem,
             buttonId = activeItem.getAttribute("data-buttonid");

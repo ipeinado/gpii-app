@@ -112,7 +112,7 @@ const { sep } = require("path");
             },
             "onCreate.addSortableListener": {
                 funcName: "gpii.psp.morphicSettingsEditor.addSortableListener",
-                args: ["{that}"]
+                args: ["{that}", "{morphicSettingsEditor}"]
             }
         },
         renderOnInit: true,
@@ -136,18 +136,85 @@ const { sep } = require("path");
         }
     });
 
-    gpii.psp.morphicSettingsEditor.addSortableListener = function(that) {
+    gpii.psp.morphicSettingsEditor.addSortableListener = function(that, mse) {
         // console.log("ADD SORTABLE LISTENER!!!!", that);
         that.container.sortable({
             connectWith: [".sortable"],
             placeholder: "fl-reorderer-dropMarker",
+            delay: 150,
             update: function(event, ui) {
-                console.log("UPDATE UI", event);
-                console.log("UPDATE UI", ui);
-            },
-            receive: function(event, ui) {
-                console.log("RECEIVE", event);
-                console.log("RECEIVE", ui);
+                // console.log(event.target.className);
+                // console.log("EVENT")
+
+                // Get the models from the editor
+                var buttonList = mse.model.buttonList,
+                    morePanelList = fluid.flatten(mse.model.morePanelList),
+                    originModel,
+                    destinationModel,
+                    originIsButtonList,
+                    destinationIsButtonList,
+                    originIsMorePanel,
+                    destinationIsMorePanel;
+
+                // Establish the destination panel using event.target
+                if (event.target.className.split(" ").includes("fl-quickSetStrip-main-buttonList")) {
+                    destinationModel = buttonList;
+                    destinationIsButtonList = true;
+                };
+
+                if (event.target.className.split(" ").includes('fl-quickSetStrip-more')) {
+                    // console.log("TARGET IS MORE PANEL");
+                    destinationModel = morePanelList;
+                    destinationIsMorePanel = true;
+                };
+
+                // Establish origin of button moved using uisender;
+                if (ui.sender) {
+                    console.log("SENDER", ui.sender);
+                    if (ui.sender[0].className.split(" ").includes("fl-quickSetStrip-main-buttonList")) {
+                        originModel = buttonList;
+                        originIsButtonList = true;
+                    }
+                    if (ui.sender[0].className.split(" ").includes("fl-quickSetStrip-more")) {
+                        // console.log("ORIGIN IS MORE BUTTON LIST");
+                        originModel = morePanelList;
+                        originIsMorePanel = true;
+                    }
+                } else {
+                    originModel = destinationModel;
+                    originIsButtonList = destinationIsButtonList;
+                    originIsMorePanel = destinationIsMorePanel;
+                }
+
+                // Get destinatin index using sortable("toArray") 
+                var buttonId = $(ui.item).data("buttonid"),
+                    destinationIndex = $(this).sortable("toArray", { attribute: "data-buttonid" }).indexOf(buttonId);
+                
+                // Get origin index by finding it in the originModel
+                var originButton = fluid.find_if(originModel, function(button, index) {
+                    if (typeof(button) === "object") { return gpii.psp.morphicSettingsEditor.string_to_slug(button.buttonName) === buttonId; }
+                    if (typeof(button) === "string") return button === buttonId;                
+                }),
+                    originIndex = originModel.indexOf(originButton);
+
+                // Swap indices
+                if ((originIndex !== -1) && (destinationIndex !== -1)) {
+                    if (originModel === destinationModel) {
+                        [originModel[originIndex], originModel[destinationIndex]] = [originModel[destinationIndex], originModel[originIndex]];
+                        if (originIsButtonList) { mse.applier.change("buttonList", originModel); }
+                        if (originIsMorePanel) { mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(originModel)); }
+                    } else {
+                        originModel.splice(originIndex, 1);
+                        destinationModel.splice(destinationIndex, 0, originButton);
+
+                        if (originIsButtonList) { mse.applier.change("buttonList", originModel); }
+                        if (originIsMorePanel) { mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(originModel)); }
+                        if (destinationIsButtonList) { mse.applier.change("buttonList", destinationModel); }
+                        if (destinationIsMorePanel) { mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(destinationModel)); }
+                    }
+                }
+
+                mse.buttonCatalog.refreshView();
             }
         });
     }

@@ -136,6 +136,7 @@ const { sep } = require("path");
         }
     });
 
+    // This function is triggered after a button is moved and update the models
     gpii.psp.morphicSettingsEditor.addSortableListener = function(that, mse) {
         // console.log("ADD SORTABLE LISTENER!!!!", that);
         that.container.sortable({
@@ -460,6 +461,31 @@ const { sep } = require("path");
         console.log("LOOOOOOOG:", message);
     };
 
+    gpii.psp.morphicSettingsEditor.addButton = function(event, mse) {
+        event.preventDefault();
+
+        var panel = event.target.className,
+            buttonId = event.target.getAttribute("data-buttonid"),
+            buttonList = mse.model.buttonList,
+            morePanelList = fluid.flatten(mse.model.morePanelList),
+            button = fluid.find_if(mse.model.buttonCatalog, function(button, index) {
+                return button.id === buttonId; 
+            });
+  
+        if (panel === "flc-buttonCatalog-btnAddToQSS") {
+            buttonList.unshift(buttonId);
+            mse.applier.change("buttonList", buttonList);
+        }
+
+        if (panel === "flc-buttonCatalog-btnAddToMorePanel") {
+            morePanelList.push(buttonId);
+            mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
+        }
+
+        mse.buttonCatalog.refreshView();
+    };
+    
+
     /**
      *
      * @param {*} that
@@ -469,34 +495,34 @@ const { sep } = require("path");
       fluid.defaults("gpii.psp.morphicSettingsEditor.buttonCatalog", {
         gradeNames: ["fluid.rendererComponent"],
         selectors: {
-            // "button:": ".flc-buttonCatalog-buttonContainer-button",
+            "button:": ".flc-buttonCatalog-buttonContainer-button",
             button: ".fl-qss-button",
             buttonLabel: ".flc-buttonCatalog-btnLabel",
-            // buttonTag: ".flc-buttonCatalog-btnTag",
-            buttonDescription: ".flc-buttonCatalog-btnDescription"
-            // buttonAddButtonToQSS: ".flc-buttonCatalog-btnAddToQSS",
-            // buttonAddButtonToMorePanel: ".flc-buttonCatalog-btnAddToMorePanel"
+            buttonTag: ".flc-buttonCatalog-btnTag",
+            buttonDescription: ".flc-buttonCatalog-btnDescription",
+            buttonAddButtonToQSS: ".flc-buttonCatalog-btnAddToQSS",
+            buttonAddButtonToMorePanel: ".flc-buttonCatalog-btnAddToMorePanel"
         },
-        repeatingSelectors: ["button"],
+
         resources: {
             template: {
-                resourceText: // "<div class=\"flc-buttonCatalog-buttonContainer-button\">" +
-                                "<div class=\"fl-qss-button\">" +
-                                "<span class=\"flc-buttonCatalog-btnLabel fl-buttonCatalog-btnLabel\"></span>" +
-                                "<div class=\"flc-buttonCatalog-btnDescription\"></div>" +
-                                "</div>" // +
-                                // "</span></div><div class=\"flc-buttonCatalog-buttonContainer-content\">" +
-                                // "<div class=\"flc-buttonCatalog-btnTag\"></div>" +
-                                // "<div class=\"flc-buttonCatalog-btnDescription\"></div>" +
-                                // "<div class=\"flc-buttonCatalog-btnAddToQSS\" role=\"button\"></div>" +
-                                // "<div class=\"flc-buttonCatalog-btnAddToMorePanel\" role=\"button\"></div>" +
-                                // "</div></div>"
+                resourceText: "<div class=\"flc-buttonCatalog-buttonContainer-button\">" +
+                              "<div class=\"flc-buttonCatalog-buttonContainer-button-container\">" +
+                              "<div class=\"fl-qss-button\"><span class=\"flc-buttonCatalog-btnLabel\"></span></div>" +
+                              "</div>" +
+                              "<div class=\"flc-buttonCatalog-buttonContainer-content\">" +
+                              "<div class=\"flc-buttonCatalog-btnTag\"></div>" +
+                              "<div class=\"flc-buttonCatalog-btnDescription\"></div>" +
+                              "<div class=\"flc-buttonCatalog-btnAddToQSS\" role=\"button\"></div>" +
+                              "<div class=\"flc-buttonCatalog-btnAddToMorePanel\" role=\"button\"></div>" +
+                              "</div>" + // flc-buttonCatalog-buttonContainer-content
+                              "</div>" // flc-buttonCatalog-buttonContainer-button
             }
         },
         renderOnInit: true,
 
-        rendererFnOptions: {
-          noexpand: true  
+        rendererOptions: {
+            autoBind: true
         },
 
         listeners: {
@@ -504,11 +530,78 @@ const { sep } = require("path");
         },
 
         invokers: {
-            produceTree: {
-                funcName: "gpii.psp.morphicSettingsEditor.buttonCatalog.produceTree",
-                args: ["{that}"]
+            addButtonToQSS: {
+                funcName: "gpii.psp.morphicSettingsEditor.addButton",
+                args: ["{arguments}.0", "{morphicSettingsEditor}"]
+            }
+        },
+
+        protoTree: {
+            expander: {
+                type: "fluid.renderer.repeat",
+                repeatID: "button:",
+                controlledBy: "buttons",
+                pathAs: "button",
+                tree: {
+                    expander: {
+                        type: "fluid.renderer.condition",
+                        condition: "${{button}.inPanel}",
+                        trueTree: {
+                            button: {
+                                decorators: [
+                                    { type: "addClass", classes: "${{button}.classes}" },
+                                    { attrs: { "data-buttonid": "${{button}.buttonId}" }}
+                                ]
+                            },
+                            buttonTag: {
+                                value: "${{button}.panel}"
+                            },  
+                            buttonLabel: {
+                                value: "${{button}.title}"
+                            },
+                            buttonDescription: {
+                                value: "${{button}.description}"
+                            },
+                        },
+                        falseTree: {
+                            button: {
+                                decorators: [
+                                    { type: "addClass", classes: "${{button}.classes}" },
+                                    { attrs: { "data-buttonid": "${{button}.buttonId}" }}
+                                ]
+                            },
+                            buttonLabel: {
+                                value: "${{button}.title}"
+                            },
+                            buttonDescription: {
+                                value: "${{button}.description}"
+                            },
+                            buttonAddButtonToQSS: {
+                                value: "Add to QSS",
+                                decorators: [
+                                    { attrs: { "data-buttonid": "${{button}.id}" }},
+                                    { type: "jQuery", func: "click", args: "{that}.addButtonToQSS" }
+                                ]
+                            },
+                            buttonAddButtonToMorePanel: {
+                                value: "Add to More Panel",
+                                decorators: [
+                                    { attrs: { "data-buttonid": "${{button}.id}" }},
+                                    { type: "jQuery", func: "click", args: "{that}.addButtonToQSS" }
+                                ]
+                            }
+                        }
+                    }
+                }
             }
         }
+
+        // invokers: {
+        //     produceTree: {
+        //         funcName: "gpii.psp.morphicSettingsEditor.buttonCatalog.produceTree",
+        //         args: ["{that}"]
+        //     }
+        // }
     });
 
     gpii.psp.morphicSettingsEditor.string_to_slug = function(str) {
@@ -540,6 +633,8 @@ const { sep } = require("path");
         } else {
             var items = model.items;
         }
+
+        // console.log("ITEMMMMSSS", items);
 
         var buttonCatalog = model.buttonCatalog,
             buttons = fluid.transform(items, function(button, index) {
@@ -575,6 +670,8 @@ const { sep } = require("path");
 
                 // return null;
             });
+
+            // console.log("BUTTONNNNNNNNSSSS", buttons);
 
             // console.log("BUTTONS", buttons);
             var newButtons = buttons.filter(function(button) { return button; });
@@ -696,20 +793,29 @@ const { sep } = require("path");
         var buttonList = fluid.transform(that.model.buttons, function(button, index) {
             return {
                 ID: "button:",
-                decorators: [
-                    { type: "addClass", classes: button.classes.join(" ") },
-                    { type: "attrs", attributes: {"data-buttonId": button.id} },
-                    { type: "jQuery", func: "mouseenter", args: function(e) { e.currentTarget.lastElementChild.style.display = "block"; } },
-                    { type: "jQuery", func: "mouseleave", args: function(e) { e.currentTarget.lastElementChild.style.display = "none"; }}
+                // decorators: [
+                    // { type: "addClass", classes: button.classes.join(" ") },
+                    // { type: "attrs", attributes: {"data-buttonId": button.id} },
+                    // { type: "jQuery", func: "mouseenter", args: function(e) { e.currentTarget.lastElementChild.style.display = "block"; } },
+                    // { type: "jQuery", func: "mouseleave", args: function(e) { e.currentTarget.lastElementChild.style.display = "none"; }}
                     // { type: "jQuery", func: "keydown", args: function(e) { gpii.psp.morphicSettingsEditor.handleKeydown(e, that, mse, buttonCatalog) }},
                     // { type: "jQuery", func: "contextmenu", args: function(e) { gpii.psp.morphicSettingsEditor.displayContextMenu(e, that, mse, mse.contextMenu); }}
-                ],
+                //],
                 children: [{
-                    ID: "buttonLabel",
-                    value: button.title
-                }, {
-                    ID: "buttonDescription",
-                    value: button.description
+                    ID: "button",
+                    decorators: [
+                        { type: "addClass", classes: button.classes.join(" ") }
+                    ],
+                    children: [
+                        {
+                            ID: "buttonLabel",
+                            value: button.title
+                        },
+                        {
+                            ID: "buttonDescription",
+                            value: button.description
+                        } 
+                    ]
                 }]
             }
         });
@@ -797,18 +903,21 @@ const { sep } = require("path");
         
         var buttons = fluid.transform(model.items, function(item, index) {
             var nb = {
+                inPanel: false,
                 classes: []
             };
 
             // If it is a custom button
             if (item.hasOwnProperty('buttonID')) {
-                nb.classes.push("fl-qss-button-movable");
+                // nb.classes.push("fl-qss-button-movable");
                 nb.id = gpii.psp.morphicSettingsEditor.string_to_slug(item.buttonName);
                 nb.title = item.buttonName;
                 nb.description = item.popupText;
 
                 if (!((qss.includes(item)) || (morePanel.includes(item)))) {
                     nb.classes.push("fl-qss-button-movable");
+                } else {
+                    
                 }
                 
             } else { // It comes from the catalog
@@ -818,6 +927,10 @@ const { sep } = require("path");
                 
                 if (!((qss.includes(nb.id)) || (morePanel.includes(nb.id)))) {
                     nb.classes.push("fl-qss-button-movable");
+                } else {
+                    nb.inPanel = true;
+                    if (qss.includes(nb.id)) { nb.panel = "In QSS"; }
+                    if (morePanel.includes(nb.id)) { nb.panel = "In More Panel"; }
                 }
 
                 if (nb.id === "separator") {
@@ -837,7 +950,7 @@ const { sep } = require("path");
                 }
             }
             
-            if ((!(STATIC_BUTTONS.includes(nb.id))) && (nb.classes.includes("fl-qss-button-movable"))) {
+            if ((!(STATIC_BUTTONS.includes(nb.id)))) {
                 return nb;
             }
             
@@ -942,8 +1055,6 @@ const { sep } = require("path");
         var qssButtons = buttonList.slice(0, buttonList.length - 7),
             qssStaticButtons = buttonList.slice(buttonList.length - 7, buttonList.length);
 
-        console.log("QSS BUTTONS", qssButtons);
-
         // More Panel Buttons
         var morePanelList = fluid.flatten(that.model.morePanelList);
 
@@ -988,9 +1099,6 @@ const { sep } = require("path");
 
         that.applier.change("morePanelList", newMorePanelList);
         that.applier.change("buttonList", newButtonList);
-
-        console.log("NEW MORE PANEL LIST", newMorePanelList);
-        console.log("NEW BUTTON LIST", newButtonList);
     };
 
     /**

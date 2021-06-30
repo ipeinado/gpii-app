@@ -44,6 +44,9 @@ const { sep } = require("path");
       "service-close"
     ];
 
+    /**
+     * Renderer component for the context menu (for each button)
+     */
     fluid.defaults("gpii.psp.morphicSettingsEditor.contextMenu", {
         gradeNames: "fluid.rendererComponent",
         model: {
@@ -97,13 +100,8 @@ const { sep } = require("path");
             button: ".fl-qss-button",
             buttonLabel: ".fl-qss-btnLabel"
         },
-        repeatingSelectors: ["button"],
 
-        modelListeners: {
-            items: {
-                func: "{that}.refreshView"
-            }
-        },  
+        repeatingSelectors: ["button"],
 
         listeners: {
             "prepareModelForRender.getInfoFromCatalog": {
@@ -136,94 +134,10 @@ const { sep } = require("path");
         }
     });
 
-    // This function is triggered after a button is moved and update the models
-    gpii.psp.morphicSettingsEditor.addSortableListener = function(that, mse) {
-        // console.log("ADD SORTABLE LISTENER!!!!", that);
-        that.container.sortable({
-            connectWith: [".sortable"],
-            placeholder: "fl-reorderer-dropMarker",
-            delay: 150,
-            update: function(event, ui) {
-                // console.log(event.target.className);
-                // console.log("EVENT")
-
-                // Get the models from the editor
-                var buttonList = mse.model.buttonList,
-                    morePanelList = fluid.flatten(mse.model.morePanelList),
-                    originModel,
-                    destinationModel,
-                    originIsButtonList,
-                    destinationIsButtonList,
-                    originIsMorePanel,
-                    destinationIsMorePanel;
-
-                // Establish the destination panel using event.target
-                if (event.target.className.split(" ").includes("fl-quickSetStrip-main-buttonList")) {
-                    destinationModel = buttonList;
-                    destinationIsButtonList = true;
-                };
-
-                if (event.target.className.split(" ").includes('fl-quickSetStrip-more')) {
-                    // console.log("TARGET IS MORE PANEL");
-                    destinationModel = morePanelList;
-                    destinationIsMorePanel = true;
-                };
-
-                // Establish origin of button moved using uisender;
-                if (ui.sender) {
-                    console.log("SENDER", ui.sender);
-                    if (ui.sender[0].className.split(" ").includes("fl-quickSetStrip-main-buttonList")) {
-                        originModel = buttonList;
-                        originIsButtonList = true;
-                    }
-                    if (ui.sender[0].className.split(" ").includes("fl-quickSetStrip-more")) {
-                        // console.log("ORIGIN IS MORE BUTTON LIST");
-                        originModel = morePanelList;
-                        originIsMorePanel = true;
-                    }
-                } else {
-                    originModel = destinationModel;
-                    originIsButtonList = destinationIsButtonList;
-                    originIsMorePanel = destinationIsMorePanel;
-                }
-
-                // Get destinatin index using sortable("toArray") 
-                var buttonId = $(ui.item).data("buttonid"),
-                    destinationIndex = $(this).sortable("toArray", { attribute: "data-buttonid" }).indexOf(buttonId);
-                
-                // Get origin index by finding it in the originModel
-                var originButton = fluid.find_if(originModel, function(button, index) {
-                    if (typeof(button) === "object") { return gpii.psp.morphicSettingsEditor.string_to_slug(button.buttonName) === buttonId; }
-                    if (typeof(button) === "string") return button === buttonId;                
-                }),
-                    originIndex = originModel.indexOf(originButton);
-
-                // Swap indices
-                if ((originIndex !== -1) && (destinationIndex !== -1)) {
-                    if (originModel === destinationModel) {
-                        [originModel[originIndex], originModel[destinationIndex]] = [originModel[destinationIndex], originModel[originIndex]];
-                        if (originIsButtonList) { mse.applier.change("buttonList", originModel); }
-                        if (originIsMorePanel) { mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(originModel)); }
-                    } else {
-                        originModel.splice(originIndex, 1);
-                        destinationModel.splice(destinationIndex, 0, originButton);
-
-                        if (originIsButtonList) { mse.applier.change("buttonList", originModel); }
-                        if (originIsMorePanel) { mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(originModel)); }
-                        if (destinationIsButtonList) { mse.applier.change("buttonList", destinationModel); }
-                        if (destinationIsMorePanel) { mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(destinationModel)); }
-                    }
-                }
-
-                mse.buttonCatalog.refreshView();
-            }
-        });
-    }
-
     /**
      * Represents the controller for the whole settings editor.
      */
-    fluid.defaults("gpii.psp.morphicSettingsEditor", {
+     fluid.defaults("gpii.psp.morphicSettingsEditor", {
         gradeNames: ["fluid.rendererComponent"],
 
         // layoutHandler: "fluid.moduleLayoutHandler",
@@ -241,6 +155,7 @@ const { sep } = require("path");
 
             messages: {
                 // translatable strings go here
+                instruction: 'Hola manolito'
             },
 
             // Button catalog as an array. Each button has the following information
@@ -334,7 +249,7 @@ const { sep } = require("path");
         invokers: {
             addNewMYOB: {
                 funcName: "gpii.psp.morphicSettingsEditor.addNewMYOB",
-                args: ["{that}", "{arguments}.0", "{buttonCatalog}"]
+                args: ["{that}", "{arguments}.0", "{buttonCatalog}", "{morphicSettingsEditor}"]
             },
             mseClickHandler: {
                 funcName: "gpii.psp.morphicSettingsEditor.qss.hideContextMenu",
@@ -350,14 +265,19 @@ const { sep } = require("path");
                 container: "{that}.dom.instructions",
                 options: {
                     model: {
-                        instruction: "You can drag and drop buttons to change their position."
+                        messages: "{morphicSettingsEditor}.model.messages"
+                    },
+                    modelListeners: {
+                        messages: {
+                            funcName: "{that}.refreshView"
+                        }
                     },
                     selectors: {
                         instructionText: ".flc-qss-instructions-text"
                     },
                     renderOnInit: true,
                     protoTree: {
-                        instructionText: "${instruction}"
+                        'instructionText': "${messages.instruction}"
                     }
                 }
             },
@@ -369,6 +289,11 @@ const { sep } = require("path");
                     model: {
                         items: "{morphicSettingsEditor}.model.buttonList",
                         buttonCatalog: "{morphicSettingsEditor}.model.buttonCatalog"
+                    },
+                    modelListeners: {
+                        items: {
+                            func: "{that}.refreshView"
+                        }
                     }
                 }
             },
@@ -380,6 +305,11 @@ const { sep } = require("path");
                     model: {
                         items: "{morphicSettingsEditor}.model.morePanelList",
                         buttonCatalog: "{morphicSettingsEditor}.model.buttonCatalog"
+                    },
+                    modelListeners: {
+                        items: {
+                            func: "{that}.refreshView"
+                        }
                     }
                 }
             },
@@ -393,17 +323,11 @@ const { sep } = require("path");
                         buttonList: "{morphicSettingsEditor}.model.buttonList",
                         morePanelList: "{morphicSettingsEditor}.model.morePanelList"
                     },
-                    // modelListeners: {
-                    //     items: {
-                    //         func: "{that}.refreshView"
-                    //     },
-                    //     buttonList: {
-                    //         func: "{that}.refreshView"
-                    //     },
-                    //     morePanelList: {
-                    //         func: "{that}.refreshView"
-                    //     }
-                    // }
+                    modelListeners: {
+                        items: { func: "{that}.refreshView" },
+                        buttonList: { func: "{that}.refreshView" },
+                        morePanelList: { func: "{that}.refreshView" }
+                    }
                 }
             },
 
@@ -446,53 +370,10 @@ const { sep } = require("path");
 
     });
 
-    gpii.psp.morphicSettingsEditor.refreshView = function(that, mse) {
-        console.log(that);
-    };
-
-    gpii.psp.morphicSettingsEditor.addNewMYOB = function (that, button, buttonCatalog) {
-        var catalog = buttonCatalog.model.items;
-        catalog.unshift(button);
-        buttonCatalog.applier.change("items", catalog);
-        buttonCatalog.refreshView();
-    };
-
-    gpii.psp.morphicSettingsEditor.log = function(message) {
-        console.log("LOOOOOOOG:", message);
-    };
-
-    gpii.psp.morphicSettingsEditor.addButton = function(event, mse) {
-        event.preventDefault();
-
-        var panel = event.target.className,
-            buttonId = event.target.getAttribute("data-buttonid"),
-            buttonList = mse.model.buttonList,
-            morePanelList = fluid.flatten(mse.model.morePanelList),
-            button = fluid.find_if(mse.model.buttonCatalog, function(button, index) {
-                return button.id === buttonId; 
-            });
-  
-        if (panel === "flc-buttonCatalog-btnAddToQSS") {
-            buttonList.unshift(buttonId);
-            mse.applier.change("buttonList", buttonList);
-        }
-
-        if (panel === "flc-buttonCatalog-btnAddToMorePanel") {
-            morePanelList.push(buttonId);
-            mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
-        }
-
-        mse.buttonCatalog.refreshView();
-    };
-    
-
     /**
-     *
-     * @param {*} that
-     * @param {*} mse
-     * @returns
+     * Renderer Component for the Button Catalogue
      */
-      fluid.defaults("gpii.psp.morphicSettingsEditor.buttonCatalog", {
+     fluid.defaults("gpii.psp.morphicSettingsEditor.buttonCatalog", {
         gradeNames: ["fluid.rendererComponent"],
         selectors: {
             "button:": ".flc-buttonCatalog-buttonContainer-button",
@@ -595,37 +476,16 @@ const { sep } = require("path");
                 }
             }
         }
-
-        // invokers: {
-        //     produceTree: {
-        //         funcName: "gpii.psp.morphicSettingsEditor.buttonCatalog.produceTree",
-        //         args: ["{that}"]
-        //     }
-        // }
     });
 
-    gpii.psp.morphicSettingsEditor.string_to_slug = function(str) {
-        str = str.replace(/^\s+|\s+$/g, ""); // trim
-        str = str.toLowerCase();
-      
-        // remove accents, swap ñ for n, etc
-        var from = "åàáãäâèéëêìíïîòóöôùúüûñç·/_,:;";
-        var to = "aaaaaaeeeeiiiioooouuuunc------";
-      
-        for (var i = 0, l = from.length; i < l; i++) {
-          str = str.replace(new RegExp(from.charAt(i), "g"), to.charAt(i));
-        }
-      
-        str = str
-          .replace(/[^a-z0-9 -]/g, "") // remove invalid chars
-          .replace(/\s+/g, "-") // collapse whitespace and replace by -
-          .replace(/-+/g, "-") // collapse dashes
-          .replace(/^-+/, "") // trim - from start of text
-          .replace(/-+$/, ""); // trim - from end of text
-      
-        return str;
-      }
 
+    /**
+     * Creates a 'buttons' model in MSE with a common structure for display
+     * @param { object } model 
+     * @param { applier } applier 
+     * @param { gpii.morphicSettn } that 
+     * @param {*} mse 
+     */
     gpii.psp.morphicSettingsEditor.qss.prepareQSSModel = function(model, applier, that, mse) {
         
         if (that.container.hasClass("fl-quickSetStrip-more")) {
@@ -633,24 +493,22 @@ const { sep } = require("path");
         } else {
             var items = model.items;
         }
-
-        // console.log("ITEMMMMSSS", items);
-
+    
         var buttonCatalog = model.buttonCatalog,
             buttons = fluid.transform(items, function(button, index) {
                 var nb = {};
-                
+                    
                 if ((typeof(button) === 'string') && (!STATIC_BUTTONS.includes(button))) {
                     var b = fluid.find_if(buttonCatalog, function(bc) {
                         return (bc.id === button);
                     });
-
+    
                     if (b) {
                         nb.id = b.id;
                         nb.title = b.title;
-
+    
                         nb.classes = ["fl-qss-button-movable"];
-                        
+                            
                     } else {
                         if (button === "||") {
                             nb.id = "separator-visible";
@@ -659,110 +517,47 @@ const { sep } = require("path");
                     }
                     return nb;
                 };
-
+    
                 if (typeof(button) === 'object') {
                     nb.id = gpii.psp.morphicSettingsEditor.string_to_slug(button.buttonName);
                     nb.title = button.buttonName;
                     nb.classes = ["fl-qss-button-movable"];
-
+    
                     return nb;
                 }
-
-                // return null;
             });
-
-            // console.log("BUTTONNNNNNNNSSSS", buttons);
-
-            // console.log("BUTTONS", buttons);
+    
             var newButtons = buttons.filter(function(button) { return button; });
-            var totalButtons = buttons.length,
-                separators = buttons.filter(function(button) { return ((typeof(button) === "object") && ((button.id === "separator-visible") || (button.id === "separator")))}).length,
-                numberButtons = totalButtons - separators,
-                status = { qssButtonsFull: (numberButtons >= 8), qssSeparatorsFull: (separators >= 3)};
-            
-            if (that.container.hasClass("fl-quickSetStrip-more")) {
-                if (totalButtons > 24) { 
-                    applier.change("isFull", true); 
-                } else { 
-                    applier.change("isFull", false); 
-                }
-            } else {
-                if (totalButtons > 8) { 
-                    applier.change("isFull", true);
-                } else { 
-                    applier.change("isFull", false);    
-                }
-            }
+            console.log(newButtons);
+            // var totalButtons = buttons.length,
+            //     separators = buttons.filter(function(button) { return ((typeof(button) === "object") && ((button.id === "separator-visible") || (button.id === "separator")))}).length,
+            //     numberButtons = totalButtons - separators,
+            //     status = { qssButtonsFull: (numberButtons >= 8), qssSeparatorsFull: (separators >= 3)};
                 
-            applier.change("buttons", newButtons);
-        // var flattenedItems = fluid.flatten(that.model.items);
-        // var items = flattenedItems.map((item, index) => {
-        //     var buttonObject = gpii.psp.morphicSettingsEditor.getButtonInfo(allModels.buttonCatalog, item) || {};
-        //     buttonObject.isAddable = true;
-        //     buttonObject.isAddableText = "";
-        //     buttonObject.tag = "";
-        //     buttonObject.buttonIndex = index;
-
-        //     switch (item) {
-        //         case "||":
-        //         case "separator-visible":
-        //         case "separator":
-        //             buttonObject.buttonType = "fl-qss-separator";
-        //             break;
-        //         case "grid":
-        //             buttonObject.buttonType = "fl-qss-emptyBtn";
-        //             break;
-        //         case "grid-visible":
-        //             buttonObject.buttonType = "fl-qss-emptyBtn-colored";
-        //             break;
-        //         case "morphic":
-        //         case "service-more":
-        //         case "service-undo":
-        //         case "service-save":
-        //         case "service-saved-settings":
-        //         case "service-reset-all":
-        //         case "service-close":
-        //             // buttonObject.buttonType = "fl-qss-closeButton";
-        //             return;
-        //         default:
-        //             if (that.typeName === "gpii.psp.morphicSettingsEditor.qss") {
-        //                 buttonObject.buttonType = "fl-qss-button-movable";
-        //             }
-        //             break;
-        //     };
-
-
-        //     if (!ELEMENTS.includes(item)) {
-        //         if (gpii.psp.morphicSettingsEditor.isButtonInList(item, allModels.buttonList)) {
-        //             buttonObject.tag = "In QuickStrip";
-        //             buttonObject.isAddable = false;
-        //         };
-
-        //         if (gpii.psp.morphicSettingsEditor.isButtonInList(item, fluid.flatten(allModels.morePanelList))) {
-        //             buttonObject.tag = "In More Panel";
-        //             buttonObject.isAddable = false;
-        //         };
-        //     }
-
-        //     return buttonObject;
-        // });
-
-        // if (that.typeName === "gpii.psp.morphicSettingsEditor.qss") {
-        //     // var numberSeparators = that.model.buttonList.filter
-        // }
-
-        // that.applier.change("isFull", false);
-        // that.applier.change("buttons", items);
-
-    };
-
+            // if (that.container.hasClass("fl-quickSetStrip-more")) {
+            //     if (totalButtons > 24) { 
+            //         applier.change("isFull", true); 
+            //     } else { 
+            //         applier.change("isFull", false); 
+            //     }
+            // } else {
+            //     if (totalButtons > 8) { 
+            //         applier.change("isFull", true);
+            //     } else { 
+            //         applier.change("isFull", false);    
+            //     }
+            // }
+                    
+            applier.change("buttons", newButtons);     
+        };
+    
     /**
      * This function creates a protoTree for each button
      * @param {*} that - element that calls for the renderer tree
      * @param {*} mse - the overall morphic settings editor
      * @returns
      */
-    gpii.psp.morphicSettingsEditor.qss.produceTree = function(that, mse) {
+     gpii.psp.morphicSettingsEditor.qss.produceTree = function(that, mse) {
         
         var buttonList = fluid.transform(that.model.buttons, function(button, index) {
             return {
@@ -783,47 +578,144 @@ const { sep } = require("path");
         return buttonList;
     };
 
-    gpii.psp.morphicSettingsEditor.dragstartHandler = function(e) {
-       //  e.dataTransfer.setData(e.currentTarget.id)
-        console.log("STARTING DRAG", e);
-    };
+    // This function is triggered after a button is moved and update the models
+    gpii.psp.morphicSettingsEditor.addSortableListener = function(that, mse) {
+        // console.log("ADD SORTABLE LISTENER!!!!", that);
+        that.container.sortable({
+            connectWith: [".sortable"],
+            placeholder: "fl-reorderer-dropMarker",
+            update: function(event, ui) {
+                // console.log(event.target.className);
+                // console.log("EVENT")
 
-    gpii.psp.morphicSettingsEditor.buttonCatalog.produceTree = function(that) {
-        
-        var buttonList = fluid.transform(that.model.buttons, function(button, index) {
-            return {
-                ID: "button:",
-                // decorators: [
-                    // { type: "addClass", classes: button.classes.join(" ") },
-                    // { type: "attrs", attributes: {"data-buttonId": button.id} },
-                    // { type: "jQuery", func: "mouseenter", args: function(e) { e.currentTarget.lastElementChild.style.display = "block"; } },
-                    // { type: "jQuery", func: "mouseleave", args: function(e) { e.currentTarget.lastElementChild.style.display = "none"; }}
-                    // { type: "jQuery", func: "keydown", args: function(e) { gpii.psp.morphicSettingsEditor.handleKeydown(e, that, mse, buttonCatalog) }},
-                    // { type: "jQuery", func: "contextmenu", args: function(e) { gpii.psp.morphicSettingsEditor.displayContextMenu(e, that, mse, mse.contextMenu); }}
-                //],
-                children: [{
-                    ID: "button",
-                    decorators: [
-                        { type: "addClass", classes: button.classes.join(" ") }
-                    ],
-                    children: [
-                        {
-                            ID: "buttonLabel",
-                            value: button.title
-                        },
-                        {
-                            ID: "buttonDescription",
-                            value: button.description
-                        } 
-                    ]
-                }]
+                // Get the models from the editor
+                var buttonList = mse.model.buttonList,
+                    morePanelList = fluid.flatten(mse.model.morePanelList),
+                    originModel,
+                    destinationModel,
+                    originIsButtonList,
+                    destinationIsButtonList,
+                    originIsMorePanel,
+                    destinationIsMorePanel;
+
+                // Establish the destination panel using event.target
+                if (event.target.className.split(" ").includes("fl-quickSetStrip-main-buttonList")) {
+                    destinationModel = buttonList;
+                    destinationIsButtonList = true;
+                };
+
+                if (event.target.className.split(" ").includes('fl-quickSetStrip-more')) {
+                    // console.log("TARGET IS MORE PANEL");
+                    destinationModel = morePanelList;
+                    destinationIsMorePanel = true;
+                };
+
+                // Establish origin of button moved using uisender;
+                if (ui.sender) {
+                    console.log("SENDER", ui.sender);
+                    if (ui.sender[0].className.split(" ").includes("fl-quickSetStrip-main-buttonList")) {
+                        originModel = buttonList;
+                        originIsButtonList = true;
+                    }
+
+                    if (ui.sender[0].className.split(" ").includes("fl-quickSetStrip-more")) {
+                        // console.log("ORIGIN IS MORE BUTTON LIST");
+                        originModel = morePanelList;
+                        originIsMorePanel = true;
+                    }
+                } else {
+                    originModel = destinationModel;
+                    originIsButtonList = destinationIsButtonList;
+                    originIsMorePanel = destinationIsMorePanel;
+                }
+
+                // Get destinatin index using sortable("toArray") 
+                var buttonId = $(ui.item).data("buttonid"),
+                    destinationIndex = $(this).sortable("toArray", { attribute: "data-buttonid" }).indexOf(buttonId);
+                
+                // Get origin index by finding it in the originModel
+                var originButtonName = "";
+                var originButton = fluid.find_if(originModel, function(button, index) {
+                    if (typeof(button) === "object") { originButtonName = button.buttonName; return gpii.psp.morphicSettingsEditor.string_to_slug(button.buttonName) === buttonId; }
+                    if (typeof(button) === "string") { originButtonName = button; return button === buttonId; }                
+                }),
+                    originIndex = originModel.indexOf(originButton);
+
+                // Swap indices
+                if ((originIndex !== -1) && (destinationIndex !== -1)) {
+                    if (originModel === destinationModel) {
+                        [originModel[originIndex], originModel[destinationIndex]] = [originModel[destinationIndex], originModel[originIndex]];
+                        if (originIsButtonList) { 
+                            mse.applier.change("buttonList", originModel);
+                            mse.instructions.applier.change("messages", Object.assign(mse.model.messages, { instruction: `You have moved the button "${originButtonName}" from position ${originIndex} to position ${destinationIndex}of the QuickStrip`}));
+                        }
+                        if (originIsMorePanel) { 
+                            mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(originModel)); 
+                            mse.instructions.applier.change("messages", Object.assign(mse.model.messages, { instruction: `You have moved the button "${originButtonName}" from position ${originIndex} to position ${destinationIndex} of the 'More' panel`}));
+                        }
+                    } else {
+                        originModel.splice(originIndex, 1);
+                        destinationModel.splice(destinationIndex, 0, originButton);
+
+                        if (originIsButtonList) { mse.applier.change("buttonList", originModel); }
+                        if (originIsMorePanel) { mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(originModel)); }
+                        if (destinationIsButtonList) { 
+                            mse.applier.change("buttonList", destinationModel); 
+                            mse.instructions.applier.change("messages", Object.assign(mse.model.messages, { instruction: `You have moved the button "${originButtonName}" from position ${originIndex} of the 'More' panel to position ${destinationIndex} of the QuickStrip`}));
+                        }
+                        if (destinationIsMorePanel) { 
+                            mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(destinationModel));
+                            mse.instructions.applier.change("messages", Object.assign(mse.model.messages, { instruction: `You have moved the button "${originButtonName}" from position ${originIndex} of the QuickStrip to position ${destinationIndex} of the 'More' panel`}));
+                        }
+                    }
+                }
+
+                mse.buttonCatalog.refreshView();
             }
         });
-        
-        return buttonList;
+    }
+
+    
+
+    gpii.psp.morphicSettingsEditor.addNewMYOB = function (that, button, buttonCatalog, mse) {
+        var b = Object.assign(button, { title: button.buttonName });
+        var catalog = buttonCatalog.model.items;
+        catalog.unshift(b);
+        mse.applier.change("buttonCatalog", catalog);
+        buttonCatalog.applier.change("items", catalog);
+        buttonCatalog.refreshView();
     };
 
+    gpii.psp.morphicSettingsEditor.log = function(message) {
+        console.log("LOOOOOOOG:", message);
+    };
 
+    gpii.psp.morphicSettingsEditor.addButton = function(event, mse) {
+        event.preventDefault();
+
+        var panel = event.target.className,
+            buttonId = event.target.getAttribute("data-buttonid"),
+            buttonList = mse.model.buttonList,
+            morePanelList = fluid.flatten(mse.model.morePanelList),
+            button = fluid.find_if(mse.model.buttonCatalog, function(button, index) {
+                return button.id === buttonId; 
+            });
+  
+        if (panel === "flc-buttonCatalog-btnAddToQSS") {
+            buttonList.push(buttonId);
+            mse.applier.change("buttonList", buttonList);
+            mse.qss.applier.change("items", buttonList);
+            console.log("THE MODEEEEEL", mse.model);
+            mse.instructions.applier.change("messages", Object.assign(mse.model.messages, { instruction: `You have added button "${button.title}" to the QuickStrip`}));
+        }
+
+        if (panel === "flc-buttonCatalog-btnAddToMorePanel") {
+            morePanelList.push(buttonId);
+            mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
+        }
+
+        mse.buttonCatalog.refreshView();
+    };
 
     /**
      * Keydown handler for buttons in the QSS or the 'More' panel
@@ -833,8 +725,8 @@ const { sep } = require("path");
      * @param {*} buttonCatalog - the button catalog renderer (for refreshing)
      */
     gpii.psp.morphicSettingsEditor.handleKeydown = function(e, that) {
-        console.log("EVENT", e);
-        console.log("THAT", that);
+        // console.log("EVENT", e);
+        // console.log("THAT", that);
 
         if ((e.key === "Backspace") || (e.key === "Delete")) {
             gpii.psp.morphicSettingsEditor.qss.removeButton(e, that, mse, buttonCatalog);
@@ -842,60 +734,11 @@ const { sep } = require("path");
     };
 
     /**
-     * Adds a button to the QuickStrip
-     * @param {} e - event
-     * @param {*} mse - overall Morphic Settings Editor
-     * @param {*} buttonCatalog - button catalog
+     * Creates a 'buttons' model in button catalog with a common structure
+     * @param {gpii.psp.morphicSettingsEditor.model} model 
+     * @param {gpii.psp.morphicSettingsEditor.applier} applier 
+     * @param {*} that 
      */
-    gpii.psp.morphicSettingsEditor.addButtonToQSS = function(e, mse, buttonCatalog) {
-
-/*         var button = $("<div class=\"cucu\"></div>");
-        button.text(e.target.getAttribute("buttonId"));
-
-        $(".flc-myChoices").append(button); */
-        var bl = [...mse.model.buttonList];
-        var buttonId = e.target.getAttribute("buttonid");
-        var buttonToAdd = buttonId === "MakeYourOwn" ? e.data.myobData : buttonId;
-
-        bl.unshift(buttonToAdd);
-        mse.applier.change("buttonList", bl);
-        buttonCatalog.refreshView();
-
-/*         buttonList.unshift(e.target.getAttribute("buttonid"));
-        mse.applier.change("buttonList", buttonList);
-        buttonCatalog.refreshView(); */
-    };
-
-    // /**
-    //  * Adds a button to the 'More' panel
-    //  * @param {*} e - click event
-    //  * @param {*} mse
-    //  * @param {*} buttonCatalog
-    //  */
-    // gpii.psp.morphicSettingsEditor.addButtonToMorePanel = function(e, mse, buttonCatalog) {
-    //     var morePanelList = fluid.flatten(mse.model.morePanelList);
-    //     var buttonId = e.target.getAttribute("buttonid");
-    //     var buttonToAdd = buttonId === "MakeYourOwn" ? e.data.myobData : buttonId;
-
-    //     morePanelList.push(buttonToAdd);
-    //     mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
-    //     buttonCatalog.refreshView();
-    // };
-
-    // gpii.psp.morphicSettingsEditor.isButtonInList = function (button, list) {
-    //     var togo = false;
-
-    //     if (typeof(button) === "object") {
-    //         togo = fluid.find_if(list, function (el) {
-    //             return isDeepStrictEqual(el, button);
-    //         });
-    //     } else {
-    //         togo = list.indexOf(button) !== -1;
-    //     }
-
-    //     return togo;
-    // };
-
     gpii.psp.morphicSettingsEditor.buttonCatalog.prepareButtonCatalogModel = function(model, applier, that) {
 
         var qss = model.buttonList,
@@ -916,8 +759,6 @@ const { sep } = require("path");
 
                 if (!((qss.includes(item)) || (morePanel.includes(item)))) {
                     nb.classes.push("fl-qss-button-movable");
-                } else {
-                    
                 }
                 
             } else { // It comes from the catalog
@@ -962,12 +803,9 @@ const { sep } = require("path");
     };
 
     gpii.psp.morphicSettingsEditor.displayContextMenu = function(e, button, mse) {
-        // console.log("### At displayContextMenu", that.typeName);
         
-        console.log("MSEEEE", mse);
         mse.contextMenu.applier.change("caller", button);
-        console.log("MSEEEE", mse);
-
+        
         var cm = $("#qssContextMenu"),
             cmTop = e.currentTarget.getBoundingClientRect().y + 40,
             cmLeft = e.currentTarget.getBoundingClientRect().x - 180;
@@ -978,20 +816,6 @@ const { sep } = require("path");
             "top": cmTop,
             "left": cmLeft
         });
-
-        cm.bind('keydown', function(e) { console.log("huhuhu")} );
-        
-        // // console.log(event)
-        // contextMenu.applier.change("caller", that.typeName);
-        // if (mse.activeItem) {
-        //     $(document.body).bind("click", function(e) { gpii.psp.morphicSettingsEditor.qss.hideContextMenu(contextMenu.container); });
-        //     contextMenu.container.css("visibility", "visible");
-        //     contextMenu.container.css("opacity", 1);
-        //     contextMenu.container.css("top", mse.activeItem.getBoundingClientRect().y + 40);
-        //     contextMenu.container.css("left", mse.activeItem.getBoundingClientRect().x - contextMenu.container.width() + 14);
-        //     contextMenu.container.children()[0].focus();
-        //     contextMenu.container.bind('keydown', gpii.psp.morphicSettingsEditor.contextMenuKeyDown);
-        // }
     };
 
     gpii.psp.morphicSettingsEditor.contextMenuKeyDown = function(e) {
@@ -1002,104 +826,6 @@ const { sep } = require("path");
             contextMenu.style.opacity = 0;
         }
     }
-
-
-    // gpii.psp.morphicSettingsEditor.getButtonInfo = function(buttonCatalog, buttonId) {
-
-    //     let buttonObject = {};
-
-    //     switch (typeof(buttonId)) {
-    //         case "string":
-    //             var button = fluid.find_if(buttonCatalog, function (el) {
-    //                 return (el.id === buttonId)? true : false;
-    //             });
-    //             buttonObject = button ? {
-    //                 id: buttonId,
-    //                 title: button.title,
-    //                 description: button.description }: null;
-    //             break;
-    //         case "object":
-    //             buttonObject = {
-    //                 id: buttonId.buttonId,
-    //                 title: buttonId.buttonName,
-    //                 description: buttonId.description,
-    //                 myobData: buttonId
-    //             };
-    //             break;
-    //         default:
-    //             buttonObject = null;
-    //             break;
-    //     }
-
-    //     return buttonObject;
-
-    // };
-
-    // gpii.psp.morphicSettingsEditor.findButtonIndexById = function(buttonId, buttonCollection) {
-    //     var button = fluid.find_if(buttonCollection, function(el) {
-    //         if (typeof(el) === "object") { return el.buttonId === buttonId; }
-    //         if (typeof(el) === "string") { return el === buttonId; }
-    //         return false;
-    //     });
-    //     return button? buttonCollection.indexOf(button) : -1;
-    // }
-
-    /**
-     * This function updates the models after a button has moved.
-     */
-    gpii.psp.morphicSettingsEditor.updateModels = function (item, position, movables, that) {
-        
-        // QSS buttons
-        var buttonList = that.model.buttonList;
-
-        var qssButtons = buttonList.slice(0, buttonList.length - 7),
-            qssStaticButtons = buttonList.slice(buttonList.length - 7, buttonList.length);
-
-        // More Panel Buttons
-        var morePanelList = fluid.flatten(that.model.morePanelList);
-
-        // I AM USING SUPPORTEDBUTTONSLIST HERE, HAVE TO THINK WHAT WE WILL DO WHEN USER CLICKS MYOB
-        // THIS FUNCTION REPLICATES WHAT gpii.morphicSettingsEditor.buttonCatalog.prepareButtonCatalogModel does
-        var catalogButtons = fluid.transform(that.model.supportedButtonsList, function(button, index) {
-            if ((!STATIC_BUTTONS.includes(button)) && (!(qssButtons.includes(button))) && (!(morePanelList.includes(button)))) { return button };
-        }).filter(function(button) { return button; });
-
-        console.log("CATALOG BUTTONS", catalogButtons);
-
-        // Get the id of the item that has been moved
-        var itemId = item.getAttribute("data-buttonId");
-
-        // Then use the movables provided by afterMove, and create an array with all the ids
-        var movableIds = fluid.transform(movables, function(movable, index) {
-            return movable.getAttribute("data-buttonId");
-        });
-        // FIND THE CURRENT INDEX OF THE ITEM THAT HAS BEEN MOVED
-        var newIndex = movableIds.indexOf(itemId);
-        
-        // Helper array that replicates the 'movables' provided, with buttons in their right format
-        var allButtons = [...that.morePanel.model.buttons, ...that.qss.model.buttons, ...that.buttonCatalog.model.buttons];
-        
-        // FIND THE OLD INDEX, USING 
-        var buttonInButtons = fluid.find_if(allButtons, function(button, index) {
-            return button.id === itemId;
-        });
-        var oldIndex = allButtons.indexOf(buttonInButtons);
-
-        // Here we are using the 'real' buttons
-        var modelButtons = [...morePanelList, ...buttonList, ...catalogButtons];
-        var b = modelButtons.splice(oldIndex, 1);
-        modelButtons.splice(newIndex, 1, b[0]);
-
-        var morePanelLength = $(".fl-quickSetStrip-more").children().length,
-            qssLength = $(".fl-quickSetStrip-main-buttonList").children().length;
-
-        // THE NEW MODELS!
-        var newMorePanelList = gpii.psp.morphicSettingsEditor.buildRows(modelButtons.slice(0, morePanelLength));
-        var newButtonList = (modelButtons.slice(morePanelLength, morePanelLength + qssLength)).concat(qssStaticButtons);
-
-        that.applier.change("morePanelList", newMorePanelList);
-        that.applier.change("buttonList", newButtonList);
-    };
 
     /**
       * buildRows creates three rows of 8 buttons from an array of buttons
@@ -1114,11 +840,11 @@ const { sep } = require("path");
     };
 
     gpii.psp.morphicSettingsEditor.qss.removeButton = function(e, caller, mse, buttonCatalog) {
-        console.log("CALLER", mse.contextMenu.model.caller);
-
+        
         var activeItem = mse.contextMenu.model.caller,
             buttonList = mse.model.buttonList,
-            morePanelList = fluid.flatten(mse.model.morePanelList);
+            morePanelList = fluid.flatten(mse.model.morePanelList),
+            buttonName = "";
 
         var buttonInQSS = fluid.find_if(buttonList, function(button, index) {
             if (typeof(button) === "object") { return button.buttonName === activeItem.title };
@@ -1135,12 +861,15 @@ const { sep } = require("path");
                 nbl = buttonList.splice(index, 1);
             mse.applier.change("buttonList", buttonList);
             mse.qss.applier.change("items", buttonList);
+            mse.instructions.applier.change("messages", Object.assign(mse.model.messages, { instruction: `You have removed button "${activeItem.title}" from the QuickStrip`}));
         };
 
         if (buttonInMorePanel) {
             var index = morePanelList.indexOf(buttonInMorePanel),
                 mpl = morePanelList.splice(index, 1);
             mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList));
+            mse.instructions.applier.change("messages", Object.assign(mse.model.messages, { instruction: `You have removed button "${activeItem.title}" from the 'More' Panel`}));
+            
         };
 
         buttonCatalog.refreshView();
@@ -1149,53 +878,6 @@ const { sep } = require("path");
             opacity: 0,
             visibility: "hidden"
         });
-
-        // var buttonInQSS = fluid.find_if(mse)
-        // console.log("BUTOTN IN QSS", buttonInQSS);
-
-        // console.log("e", e);
-        // Sconsole.log("MSE", mse);
-        // e.preventDefault();
-
-        // console.log("e", e);
-        // console.log("caller", caller);
-        // console.log("mse", mse);
-        // console.log("buttonCatalog", buttonCatalog);
-
-        // var activeItem = mse.activeItem;
-        // console.log("ACTIVE ITEM", activeItem);
-        // var buttonId = activeItem.getAttribute("data-buttonid");
-
-        // if ((caller.typeName === "gpii.psp.morphicSettingsEditor.qss") ||
-        //     ((caller.typeName === "gpii.psp.morphicSettingsEditor.contextMenu") && (caller.model.caller === "gpii.psp.morphicSettingsEditor.qss"))) {
-        //     var buttonList = mse.model.buttonList;
-        //     var buttonIndex = gpii.psp.morphicSettingsEditor.findButtonIndexById(buttonId, buttonList);
-        //     buttonList.splice(buttonIndex, 1);
-        //     mse.applier.change("buttonList", buttonList);
-        // };
-
-        // if ((caller.typeName === "gpii.psp.morphicSettingsEditor.morePanel") ||
-        //    ((caller.typeName === "gpii.psp.morphicSettingsEditor.contextMenu") && (caller.model.caller === "gpii.psp.morphicSettingsEditor.morePanel"))) {
-        //     var morePanelList = fluid.flatten(mse.model.morePanelList);
-        //     var buttonIndex = gpii.psp.morphicSettingsEditor.findButtonIndexById(buttonId, morePanelList);
-        //     morePanelList.splice(buttonIndex, 1);
-        //     mse.applier.change("morePanelList", gpii.psp.morphicSettingsEditor.buildRows(morePanelList))
-        // };
-
-        // activeItem.remove();
-
-        // mse.instructions.applier.change("instruction", `You have deleted button '${activeItem.innerText}'`);
-        // mse.instructions.refreshView();
-
-        // // MODEL
-        // activeItem.remove();
-
-        // if (caller.typeName === "gpii.psp.morphicSettingsEditor.contextMenu") {
-        //     gpii.psp.morphicSettingsEditor.qss.hideContextMenu(caller.container);
-        // }
-
-        // // buttonCatalog.applier.change("items", buttonCatalog.model.items);
-        // buttonCatalog.refreshView();
     };
 
     gpii.psp.morphicSettingsEditor.qss.hideContextMenu = function(that) {
@@ -1203,5 +885,36 @@ const { sep } = require("path");
         that.css("visibility", "hidden");
         that.css("opacity", 0);
     };
+
+    /**
+     * HELPER FUNCTIONS
+     */
+
+    /**
+     * Converts a string to a slug (no funny characters, no spaces)
+     * @param {string} str 
+     * @returns {string}
+     */
+     gpii.psp.morphicSettingsEditor.string_to_slug = function(str) {
+        str = str.replace(/^\s+|\s+$/g, ""); // trim
+        str = str.toLowerCase();
+      
+        // remove accents, swap ñ for n, etc
+        var from = "åàáãäâèéëêìíïîòóöôùúüûñç·/_,:;";
+        var to = "aaaaaaeeeeiiiioooouuuunc------";
+      
+        for (var i = 0, l = from.length; i < l; i++) {
+          str = str.replace(new RegExp(from.charAt(i), "g"), to.charAt(i));
+        }
+      
+        str = str
+          .replace(/[^a-z0-9 -]/g, "") // remove invalid chars
+          .replace(/\s+/g, "-") // collapse whitespace and replace by -
+          .replace(/-+/g, "-") // collapse dashes
+          .replace(/^-+/, "") // trim - from start of text
+          .replace(/-+$/, ""); // trim - from end of text
+      
+        return str;
+      }
 
 })(fluid);
